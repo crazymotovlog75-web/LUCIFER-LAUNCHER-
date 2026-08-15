@@ -23,7 +23,7 @@ Welcome to the official GitHub documentation page for **Zyron Launcher**, a high
 
 ## 🌐 Official Channels & Community
 To avoid downloading malicious clones, always use our verified official platforms managed directly by **Saif Khan**:
-* **YouTube Channel:** [Zyron Launcher Official](https://youtube.com)
+* **YouTube Channel:** [Zyron Launcher Official](https://youtube.com/@zyronlauncher?si=7eaLXkK4jV9dpFUu)
 * **Discord Community:** Join via the official links pinned in our YouTube video descriptions.
 
 ---
