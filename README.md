@@ -4,7 +4,7 @@
 Welcome to the official GitHub documentation page for **Zyron Launcher**, a high-performance custom Minecraft Java Edition launcher built for mobile devices.
 
 ## 👑 Developer & Ownership Information
-* **Lead Developer & Owner:** Saif Khan (Roller Gaming)
+* **Lead Developer & Owner:** Saif Khan And Roller Gaming
 * **Official Brand:** ZyronLauncher
 * **Project Status:** Active (Closed Source / Proprietary)
 
