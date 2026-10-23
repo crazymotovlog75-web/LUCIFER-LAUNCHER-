@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/card_profile_root"
+    android:layout_width="@dimen/_168sdp"
+    android:layout_height="match_parent"
+    android:minHeight="@dimen/_42sdp"
+    android:layout_marginEnd="@dimen/_5sdp"
+    android:background="@drawable/bg_home_profile_card"
+    android:clickable="true"
+    android:focusable="true"
+    android:paddingHorizontal="@dimen/_6sdp"
+    android:paddingVertical="@dimen/_4sdp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal"
+        android:gravity="center_vertical">
+
+        <ImageView
+            android:id="@+id/img_profile_icon"
+            android:layout_width="@dimen/_26sdp"
+            android:layout_height="@dimen/_26sdp"
+            android:layout_marginEnd="@dimen/_6sdp"
+            android:scaleType="fitCenter"
+            android:background="@drawable/bg_profile_icon_rounded"
+            android:padding="@dimen/_2sdp"
+            android:contentDescription="Instance icon" />
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/tv_profile_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/text_primary_white"
+                android:textSize="@dimen/_8ssp"
+                android:textStyle="bold"
+                android:maxLines="1"
+                android:ellipsize="end" />
+
+            <TextView
+                android:id="@+id/tv_profile_meta"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/sd_cyan_bright"
+                android:textSize="@dimen/_6ssp"
+                android:maxLines="1"
+                android:ellipsize="end" />
+
+            <TextView
+                android:id="@+id/tv_profile_mod_count"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/sd_magenta_bright"
+                android:textSize="@dimen/_6ssp"
+                android:maxLines="1"
+                android:ellipsize="end"
+                android:text="Mods: 0" />
+        </LinearLayout>
+
+        <ImageButton
+            android:id="@+id/btn_profile_edit"
+            android:layout_width="@dimen/_22sdp"
+            android:layout_height="@dimen/_22sdp"
+            android:background="?android:attr/selectableItemBackgroundBorderless"
+            android:contentDescription="Edit instance"
+            android:padding="@dimen/_4sdp"
+            android:tint="@color/sd_cyan"
+            android:src="@drawable/ic_edit_profile" />
+
+        <FrameLayout
+            android:id="@+id/btn_profile_play"
+            android:layout_width="@dimen/_34sdp"
+            android:layout_height="@dimen/_22sdp"
+            android:layout_marginStart="@dimen/_3sdp"
+            android:background="@drawable/bg_sd_join_cyan"
+            android:clickable="true"
+            android:focusable="true"
+            android:contentDescription="Launch this instance">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:text="GO"
+                android:textColor="#040812"
+                android:textSize="@dimen/_7ssp"
+                android:textStyle="bold" />
+        </FrameLayout>
+    </LinearLayout>
+</FrameLayout>

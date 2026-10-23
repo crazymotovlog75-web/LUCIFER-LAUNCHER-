@@ -1,0 +1,394 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="false"
+    android:background="?attr/bgMainDrawable">
+
+    <!-- ═══════════════════════════════════════════════════════════════════════
+         TOP 3-MODULE SHADOW-DRAGON TACTICAL HUD BAR (#02 + #05 Fusion)
+         ═══════════════════════════════════════════════════════════════════════ -->
+    <LinearLayout
+        android:id="@+id/header_bar"
+        android:layout_width="0dp"
+        android:layout_height="@dimen/_42sdp"
+        android:layout_marginTop="@dimen/_4sdp"
+        android:layout_marginHorizontal="@dimen/_8sdp"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:elevation="8dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <!-- MODULE 1: Left Angled Horned LUCIFER Crest -->
+        <LinearLayout
+            android:id="@+id/hud_brand_plate"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:paddingHorizontal="@dimen/_10sdp"
+            android:background="@drawable/bg_sd_hud_plate">
+
+            <FrameLayout
+                android:id="@+id/btn_home_logo"
+                android:layout_width="@dimen/_28sdp"
+                android:layout_height="@dimen/_28sdp"
+                android:clickable="true"
+                android:focusable="true"
+                android:contentDescription="Lucifer Launcher home">
+                <ImageView
+                    android:id="@+id/iv_lucifer_logo"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:src="@drawable/lucifer_launcher_emblem"
+                    android:scaleType="fitCenter"
+                    android:contentDescription="Lucifer Launcher logo" />
+            </FrameLayout>
+
+            <TextView
+                android:id="@+id/tv_launcher_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/_6sdp"
+                android:text="LUCIFER"
+                android:textSize="@dimen/_13ssp"
+                android:textStyle="bold"
+                android:textColor="@color/text_primary_white"
+                android:letterSpacing="0.12"
+                android:maxLines="1"
+                android:clickable="true"
+                android:focusable="true" />
+        </LinearLayout>
+
+        <Space
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:layout_weight="1" />
+
+        <!-- MODULE 2: Center Live Vulkan / FPS / RAM Telemetry Strip + Quick Studio Pills -->
+        <LinearLayout
+            android:id="@+id/hud_telemetry_plate"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:paddingHorizontal="@dimen/_10sdp"
+            android:background="@drawable/bg_sd_hud_plate"
+            android:clickable="true"
+            android:focusable="true">
+
+            <TextView
+                android:id="@+id/tv_hud_renderer"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="VULKAN 1.3"
+                android:textColor="@color/sd_cyan"
+                android:textSize="@dimen/_8ssp"
+                android:textStyle="bold"
+                android:letterSpacing="0.06" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/_5sdp"
+                android:text="•"
+                android:textColor="@color/sd_magenta"
+                android:textSize="@dimen/_9ssp" />
+
+            <TextView
+                android:id="@+id/tv_hud_fps"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="144 FPS"
+                android:textColor="@color/text_primary_white"
+                android:textSize="@dimen/_8ssp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/_5sdp"
+                android:text="•"
+                android:textColor="@color/sd_magenta"
+                android:textSize="@dimen/_9ssp" />
+
+            <TextView
+                android:id="@+id/tv_hud_ram"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="6.0 GB RAM"
+                android:textColor="@color/sd_magenta_bright"
+                android:textSize="@dimen/_8ssp"
+                android:textStyle="bold" />
+
+            <View
+                android:layout_width="1dp"
+                android:layout_height="@dimen/_18sdp"
+                android:layout_marginHorizontal="@dimen/_7sdp"
+                android:background="#5500D4FF" />
+
+            <LinearLayout
+                android:id="@+id/nav_wallpapers"
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/_26sdp"
+                android:gravity="center"
+                android:paddingHorizontal="@dimen/_6sdp"
+                android:background="@drawable/bg_lucifer_nav_item"
+                android:clickable="true"
+                android:focusable="true"
+                android:contentDescription="@string/nav_wallpapers">
+                <ImageView
+                    android:id="@+id/nav_wallpapers_icon"
+                    android:layout_width="@dimen/_11sdp"
+                    android:layout_height="@dimen/_11sdp"
+                    android:src="@drawable/ic_wallpaper"
+                    android:tint="@color/sd_cyan"
+                    android:contentDescription="@null" />
+                <TextView
+                    android:id="@+id/nav_wallpapers_label"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/_3sdp"
+                    android:text="Scene"
+                    android:textColor="@color/text_primary_white"
+                    android:textSize="@dimen/_7ssp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/nav_cursor"
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/_26sdp"
+                android:layout_marginStart="@dimen/_4sdp"
+                android:gravity="center"
+                android:paddingHorizontal="@dimen/_6sdp"
+                android:background="@drawable/bg_lucifer_nav_item"
+                android:clickable="true"
+                android:focusable="true"
+                android:contentDescription="Cursor Studio">
+                <ImageView
+                    android:id="@+id/nav_cursor_icon"
+                    android:layout_width="@dimen/_11sdp"
+                    android:layout_height="@dimen/_11sdp"
+                    android:src="@drawable/ic_mouse_pointer"
+                    android:tint="@color/sd_magenta_bright"
+                    android:contentDescription="@null" />
+                <TextView
+                    android:id="@+id/nav_cursor_label"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/_3sdp"
+                    android:text="Cursor"
+                    android:textColor="@color/text_primary_white"
+                    android:textSize="@dimen/_7ssp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/nav_about"
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/_26sdp"
+                android:layout_marginStart="@dimen/_4sdp"
+                android:gravity="center"
+                android:paddingHorizontal="@dimen/_6sdp"
+                android:background="@drawable/bg_lucifer_nav_item"
+                android:clickable="true"
+                android:focusable="true"
+                android:contentDescription="About Lucifer Launcher">
+                <ImageView
+                    android:id="@+id/nav_about_icon"
+                    android:layout_width="@dimen/_11sdp"
+                    android:layout_height="@dimen/_11sdp"
+                    android:src="@drawable/ic_menu_news"
+                    android:tint="@color/sd_cyan"
+                    android:contentDescription="@null" />
+            </LinearLayout>
+
+            <Button
+                android:id="@+id/btn_creator_team"
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/_26sdp"
+                android:layout_marginStart="@dimen/_4sdp"
+                android:minWidth="@dimen/_34sdp"
+                android:paddingHorizontal="@dimen/_6sdp"
+                android:text="✦ PRO"
+                android:textSize="@dimen/_7ssp"
+                android:textStyle="bold"
+                android:textColor="@color/sd_magenta_bright"
+                android:background="@drawable/bg_lucifer_nav_item"
+                android:contentDescription="Creator team credits" />
+        </LinearLayout>
+
+        <Space
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:layout_weight="1" />
+
+        <!-- MODULE 3: Right Angled Player Account & Settings Plate -->
+        <LinearLayout
+            android:id="@+id/hud_account_plate"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:paddingHorizontal="@dimen/_6sdp"
+            android:background="@drawable/bg_sd_hud_plate">
+
+            <com.kdt.mcgui.mcAccountSpinner
+                android:id="@+id/account_spinner"
+                android:layout_width="@dimen/_124sdp"
+                android:layout_height="@dimen/_32sdp"
+                android:dropDownWidth="wrap_content"
+                android:dropDownVerticalOffset="@dimen/_36sdp"
+                android:background="@drawable/bg_account_spinner"
+                android:paddingStart="@dimen/_5sdp"
+                android:paddingEnd="@dimen/_5sdp" />
+
+            <ImageButton
+                android:id="@+id/setting_button"
+                android:layout_width="@dimen/_32sdp"
+                android:layout_height="@dimen/_32sdp"
+                android:layout_marginStart="@dimen/_4sdp"
+                android:background="@drawable/bg_settings_btn"
+                android:src="@drawable/ic_menu_settings"
+                android:tint="@color/sd_cyan"
+                android:scaleType="fitCenter"
+                android:padding="@dimen/_6sdp"
+                android:contentDescription="Settings"
+                android:clickable="true"
+                android:focusable="true" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <!-- ═══════════════════════════════════════════════════════════════════════
+         MAIN CONTENT STAGE (Home / Profiles / Mods / Servers / Skins)
+         ═══════════════════════════════════════════════════════════════════════ -->
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/container_fragment"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="@dimen/_3sdp"
+        android:layout_marginBottom="@dimen/_3sdp"
+        app:layout_constraintTop_toBottomOf="@+id/header_bar"
+        app:layout_constraintBottom_toTopOf="@+id/bottom_dock_bar" />
+
+    <com.kdt.mcgui.ProgressLayout
+        android:id="@+id/progress_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:elevation="12dp"
+        android:layout_marginStart="@dimen/padding_large"
+        android:layout_marginEnd="@dimen/padding_large"
+        android:layout_marginTop="4dp"
+        app:layout_constraintTop_toBottomOf="@+id/header_bar"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <!-- ═══════════════════════════════════════════════════════════════════════
+         BOTTOM FLOATING SHADOW-DRAGON CRYSTAL DOCK (#02 + #05 Signature)
+         ═══════════════════════════════════════════════════════════════════════ -->
+    <LinearLayout
+        android:id="@+id/bottom_dock_bar"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/_42sdp"
+        android:layout_marginBottom="@dimen/_4sdp"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:elevation="10dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <ImageView
+            android:layout_width="@dimen/_24sdp"
+            android:layout_height="@dimen/_36sdp"
+            android:layout_marginEnd="-4dp"
+            android:src="@drawable/ic_sd_dock_crystals_left"
+            android:contentDescription="@null" />
+
+        <HorizontalScrollView
+            android:id="@+id/nav_scroll"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:background="@drawable/bg_sd_dock_shell"
+            android:paddingHorizontal="@dimen/_8sdp"
+            android:overScrollMode="never"
+            android:scrollbars="none">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:id="@+id/nav_home"
+                    style="@style/LuciferDockTab"
+                    android:contentDescription="Home">
+                    <ImageView android:id="@+id/nav_home_icon" style="@style/LuciferDockIcon" android:src="@drawable/ic_home" />
+                    <TextView android:id="@+id/nav_home_label" style="@style/LuciferDockLabel" android:text="HOME" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/nav_instances"
+                    style="@style/LuciferDockTab"
+                    android:contentDescription="Profiles">
+                    <ImageView android:id="@+id/nav_instances_icon" style="@style/LuciferDockIcon" android:src="@drawable/ic_folder_managed" />
+                    <TextView android:id="@+id/nav_instances_label" style="@style/LuciferDockLabel" android:text="PROFILES" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/nav_mod_store"
+                    style="@style/LuciferDockTab"
+                    android:contentDescription="Mods">
+                    <ImageView android:id="@+id/nav_mod_store_icon" style="@style/LuciferDockIcon" android:src="@drawable/ic_download_box" />
+                    <TextView android:id="@+id/nav_mod_store_label" style="@style/LuciferDockLabel" android:text="MODS" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/nav_servers"
+                    style="@style/LuciferDockTab"
+                    android:contentDescription="Servers">
+                    <ImageView android:id="@+id/nav_servers_icon" style="@style/LuciferDockIcon" android:src="@drawable/ic_mc_block" />
+                    <TextView android:id="@+id/nav_servers_label" style="@style/LuciferDockLabel" android:text="SERVERS" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/nav_custom_controls"
+                    style="@style/LuciferDockTab"
+                    android:contentDescription="Controls">
+                    <ImageView android:id="@+id/nav_controls_icon" style="@style/LuciferDockIcon" android:src="@drawable/ic_menu_custom_controls" />
+                    <TextView android:id="@+id/nav_controls_label" style="@style/LuciferDockLabel" android:text="CONTROLS" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/nav_skin"
+                    style="@style/LuciferDockTab"
+                    android:contentDescription="Skins">
+                    <ImageView android:id="@+id/nav_skin_icon" style="@style/LuciferDockIcon" android:src="@drawable/ic_manage_skin" />
+                    <TextView android:id="@+id/nav_skin_label" style="@style/LuciferDockLabel" android:text="SKINS" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/nav_dock_settings"
+                    style="@style/LuciferDockTab"
+                    android:contentDescription="Settings">
+                    <ImageView style="@style/LuciferDockIcon" android:src="@drawable/ic_menu_settings" android:tint="@color/sd_magenta_bright" />
+                    <TextView style="@style/LuciferDockLabel" android:text="SETTINGS" />
+                </LinearLayout>
+            </LinearLayout>
+        </HorizontalScrollView>
+
+        <ImageView
+            android:layout_width="@dimen/_24sdp"
+            android:layout_height="@dimen/_36sdp"
+            android:layout_marginStart="-4dp"
+            android:src="@drawable/ic_sd_dock_crystals_right"
+            android:contentDescription="@null" />
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

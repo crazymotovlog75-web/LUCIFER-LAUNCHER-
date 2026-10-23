@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- Control Buttons -->
+    <color name="control_button_color">#3339FF14</color>
+    <color name="control_button_pressed_color">#6639FF14</color>
+
+    <!-- Main Button -->
+    <color name="minebutton_color">#00D4FF</color>
+    <color name="cu_bg_app">#05040B</color>
+    <color name="cu_bg_status_bar">#040309</color>
+    <color name="cu_bg_bottom_bar">#090616</color>
+    <color name="cu_divider">#1A7BE7E4</color>
+
+    <!-- BACKGROUND SYSTEM (DARK THEME) -->
+    <!-- Dark layered surfaces -->
+
+    <color name="background_app">#121212</color>
+    <color name="background_overlay">#464646</color>      
+    <color name="background_surface">#464646</color>      
+    <color name="divider">#464646</color>                
+    <color name="background_status_bar">#232323</color>
+    <color name="background_bottom_bar">#272727</color>
+
+    <!-- TEXT (FIXED: removed orange tint, improved readability) -->
+    <color name="primary_text">#F5F5F5</color>
+    <color name="secondary_text">#B8B8B8</color>
+
+    <!-- ── Midnight Blue preset ───────────────────────────────────────── -->
+    <color name="mb_bg_app">#0D1B2A</color>
+    <color name="mb_bg_bottom_bar">#1B2A3B</color>
+    <color name="mb_bg_status_bar">#0A1522</color>
+    <color name="mb_divider">#1E3A5F</color>
+    <color name="mb_accent">#1E90FF</color>
+    <color name="mb_text_primary">#E8EFF5</color>
+    <color name="mb_text_secondary">#8BAABF</color>
+
+    <!-- ── Forest Green preset ───────────────────────────────────────── -->
+    <color name="fg_bg_app">#0F1F0F</color>
+    <color name="fg_bg_bottom_bar">#1A2E1A</color>
+    <color name="fg_bg_status_bar">#0C1A0C</color>
+    <color name="fg_divider">#2D4A2D</color>
+    <color name="fg_accent">#4CAF50</color>
+    <color name="fg_text_primary">#E8F5E9</color>
+    <color name="fg_text_secondary">#9CCC9C</color>
+
+    <!-- ── Crimson preset ────────────────────────────────────────────── -->
+    <color name="cr_bg_app">#1A0A0A</color>
+    <color name="cr_bg_bottom_bar">#2A1010</color>
+    <color name="cr_bg_status_bar">#150808</color>
+    <color name="cr_divider">#4A1A1A</color>
+    <color name="cr_accent">#E53935</color>
+    <color name="cr_text_primary">#FFF0F0</color>
+    <color name="cr_text_secondary">#CCA0A0</color>
+
+    <!-- ── Amethyst preset ───────────────────────────────────────────── -->
+    <color name="am_bg_app">#13091A</color>
+    <color name="am_bg_bottom_bar">#1E1028</color>
+    <color name="am_bg_status_bar">#0F0714</color>
+    <color name="am_divider">#3A1F52</color>
+    <color name="am_accent">#9C27B0</color>
+    <color name="am_text_primary">#F3E5F5</color>
+    <color name="am_text_secondary">#CBA8D4</color>
+
+    <!-- ── Arctic preset ─────────────────────────────────────────────── -->
+    <color name="ar_bg_app">#0E1A20</color>
+    <color name="ar_bg_bottom_bar">#162530</color>
+    <color name="ar_bg_status_bar">#0B1418</color>
+    <color name="ar_divider">#1E3A47</color>
+    <color name="ar_accent">#00BCD4</color>
+    <color name="ar_text_primary">#E0F7FA</color>
+    <color name="ar_text_secondary">#80C8D4</color>
+
+    <!-- ── LUCIFER LAUNCHER Colors (Dark Gaming Theme) ── -->
+    <!-- Base backgrounds -->
+    <color name="bg_primary">#05040B</color>
+    <color name="bg_launcher_dark">#05040B</color>
+    <color name="bg_sidebar">#080513</color>
+    <color name="bg_header">#0C081D</color>
+    <color name="bg_bottom_bar">#0A0718</color>
+    <color name="bg_card">#0E0920</color>
+    <color name="bg_card_dark">#150D2E</color>
+    <color name="bg_elevated">#202D3C</color>
+
+    <!-- Accent colors (Neon Green + Purple) -->
+    <color name="accent_primary">#00D4FF</color>
+    <color name="accent_light">#7CEEFF</color>
+    <color name="accent_purple">#D946EF</color>
+    <color name="accent_purple_deep">#7C3AED</color>
+    <color name="accent_bg_subtle">#18202E</color>
+    <color name="accent_border">#00D4FF</color>
+
+    <!-- Legacy/Alias colors (kept for back-compat) -->
+    <color name="accent_green">#39FF14</color>
+    <color name="accent_green_light">#00FF88</color>
+    <color name="accent_green_bg">#1A1C2C</color>
+    <color name="accent_green_border">#39FF14</color>
+
+    <!-- Text -->
+    <color name="text_primary_white">#FFFFFF</color>
+    <color name="text_primary_light">#FFFFFF</color>
+    <color name="text_primary">#FFFFFFFF</color>
+    <color name="text_secondary_light">#9CA3AF</color>
+    <color name="text_secondary_dim">#6B7280</color>
+    <color name="text_secondary">#8FFFFFFF</color>
+
+    <!-- Dividers / Borders -->
+    <color name="border_default">#2A2A2A</color>
+    <color name="border_hover">#39FF14</color>
+    <color name="divider_color">#333333</color>
+
+    <!-- Lucifer liquid-crystal palette -->
+    <color name="lucifer_bg">#05040B</color>
+    <color name="lucifer_surface">#0C081C</color>
+    <color name="lucifer_surface_high">#160E30</color>
+    <color name="lucifer_glass_edge">#8800D4FF</color>
+    <color name="lucifer_cyan">#00D4FF</color>
+    <color name="lucifer_violet">#D946EF</color>
+
+    <!-- Legacy PLAY tokens are retained for compatibility with existing screens -->
+    <color name="play_btn_bg">#00D4FF</color>
+    <color name="play_btn_text">#071017</color>
+
+    <!-- Settings UI Colors -->
+    <color name="settings_bg">#05040B</color>
+    <color name="card_bg">#0C081C</color>
+    <color name="card_bg_pressed">#1C1138</color>
+    <color name="neon_green">#00D4FF</color>
+    <color name="neon_green_dim">#4400D4FF</color>
+    <color name="stroke_neon">#80D946EF</color>
+    <color name="like_active">#FF668B</color>
+    <color name="installed_color">#56D6A2</color>
+
+    <color name="bg_nav_item_active">#6600D4FF</color>
+
+    <!-- Shadow Monarch (#02) + Ender Dragon Cataclysm (#05) Fused Tokens -->
+    <color name="sd_void">#05040B</color>
+    <color name="sd_obsidian">#090616</color>
+    <color name="sd_obsidian_high">#140C2C</color>
+    <color name="sd_cyan">#00D4FF</color>
+    <color name="sd_cyan_bright">#67E8F9</color>
+    <color name="sd_violet">#8B5CF6</color>
+    <color name="sd_magenta">#D946EF</color>
+    <color name="sd_magenta_bright">#F0ABFC</color>
+    <color name="sd_online_emerald">#22C55E</color>
+</resources>

@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="220dp"
+    android:height="240dp"
+    android:viewportWidth="220"
+    android:viewportHeight="240">
+    <!-- Outer abyssal violet aura -->
+    <path
+        android:fillColor="#2E7C3AED"
+        android:pathData="M110,18 C158,38 195,95 190,162 C186,204 152,228 110,228 C68,228 34,204 30,162 C25,95 62,38 110,18 Z" />
+    <!-- Left & Right Shadow Monarch electric blue flame tongues -->
+    <path
+        android:fillColor="#5500D4FF"
+        android:pathData="M36,208 C18,176 22,132 42,102 C35,134 46,154 58,136 C48,100 64,62 84,42 C74,78 82,106 94,94 C88,132 76,178 110,214 Z" />
+    <path
+        android:fillColor="#55D946EF"
+        android:pathData="M184,208 C202,176 198,132 178,102 C185,134 174,154 162,136 C172,100 156,62 136,42 C146,78 138,106 126,94 C132,132 144,178 110,214 Z" />
+    <!-- Bright inner electric cyan & magenta flame wisps -->
+    <path
+        android:fillColor="#8800E5FF"
+        android:pathData="M48,210 C34,184 38,150 56,128 C52,154 64,170 76,156 C68,182 82,202 110,214 Z" />
+    <path
+        android:fillColor="#88E879F9"
+        android:pathData="M172,210 C186,184 182,150 164,128 C168,154 156,170 144,156 C152,182 138,202 110,214 Z" />
+    <!-- Obsidian & End-Crystal Pedestal Ring -->
+    <path
+        android:fillColor="#E6090618"
+        android:strokeColor="#FF00D4FF"
+        android:strokeWidth="2"
+        android:pathData="M34,212 L68,198 L152,198 L186,212 L156,228 L64,228 Z" />
+    <path
+        android:fillColor="#66D946EF"
+        android:pathData="M50,212 L76,203 L144,203 L170,212 L146,222 L74,222 Z" />
+    <!-- Pedestal Crystal Spikes -->
+    <path
+        android:fillColor="#FF00D4FF"
+        android:pathData="M28,212 L38,192 L46,214 Z" />
+    <path
+        android:fillColor="#FFD946EF"
+        android:pathData="M192,212 L182,192 L174,214 Z" />
+</vector>

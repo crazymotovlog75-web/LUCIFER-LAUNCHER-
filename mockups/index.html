@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LUCIFER LAUNCHER — 10 Danger-Class UI Overhaul Mockups</title>
+  <style>
+    :root {
+      --bg: #050508;
+      --card: #0c0c12;
+      --border: rgba(255, 30, 56, 0.28);
+      --red: #ff1738;
+      --orange: #ff5e00;
+      --text: #f5f6fa;
+      --muted: #9ca3b8;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background:
+        radial-gradient(900px 500px at 15% 0%, rgba(255, 23, 56, 0.16), transparent 65%),
+        radial-gradient(900px 500px at 85% 5%, rgba(255, 94, 0, 0.12), transparent 65%),
+        var(--bg);
+      color: var(--text);
+      font-family: "Inter", "Segoe UI", Roboto, system-ui, sans-serif;
+      min-height: 100vh;
+      padding-bottom: 80px;
+    }
+    header {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 32px 20px 20px;
+    }
+    .badge-top {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 14px;
+      background: rgba(255, 23, 56, 0.14);
+      border: 1px solid rgba(255, 23, 56, 0.45);
+      color: #ff4d67;
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      clip-path: polygon(8px 0, 100% 0, calc(100% - 8px) 100%, 0 100%);
+    }
+    h1 {
+      margin-top: 12px;
+      font-size: clamp(28px, 4vw, 46px);
+      font-weight: 900;
+      letter-spacing: -0.02em;
+      text-transform: uppercase;
+      line-height: 1.05;
+    }
+    h1 span {
+      background: linear-gradient(90deg, #ff1738, #ff6a00, #ffb800);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+    .subtitle {
+      margin-top: 10px;
+      color: var(--muted);
+      max-width: 840px;
+      font-size: 15px;
+      line-height: 1.6;
+    }
+    .toolbar {
+      position: sticky;
+      top: 0;
+      z-index: 30;
+      background: rgba(5, 5, 8, 0.88);
+      backdrop-filter: blur(14px);
+      border-top: 1px solid rgba(255, 255, 255, 0.07);
+      border-bottom: 1px solid rgba(255, 23, 56, 0.25);
+      padding: 12px 20px;
+      margin-bottom: 28px;
+    }
+    .toolbar-inner {
+      max-width: 1400px;
+      margin: 0 auto;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+    .jump-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+    .jump-links a, .btn-tool {
+      text-decoration: none;
+      color: var(--text);
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      padding: 7px 12px;
+      background: #12121b;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      cursor: pointer;
+      transition: all 0.18s ease;
+      clip-path: polygon(6px 0, 100% 0, calc(100% - 6px) 100%, 0 100%);
+    }
+    .jump-links a:hover, .btn-tool:hover, .btn-tool.active {
+      background: rgba(255, 23, 56, 0.22);
+      border-color: var(--red);
+      color: #fff;
+    }
+    .compare-drawer {
+      display: none;
+      max-width: 1400px;
+      margin: 0 auto 28px;
+      padding: 0 20px;
+    }
+    .compare-drawer.open { display: block; }
+    .compare-box {
+      background: #0d0d15;
+      border: 1px solid var(--red);
+      padding: 18px;
+    }
+    .compare-controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      align-items: center;
+      margin-bottom: 14px;
+    }
+    .compare-controls select {
+      background: #161622;
+      color: #fff;
+      border: 1px solid rgba(255,255,255,0.2);
+      padding: 8px 12px;
+      font-size: 13px;
+      font-weight: 600;
+    }
+    .compare-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 16px;
+    }
+    .compare-grid img {
+      width: 100%;
+      display: block;
+      border: 1px solid rgba(255,255,255,0.16);
+    }
+    .compare-caption {
+      margin-top: 6px;
+      font-size: 13px;
+      font-weight: 700;
+      color: #ff6b81;
+    }
+    main {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 0 20px;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(560px, 1fr));
+      gap: 26px;
+    }
+    @media (max-width: 680px) {
+      main { grid-template-columns: 1fr; }
+    }
+    .card {
+      background: var(--card);
+      border: 1px solid rgba(255, 255, 255, 0.11);
+      position: relative;
+      overflow: hidden;
+      transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+    .card:hover {
+      transform: translateY(-3px);
+      border-color: var(--accent, var(--red));
+      box-shadow: 0 18px 50px rgba(0, 0, 0, 0.7), 0 0 28px var(--glow, rgba(255, 23, 56, 0.22));
+    }
+    .card-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      padding: 14px 18px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      background: linear-gradient(90deg, rgba(255,255,255,0.03), transparent);
+    }
+    .num-pill {
+      font-size: 12px;
+      font-weight: 900;
+      letter-spacing: 0.14em;
+      padding: 4px 10px;
+      background: var(--accent, var(--red));
+      color: #050508;
+      clip-path: polygon(5px 0, 100% 0, calc(100% - 5px) 100%, 0 100%);
+    }
+    .card-title {
+      font-size: 18px;
+      font-weight: 800;
+      letter-spacing: 0.03em;
+      text-transform: uppercase;
+      flex: 1;
+    }
+    .arch-tag {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--muted);
+      border: 1px solid rgba(255,255,255,0.14);
+      padding: 4px 9px;
+    }
+    .shot-wrap {
+      position: relative;
+      cursor: zoom-in;
+      background: #000;
+    }
+    .shot-wrap img {
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      object-fit: cover;
+      display: block;
+    }
+    .zoom-hint {
+      position: absolute;
+      right: 12px;
+      bottom: 12px;
+      background: rgba(5, 5, 8, 0.82);
+      border: 1px solid rgba(255, 255, 255, 0.22);
+      color: #fff;
+      font-size: 11px;
+      font-weight: 700;
+      padding: 5px 10px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      pointer-events: none;
+    }
+    .card-body {
+      padding: 15px 18px 18px;
+      display: grid;
+      gap: 8px;
+    }
+    .card-desc {
+      color: #d2d7e5;
+      font-size: 13.5px;
+      line-height: 1.55;
+    }
+    .spec-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 4px;
+    }
+    .spec-chip {
+      font-size: 11px;
+      color: var(--muted);
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.09);
+      padding: 4px 8px;
+    }
+    /* Fullscreen Lightbox */
+    .lightbox {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 100;
+      background: rgba(3, 3, 6, 0.95);
+      backdrop-filter: blur(12px);
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+    .lightbox.open { display: flex; }
+    .lb-bar {
+      width: 100%;
+      max-width: 1360px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+    .lb-title {
+      font-size: 16px;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+    .lb-btns { display: flex; gap: 8px; }
+    .lb-img {
+      max-width: min(96vw, 1360px);
+      max-height: 80vh;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      box-shadow: 0 25px 80px rgba(0, 0, 0, 0.9);
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="badge-top">LUCIFER LAUNCHER • DANGER EDITION OVERHAUL</div>
+    <h1>10 <span>DANGER-CLASS</span> UI MOCKUPS</h1>
+    <p class="subtitle">
+      Click any mockup to inspect in full-screen 16:9 landscape, or toggle <b>Compare Side-by-Side</b>.
+      Reply with the number (<b>#01 – #10</b>) you want—or mix elements from two concepts—and I will adapt and implement the complete launcher UI overhaul cleanly.
+    </p>
+  </header>
+
+  <div class="toolbar">
+    <div class="toolbar-inner">
+      <div class="jump-links" id="jumpLinks"></div>
+      <button class="btn-tool" id="compareBtn" type="button">Compare Side-by-Side</button>
+    </div>
+  </div>
+
+  <section class="compare-drawer" id="compareDrawer">
+    <div class="compare-box">
+      <div class="compare-controls">
+        <strong>HEAD-TO-HEAD COMPARE:</strong>
+        <select id="selA"></select>
+        <span>VS</span>
+        <select id="selB"></select>
+      </div>
+      <div class="compare-grid">
+        <div>
+          <img id="imgA" src="" alt="Option A" />
+          <div class="compare-caption" id="capA"></div>
+        </div>
+        <div>
+          <img id="imgB" src="" alt="Option B" />
+          <div class="compare-caption" id="capB"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <main id="galleryGrid"></main>
+
+  <div class="lightbox" id="lightbox">
+    <div class="lb-bar">
+      <div class="lb-title" id="lbTitle"></div>
+      <div class="lb-btns">
+        <button class="btn-tool" id="prevBtn" type="button">◀ Prev</button>
+        <button class="btn-tool" id="nextBtn" type="button">Next ▶</button>
+        <button class="btn-tool" id="closeBtn" type="button">✕ Close (ESC)</button>
+      </div>
+    </div>
+    <img class="lb-img" id="lbImg" src="" alt="Fullscreen Mockup" />
+  </div>
+
+  <script>
+    const MOCKUPS = [
+      {
+        id: "01",
+        file: "01-hellfire-overlord-hud.jpg",
+        name: "Hellfire Overlord",
+        arch: "Left Armor Blade Rail",
+        accent: "#ff1738",
+        glow: "rgba(255,23,56,0.3)",
+        desc: "ASUS ROG meets Nether Demon Warlord. 45°-chamfered obsidian armor blades with blood-red laser rims, cracked magma stage, LUCIFERMC combat card, and explosive bottom-right LAUNCH core.",
+        specs: ["Chamfered Vector Borders", "Left 6-Blade Rail", "Blood Crimson #FF1738", "Bottom-Right Reactor CTA"]
+      },
+      {
+        id: "02",
+        file: "02-shadow-monarch-abyss.jpg",
+        name: "Shadow Monarch Abyss",
+        arch: "Floating Shadow Dock",
+        accent: "#00d4ff",
+        glow: "rgba(0,212,255,0.28)",
+        desc: "Solo Leveling dark shadow-flame aesthetic. Electric cobalt-blue & abyssal-violet neon crystal frames, top telemetry bar, floating 5-tab dock, and high-voltage PLAY trigger.",
+        specs: ["Electric Cyan #00D4FF", "Shadow Violet #7C3AED", "Bottom Floating Dock", "Top Telemetry Strip"]
+      },
+      {
+        id: "03",
+        file: "03-warden-sculk-sonic.jpg",
+        name: "Deep Dark Warden",
+        arch: "Left Angled Wing Stack",
+        accent: "#00f5d4",
+        glow: "rgba(0,245,212,0.28)",
+        desc: "Ancient City bioluminescent terror. Pitch-black sculk-veined obsidian plates with glowing soul-cyan laser bevels, left angled tab stack, right server wing, and sonic hexagonal LAUNCH core.",
+        specs: ["Sculk Cyan #00F5D4", "Angled Parallelogram Tabs", "Right Combat Stack", "Hexagonal Launch Core"]
+      },
+      {
+        id: "04",
+        file: "04-cyber-katana-ronin.jpg",
+        name: "Cyber Demon Ronin",
+        arch: "Diagonal Slash Sidebar",
+        accent: "#ff003c",
+        glow: "rgba(255,0,60,0.32)",
+        desc: "Valorant × Cyberpunk tactical combat UI. Aggressive diagonal crimson slash geometry, numbered blade menu (01–05), quick Vulkan/FPS boost switches, and sharp angled PLAY NOW trigger.",
+        specs: ["Cyber Red #FF003C", "Diagonal Skew Layout", "Quick Boost Switches", "Esports Stencil Type"]
+      },
+      {
+        id: "05",
+        file: "05-ender-dragon-cataclysm.jpg",
+        name: "Ender Cataclysm",
+        arch: "Crystal Shard HUD + Dock",
+        accent: "#d946ef",
+        glow: "rgba(217,70,239,0.3)",
+        desc: "Boss-fight End storm energy. Dark obsidian shard panels rimmed with glowing neon-magenta End crystals, top status crest, bottom 5-icon crystal dock, and crystalline LAUNCH core.",
+        specs: ["Dragon Magenta #D946EF", "End Amethyst #9333EA", "Bottom 5-Tab Dock", "Crystal Orb CTA"]
+      },
+      {
+        id: "06",
+        file: "06-venom-creeper-biohazard.jpg",
+        name: "Charged Venom Reactor",
+        arch: "Left Carbon Rail + Hex Core",
+        accent: "#39ff14",
+        glow: "rgba(57,255,20,0.28)",
+        desc: "High-voltage Charged Creeper × Razer cyber-hazard HUD. Matte carbon-fiber panels, radioactive neon-green lightning rims, left icon rail, and glowing green hexagonal LAUNCH core.",
+        specs: ["Venom Green #39FF14", "Carbon Hazard Texture", "Slim Left Rail", "Hex Reactor Button"]
+      },
+      {
+        id: "07",
+        file: "07-blood-moon-eclipse.jpg",
+        name: "Crimson Blood-Moon Eclipse",
+        arch: "Symmetrical Dark-Lord Crest",
+        accent: "#e11d48",
+        glow: "rgba(225,29,72,0.3)",
+        desc: "Gothic Nether cathedral & giant Blood Moon eclipse. Forged dark-steel symmetrical top blade bar, left LUCIFERMC card, right Vulkan/RAM armory card, and center-bottom PLAY altar.",
+        specs: ["Blood Ruby #E11D48", "Top Split Crest Nav", "Balanced Left/Right Cards", "Center-Bottom PLAY"]
+      },
+      {
+        id: "08",
+        file: "08-mecha-slayer-cockpit.jpg",
+        name: "DOOM Slayer Mecha Cockpit",
+        arch: "Wrap-Around Visor HUD",
+        accent: "#ff5500",
+        glow: "rgba(255,85,0,0.3)",
+        desc: "DOOM Eternal × ROG armored combat visor HUD. Titanium brackets with molten magma-orange laser telemetry, live LUCIFERMC radar panel, instance switcher, and giant hex LAUNCH core.",
+        specs: ["Magma Orange #FF5500", "Full Visor Frame HUD", "Server Radar Widget", "Hex Reactor CTA"]
+      },
+      {
+        id: "09",
+        file: "09-abyssal-phantom-stealth.jpg",
+        name: "Abyssal Phantom Predator",
+        arch: "Stealth Split Minimalist",
+        accent: "#ff002b",
+        glow: "rgba(255,0,43,0.3)",
+        desc: "Pitch-black Dark Aether stealth predator UI. Pure #030305 void, crimson wireframe terrain, glowing red-eyed shadow skin on right, bold kinetic specs & neon red LAUNCH trigger on left.",
+        specs: ["Pure Void #030305", "Laser Red #FF002B", "Zero-Clutter High FPS", "Top Bar + Split Stage"]
+      },
+      {
+        id: "10",
+        file: "10-nether-emperor-inferno.jpg",
+        name: "Nether Emperor Inferno",
+        arch: "Obsidian & Molten-Gold Wings",
+        accent: "#ffb800",
+        glow: "rgba(255,184,0,0.28)",
+        desc: "Mythic God-King of the Nether. Volcanic black glass framed in liquid molten-gold & hellfire-red bevels, top war-banner tabs, pointed side HUD wings, and monumental PLAY MINECRAFT war-button.",
+        specs: ["Molten Gold #FFB800", "Hellfire Red #FF1E1E", "Pointed Side Wings", "Center War-Banner CTA"]
+      }
+    ];
+
+    const grid = document.getElementById("galleryGrid");
+    const jumpLinks = document.getElementById("jumpLinks");
+    const selA = document.getElementById("selA");
+    const selB = document.getElementById("selB");
+
+    MOCKUPS.forEach((m, idx) => {
+      const a = document.createElement("a");
+      a.href = `#mockup-${m.id}`;
+      a.textContent = `#${m.id} ${m.name.split(" ")[0]}`;
+      jumpLinks.appendChild(a);
+
+      [selA, selB].forEach((sel) => {
+        const opt = document.createElement("option");
+        opt.value = idx;
+        opt.textContent = `#${m.id} — ${m.name}`;
+        sel.appendChild(opt);
+      });
+
+      const card = document.createElement("article");
+      card.className = "card";
+      card.id = `mockup-${m.id}`;
+      card.style.setProperty("--accent", m.accent);
+      card.style.setProperty("--glow", m.glow);
+      card.innerHTML = `
+        <div class="card-top">
+          <span class="num-pill">#${m.id}</span>
+          <h2 class="card-title">${m.name}</h2>
+          <span class="arch-tag">${m.arch}</span>
+        </div>
+        <div class="shot-wrap" data-idx="${idx}">
+          <img src="${m.file}" alt="Mockup ${m.id} — ${m.name}" loading="lazy" />
+          <span class="zoom-hint">⛶ Fullscreen</span>
+        </div>
+        <div class="card-body">
+          <p class="card-desc">${m.desc}</p>
+          <div class="spec-row">
+            ${m.specs.map((s) => `<span class="spec-chip">${s}</span>`).join("")}
+          </div>
+        </div>
+      `;
+      grid.appendChild(card);
+    });
+
+    selA.value = "0";
+    selB.value = "1";
+    function syncCompare() {
+      const a = MOCKUPS[Number(selA.value)];
+      const b = MOCKUPS[Number(selB.value)];
+      document.getElementById("imgA").src = a.file;
+      document.getElementById("capA").textContent = `#${a.id} — ${a.name} (${a.arch})`;
+      document.getElementById("imgB").src = b.file;
+      document.getElementById("capB").textContent = `#${b.id} — ${b.name} (${b.arch})`;
+    }
+    selA.addEventListener("change", syncCompare);
+    selB.addEventListener("change", syncCompare);
+    syncCompare();
+
+    const compareBtn = document.getElementById("compareBtn");
+    const compareDrawer = document.getElementById("compareDrawer");
+    compareBtn.addEventListener("click", () => {
+      compareDrawer.classList.toggle("open");
+      compareBtn.classList.toggle("active");
+    });
+
+    // Lightbox
+    let currentIdx = 0;
+    const lb = document.getElementById("lightbox");
+    const lbImg = document.getElementById("lbImg");
+    const lbTitle = document.getElementById("lbTitle");
+
+    function openLb(idx) {
+      currentIdx = (idx + MOCKUPS.length) % MOCKUPS.length;
+      const m = MOCKUPS[currentIdx];
+      lbImg.src = m.file;
+      lbTitle.textContent = `#${m.id} — ${m.name} · ${m.arch}`;
+      lb.classList.add("open");
+    }
+    grid.addEventListener("click", (e) => {
+      const wrap = e.target.closest(".shot-wrap");
+      if (wrap) openLb(Number(wrap.dataset.idx));
+    });
+    document.getElementById("prevBtn").addEventListener("click", () => openLb(currentIdx - 1));
+    document.getElementById("nextBtn").addEventListener("click", () => openLb(currentIdx + 1));
+    document.getElementById("closeBtn").addEventListener("click", () => lb.classList.remove("open"));
+    lb.addEventListener("click", (e) => { if (e.target === lb) lb.classList.remove("open"); });
+    document.addEventListener("keydown", (e) => {
+      if (!lb.classList.contains("open")) return;
+      if (e.key === "Escape") lb.classList.remove("open");
+      if (e.key === "ArrowLeft") openLb(currentIdx - 1);
+      if (e.key === "ArrowRight") openLb(currentIdx + 1);
+    });
+  </script>
+</body>
+</html>
