@@ -208,7 +208,7 @@
                     android:contentDescription="@null" />
             </LinearLayout>
 
-            <Button
+            <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/btn_creator_team"
                 android:layout_width="wrap_content"
                 android:layout_height="@dimen/_26sdp"
@@ -220,6 +220,7 @@
                 android:textStyle="bold"
                 android:textColor="@color/sd_magenta_bright"
                 android:background="@drawable/bg_lucifer_nav_item"
+                app:backgroundTint="@null"
                 android:contentDescription="Creator team credits" />
         </LinearLayout>
 

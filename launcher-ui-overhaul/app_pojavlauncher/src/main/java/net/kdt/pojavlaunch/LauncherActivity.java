@@ -162,16 +162,7 @@ public class LauncherActivity extends BaseActivity {
             return false;
         }
 
-        String selectedProfile = LauncherPreferences.DEFAULT_PREF.getString(
-                LauncherPreferences.PREF_KEY_CURRENT_PROFILE, "");
-        if (selectedProfile == null || selectedProfile.trim().isEmpty() ||
-                LauncherProfiles.mainProfileJson == null ||
-                LauncherProfiles.mainProfileJson.profiles == null ||
-                !LauncherProfiles.mainProfileJson.profiles.containsKey(selectedProfile)) {
-            Toast.makeText(this, R.string.please_select_version, Toast.LENGTH_LONG).show();
-            return false;
-        }
-        MinecraftProfile prof = LauncherProfiles.mainProfileJson.profiles.get(selectedProfile);
+        MinecraftProfile prof = LauncherProfiles.getCurrentProfile();
         if (prof == null || prof.lastVersionId == null || prof.lastVersionId.trim().isEmpty() ||
                 "Unknown".equalsIgnoreCase(prof.lastVersionId)) {
             Toast.makeText(this, R.string.please_select_version, Toast.LENGTH_LONG).show();
@@ -330,6 +321,11 @@ public class LauncherActivity extends BaseActivity {
         net.kdt.pojavlaunch.value.launcherprofiles.LauncherProfiles.loadAsync(() -> {
             if (isDestroyed() || isFinishing()) return;
             updateNavSkinIcon();
+            Fragment root = getVisibleFragment("ROOT");
+            if (root instanceof MainMenuFragment) {
+                // Keep the instance spinner in sync after any self-healed profile repair
+                ((MainMenuFragment) root).reloadSpinner();
+            }
         });
         refreshShadowDragonTelemetry();
         mInstallTracker.attach();

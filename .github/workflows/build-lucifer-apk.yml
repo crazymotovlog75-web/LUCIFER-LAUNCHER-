@@ -27,9 +27,10 @@ jobs:
           git clone --branch arena/581836b4-lucifer-launcher-v2 --depth 1 \
             https://github.com/crazymotovlog75-web/LUCIFER-LAUNCHER-v2.git engine
 
-      - name: Apply Shadow Monarch (#02) + Ender Dragon (#05) UI Overhaul
+      - name: Apply Shadow Monarch (#02) + Ender Dragon (#05) UI Overhaul & Startup Crash Fix
         run: |
           cp -rv overhaul/launcher-ui-overhaul/app_pojavlauncher/* engine/app_pojavlauncher/
+          sed -i 's/versionCode 10000000/versionCode 10000001/' engine/app_pojavlauncher/build.gradle
 
       - name: Set up JDK 21
         uses: actions/setup-java@v4
@@ -43,7 +44,7 @@ jobs:
           validate-wrappers: false
           gradle-version: '8.11'
 
-      - name: Run JVM Unit Tests
+      - name: Run JVM Unit Tests (Including Fresh-Install Profile Selection Fix)
         working-directory: engine
         run: |
           ./gradlew :app_pojavlauncher:testDebugUnitTest --no-daemon --stacktrace
@@ -68,6 +69,7 @@ jobs:
           fi
 
           cp "$RELEASE_APK" "$GITHUB_WORKSPACE/dist-apk/LUCIFER-LAUNCHER-SHADOW-DRAGON.apk"
+          cp "$RELEASE_APK" "$GITHUB_WORKSPACE/dist-apk/LUCIFER-LAUNCHER-SHADOW-DRAGON-v2.6-FIXED.apk"
           sha256sum "$GITHUB_WORKSPACE/dist-apk/LUCIFER-LAUNCHER-SHADOW-DRAGON.apk" > "$GITHUB_WORKSPACE/dist-apk/LUCIFER-LAUNCHER-SHADOW-DRAGON.sha256"
           md5sum "$GITHUB_WORKSPACE/dist-apk/LUCIFER-LAUNCHER-SHADOW-DRAGON.apk" > "$GITHUB_WORKSPACE/dist-apk/LUCIFER-LAUNCHER-SHADOW-DRAGON.md5"
 
@@ -97,11 +99,12 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         working-directory: dist-apk
         run: |
-          TAG="shadow-dragon-v2.5"
-          TITLE="LUCIFER LAUNCHER — Shadow Dragon Cataclysm Edition (#02 + #05)"
-          NOTES="### LUCIFER LAUNCHER — Shadow Monarch (#02) × Ender Dragon Cataclysm (#05) UI Overhaul
+          TAG="shadow-dragon-v2.6"
+          TITLE="LUCIFER LAUNCHER v2.6 — Shadow Dragon Cataclysm Edition (Startup Crash Fixed)"
+          NOTES="### LUCIFER LAUNCHER v2.6 — Shadow Monarch (#02) × Ender Dragon Cataclysm (#05) (Fixed Build)
 
-          - **Direct Installable Android APK:** \`LUCIFER-LAUNCHER-SHADOW-DRAGON.apk\`
+          - **Startup Crash Fixed:** Resolved fresh-install \`RuntimeException: The current profile stopped existing :(\` in \`LauncherProfiles.getCurrentProfile()\` / \`AsyncAssetManager.unpackSingleFiles()\`, synchronized concurrent profile initialization, and added automatic default-profile self-healing.
+          - **Direct Installable Android APK:** \`LUCIFER-LAUNCHER-SHADOW-DRAGON-v2.6-FIXED.apk\` (versionCode \`10000001\`, installs cleanly or upgrades over v2.5)
           - **Top 3-Module Tactical HUD:** Horned Shadow-Dragon Lucifer Crest + Live Vulkan / FPS / RAM Telemetry + Player Account Switcher
           - **Bottom Floating Crystal-Shard Dock:** Home · Profiles · Mods · Servers · Controls · Skins · Settings
           - **Home Sanctum:** \`LUCIFERMC — LIFESTEEL SMP\` (\`play.lucifermc.fun\`) Combat Card + Active Build Quick-Switch Strip + 3D Shadow-Flame Avatar Stage + Dragon-Plasma \`PLAY\` Reactor
@@ -109,19 +112,32 @@ jobs:
 
           if gh release view "$TAG" --repo "${GITHUB_REPOSITORY}" >/dev/null 2>&1; then
             gh release upload "$TAG" \
+              LUCIFER-LAUNCHER-SHADOW-DRAGON-v2.6-FIXED.apk \
               LUCIFER-LAUNCHER-SHADOW-DRAGON.apk \
               LUCIFER-LAUNCHER-SHADOW-DRAGON.sha256 \
               LUCIFER-LAUNCHER-SHADOW-DRAGON.md5 \
               --clobber \
               --repo "${GITHUB_REPOSITORY}"
-            gh release edit "$TAG" --title "$TITLE" --notes "$NOTES" --repo "${GITHUB_REPOSITORY}"
+            gh release edit "$TAG" --title "$TITLE" --notes "$NOTES" --repo "${GITHUB_REPOSITORY}" --latest
           else
             gh release create "$TAG" \
+              LUCIFER-LAUNCHER-SHADOW-DRAGON-v2.6-FIXED.apk \
               LUCIFER-LAUNCHER-SHADOW-DRAGON.apk \
               LUCIFER-LAUNCHER-SHADOW-DRAGON.sha256 \
               LUCIFER-LAUNCHER-SHADOW-DRAGON.md5 \
               --target "${GITHUB_SHA}" \
               --title "$TITLE" \
               --notes "$NOTES" \
+              --latest \
+              --repo "${GITHUB_REPOSITORY}"
+          fi
+
+          # Also overwrite shadow-dragon-v2.5 asset so any older link serves the fixed APK too
+          if gh release view "shadow-dragon-v2.5" --repo "${GITHUB_REPOSITORY}" >/dev/null 2>&1; then
+            gh release upload "shadow-dragon-v2.5" \
+              LUCIFER-LAUNCHER-SHADOW-DRAGON.apk \
+              LUCIFER-LAUNCHER-SHADOW-DRAGON.sha256 \
+              LUCIFER-LAUNCHER-SHADOW-DRAGON.md5 \
+              --clobber \
               --repo "${GITHUB_REPOSITORY}"
           fi
