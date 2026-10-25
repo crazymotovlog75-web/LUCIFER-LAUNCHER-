@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- PERFORMANCE: same two-pass optimisation as bg_lucifer_scene.xml — the extra
+     full-screen solid tint item was removed and its darkening folded into the gradient. -->
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:drawable="?attr/luciferWallpaper" />
+    <item>
+        <shape android:shape="rectangle">
+            <gradient
+                android:angle="270"
+                android:startColor="#3A000000"
+                android:centerColor="#28000000"
+                android:endColor="#8A000000" />
+        </shape>
+    </item>
+</layer-list>

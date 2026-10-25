@@ -1,4 +1,4 @@
-name: Lucifer Launcher — Shadow Dragon APK Build
+name: Lucifer Launcher — Performance APK Build
 
 on:
   push:
@@ -27,10 +27,10 @@ jobs:
           git clone --branch arena/581836b4-lucifer-launcher-v2 --depth 1 \
             https://github.com/crazymotovlog75-web/LUCIFER-LAUNCHER-v2.git engine
 
-      - name: Apply Abyssal Tide Wallpaper + Teal Palette + Startup Crash Fix
+      - name: Apply Abyssal Tide UI + Performance Mode + Startup Crash Fix
         run: |
           cp -rv overhaul/launcher-ui-overhaul/app_pojavlauncher/* engine/app_pojavlauncher/
-          sed -i 's/versionCode 10000000/versionCode 10000002/' engine/app_pojavlauncher/build.gradle
+          sed -i 's/versionCode 10000000/versionCode 10000002/; s/versionCode 10000002/versionCode 10000003/' engine/app_pojavlauncher/build.gradle
 
       - name: Set up JDK 21
         uses: actions/setup-java@v4
@@ -44,7 +44,7 @@ jobs:
           validate-wrappers: false
           gradle-version: '8.11'
 
-      - name: Run JVM Unit Tests (Including Fresh-Install Profile Selection Fix)
+      - name: Run JVM Unit Tests (Profile Selection + Performance Mode)
         working-directory: engine
         run: |
           ./gradlew :app_pojavlauncher:testDebugUnitTest --no-daemon --stacktrace
@@ -68,10 +68,10 @@ jobs:
             exit 1
           fi
 
-          cp "$RELEASE_APK" "$GITHUB_WORKSPACE/dist-apk/LUCIFER-LAUNCHER-ABYSSAL-TIDE.apk"
-          cp "$RELEASE_APK" "$GITHUB_WORKSPACE/dist-apk/LUCIFER-LAUNCHER-ABYSSAL-TIDE-v2.7.apk"
-          sha256sum "$GITHUB_WORKSPACE/dist-apk/LUCIFER-LAUNCHER-ABYSSAL-TIDE.apk" > "$GITHUB_WORKSPACE/dist-apk/LUCIFER-LAUNCHER-ABYSSAL-TIDE.sha256"
-          md5sum "$GITHUB_WORKSPACE/dist-apk/LUCIFER-LAUNCHER-ABYSSAL-TIDE.apk" > "$GITHUB_WORKSPACE/dist-apk/LUCIFER-LAUNCHER-ABYSSAL-TIDE.md5"
+          cp "$RELEASE_APK" "$GITHUB_WORKSPACE/dist-apk/LUCIFER-LAUNCHER-OVERCLOCK.apk"
+          cp "$RELEASE_APK" "$GITHUB_WORKSPACE/dist-apk/LUCIFER-LAUNCHER-OVERCLOCK-v2.8.apk"
+          sha256sum "$GITHUB_WORKSPACE/dist-apk/LUCIFER-LAUNCHER-OVERCLOCK.apk" > "$GITHUB_WORKSPACE/dist-apk/LUCIFER-LAUNCHER-OVERCLOCK.sha256"
+          md5sum "$GITHUB_WORKSPACE/dist-apk/LUCIFER-LAUNCHER-OVERCLOCK.apk" > "$GITHUB_WORKSPACE/dist-apk/LUCIFER-LAUNCHER-OVERCLOCK.md5"
 
           ls -lh "$GITHUB_WORKSPACE/dist-apk/"
 
@@ -89,7 +89,7 @@ jobs:
       - name: Upload APK Build Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: lucifer-launcher-shadow-dragon-apk
+          name: lucifer-launcher-overclock-apk
           path: dist-apk/*
           retention-days: 30
 
@@ -99,31 +99,34 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         working-directory: dist-apk
         run: |
-          TAG="abyssal-tide-v2.7"
-          TITLE="LUCIFER LAUNCHER v2.7 — Abyssal Tide (New Background + Teal Theme)"
-          NOTES="### LUCIFER LAUNCHER v2.7 — Abyssal Tide
+          TAG="overclock-v2.8"
+          TITLE="LUCIFER LAUNCHER v2.8 — Overclock (Stable 80+ FPS)"
+          NOTES="### LUCIFER LAUNCHER v2.8 — Overclock (Stable 80+ FPS)
 
-          - **New Launcher Background:** Deep-sea light-ray wallpaper (BG10 \`Abyss Teal\`) is now the bundled default behind the whole launcher.
-          - **Matching Teal Palette:** Accent shifted to luminous aqua \`#2FE9FF\`, surfaces/glass/backdrop retuned to deep teal-black so text and cards stay crisp on the new art. Magenta remains as the contrast highlight.
-          - **Direct Installable APK:** \`LUCIFER-LAUNCHER-ABYSSAL-TIDE-v2.7.apk\` (versionCode \`10000002\`, upgrades cleanly over v2.6)
-          - **Still Included:** Startup crash fix (self-healing profile selection), 3-module Shadow-Dragon HUD, crystal-shard dock, LUCIFERMC server card
-          - **Branch:** \`${GITHUB_REF_NAME}\` · **Commit:** \`${GITHUB_SHA}\`"
+          - **Performance Mode is ON by default:** the launcher seeds the engine's high-FPS profile on first start, so a fresh install already runs the fast pipeline instead of the default 40 FPS one.
+          - **Why the old build sat at ~40 FPS:** Minecraft rendered at full screen resolution with default video settings (render distance 12+, clouds, entity shadows, particles, AO, mipmaps, vsync, and vsync forced on by the engine on powerful devices). v2.8 caps the render surface at **30% per axis (~9% of the pixels)**, switches the instance to the reversible low-cost video preset (render distance 4, simulation distance 4, fast graphics, no clouds/shadows/particles/AO/mipmaps, entity distance 0.5, vsync off, maxFps 150) and disables the Zink / ForceVsync frame limiter.
+          - **Stable frame time, not just a higher peak:** sustained performance clocks, big-core CPU affinity, a heap floor (no more GC-thrash spikes) and injected JVM flags (-XX:+DisableExplicitGC, -XX:MaxGCPauseMillis=20) remove the '50 FPS, then 10 FPS' oscillation.
+          - **One tap to switch:** tap the FPS chip in the HUD (or long-press the telemetry plate) to toggle Performance Mode and restore the original video settings instantly.
+          - **Direct Installable APK:** LUCIFER-LAUNCHER-OVERCLOCK-v2.8.apk (versionCode 10000003, upgrades cleanly over v2.7)
+          - **Still Included:** BG10 Abyss Teal wallpaper + teal palette, startup crash fix (self-healing profile selection), 3-module Shadow-Dragon HUD, crystal-shard dock, LUCIFERMC server card
+          - **Note:** actual FPS depends on the device, the chosen renderer and thermals — the profile removes the launcher-side bottlenecks, then the game's own render loop decides the number.
+          - **Branch:** ${GITHUB_REF_NAME} · **Commit:** ${GITHUB_SHA}"
 
           if gh release view "$TAG" --repo "${GITHUB_REPOSITORY}" >/dev/null 2>&1; then
             gh release upload "$TAG" \
-              LUCIFER-LAUNCHER-ABYSSAL-TIDE-v2.7.apk \
-              LUCIFER-LAUNCHER-ABYSSAL-TIDE.apk \
-              LUCIFER-LAUNCHER-ABYSSAL-TIDE.sha256 \
-              LUCIFER-LAUNCHER-ABYSSAL-TIDE.md5 \
+              LUCIFER-LAUNCHER-OVERCLOCK-v2.8.apk \
+              LUCIFER-LAUNCHER-OVERCLOCK.apk \
+              LUCIFER-LAUNCHER-OVERCLOCK.sha256 \
+              LUCIFER-LAUNCHER-OVERCLOCK.md5 \
               --clobber \
               --repo "${GITHUB_REPOSITORY}"
             gh release edit "$TAG" --title "$TITLE" --notes "$NOTES" --repo "${GITHUB_REPOSITORY}" --latest
           else
             gh release create "$TAG" \
-              LUCIFER-LAUNCHER-ABYSSAL-TIDE-v2.7.apk \
-              LUCIFER-LAUNCHER-ABYSSAL-TIDE.apk \
-              LUCIFER-LAUNCHER-ABYSSAL-TIDE.sha256 \
-              LUCIFER-LAUNCHER-ABYSSAL-TIDE.md5 \
+              LUCIFER-LAUNCHER-OVERCLOCK-v2.8.apk \
+              LUCIFER-LAUNCHER-OVERCLOCK.apk \
+              LUCIFER-LAUNCHER-OVERCLOCK.sha256 \
+              LUCIFER-LAUNCHER-OVERCLOCK.md5 \
               --target "${GITHUB_SHA}" \
               --title "$TITLE" \
               --notes "$NOTES" \

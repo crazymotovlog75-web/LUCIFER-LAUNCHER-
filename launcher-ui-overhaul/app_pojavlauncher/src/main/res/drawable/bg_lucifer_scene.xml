@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    PERFORMANCE: the launcher backdrop used to be three stacked full-screen items
+    (wallpaper bitmap + solid tint + gradient). Every one of those is a full-screen
+    overdraw pass, which is exactly the kind of work that makes a static screen drop
+    frames on a mid-range GPU. The tint is now folded into the gradient so the whole
+    scene is a single bitmap plus a single gradient (2 passes instead of 3).
+-->
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:drawable="?attr/luciferWallpaper" />
+    <item>
+        <shape android:shape="rectangle">
+            <gradient
+                android:angle="270"
+                android:startColor="#2E000000"
+                android:centerColor="#24000000"
+                android:endColor="#52000000" />
+        </shape>
+    </item>
+</layer-list>

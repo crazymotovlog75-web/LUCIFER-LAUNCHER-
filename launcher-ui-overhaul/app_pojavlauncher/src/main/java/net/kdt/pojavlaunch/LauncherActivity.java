@@ -52,6 +52,7 @@ import net.kdt.pojavlaunch.modloaders.modpacks.api.ModLoader;
 import net.kdt.pojavlaunch.modloaders.modpacks.api.ModpackInstaller;
 import net.kdt.pojavlaunch.modloaders.modpacks.api.NotificationDownloadListener;
 import net.kdt.pojavlaunch.modloaders.modpacks.imagecache.IconCacheJanitor;
+import net.kdt.pojavlaunch.performance.PerformanceMode;
 import net.kdt.pojavlaunch.prefs.LauncherPreferences;
 import net.kdt.pojavlaunch.prefs.screens.LauncherPreferenceFragment;
 import net.kdt.pojavlaunch.progresskeeper.ProgressKeeper;
@@ -288,6 +289,8 @@ public class LauncherActivity extends BaseActivity {
                 }
         );
         getWindow().setBackgroundDrawable(null);
+        // Activate the high-FPS profile for anyone who has never chosen (once, ever).
+        PerformanceMode.ensureSeeded(this);
         bindViews();
         setupNavButtons();
         checkNotificationPermission();
@@ -550,6 +553,15 @@ public class LauncherActivity extends BaseActivity {
         View telemetryPlate = findViewById(R.id.hud_telemetry_plate);
         if (telemetryPlate != null) {
             telemetryPlate.setOnClickListener(mSettingButtonListener);
+            telemetryPlate.setOnLongClickListener(v -> {
+                togglePerformanceMode(v);
+                return true;
+            });
+        }
+        // Tap the FPS chip in the HUD to switch Performance Mode on/off.
+        View telemetryFps = findViewById(R.id.tv_hud_fps);
+        if (telemetryFps != null) {
+            telemetryFps.setOnClickListener(this::togglePerformanceMode);
         }
         refreshShadowDragonTelemetry();
         updateNavSkinIcon();
@@ -571,12 +583,27 @@ public class LauncherActivity extends BaseActivity {
             tvRenderer.setText(label);
         }
         if (tvFps != null) {
-            tvFps.setText(LauncherPreferences.PREF_HIGH_FPS_MODE ? "144 FPS BOOST" : "120 FPS READY");
+            boolean perfOn = PerformanceMode.isEnabled(this);
+            tvFps.setText(PerformanceMode.statusLabel(this));
+            tvFps.setTextColor(ContextCompat.getColor(this,
+                    perfOn ? R.color.sd_cyan : R.color.text_secondary_light));
         }
         if (tvRam != null && LauncherPreferences.PREF_RAM_ALLOCATION > 0) {
             tvRam.setText(String.format(java.util.Locale.US, "%.1f GB RAM",
                     LauncherPreferences.PREF_RAM_ALLOCATION / 1024.0));
         }
+    }
+
+    /**
+     * One-tap performance switch. Toggles the engine's high-FPS pipeline (render scale cap,
+     * low-cost video preset, vsync off, big-core affinity, sustained clocks) and reflects the
+     * state in the HUD telemetry chip immediately.
+     */
+    private void togglePerformanceMode(View source) {
+        boolean enabled = PerformanceMode.toggle(this);
+        refreshShadowDragonTelemetry();
+        Toast.makeText(this, PerformanceMode.summary(this, enabled), Toast.LENGTH_LONG).show();
+        if (source != null) source.announceForAccessibility(PerformanceMode.statusLabel(this));
     }
 
     private void openWallpaperStudio() {
