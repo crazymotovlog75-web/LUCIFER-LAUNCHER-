@@ -37,6 +37,8 @@ public final class PerformanceMode {
 
     /** Engine preference key holding the extra JVM arguments. */
     public static final String KEY_JAVA_ARGS = "javaArgs";
+    /** SurfaceView instead of TextureView: zero-copy, one less full-screen blit per frame. */
+    public static final String KEY_ALTERNATE_SURFACE = "alternate_surface";
 
 
     /** Bookkeeping only: makes the automatic first-run activation happen exactly once. */
@@ -94,7 +96,8 @@ public final class PerformanceMode {
             if (enabled) {
                 editor.putBoolean(KEY_SUSTAINED, true)
                         .putBoolean(KEY_BIG_CORES, true)
-                        .putBoolean(KEY_VSYNC_IN_ZINK, false);
+                        .putBoolean(KEY_VSYNC_IN_ZINK, false)
+                        .putBoolean(KEY_ALTERNATE_SURFACE, true);
             }
             editor.apply();
         }
@@ -107,9 +110,33 @@ public final class PerformanceMode {
             LauncherPreferences.PREF_SUSTAINED_PERFORMANCE = true;
             LauncherPreferences.PREF_BIG_CORE_AFFINITY = true;
             LauncherPreferences.PREF_VSYNC_IN_ZINK = false;
+            LauncherPreferences.PREF_USE_ALTERNATE_SURFACE = true;
             ensureHeapFloor(context, pref);
         }
         applyJvmArgs(pref, enabled);
+        refreshRenderScale(context);
+    }
+
+    /**
+     * Recomputes the render resolution for the current screen and mode.
+     *
+     * <p>The engine only derives this while loading preferences, but the game is launched from this
+     * same process right after a toggle, so the new value has to be picked up immediately.
+     */
+    public static void refreshRenderScale(Context context) {
+        if (context == null) return;
+        try {
+            SharedPreferences pref = prefs(context);
+            float savedScale = pref == null ? 1f
+                    : pref.getInt("resolutionRatio", 100) / 100f;
+            android.util.DisplayMetrics metrics = context.getResources().getDisplayMetrics();
+            LauncherPreferences.PREF_SCALE_FACTOR =
+                    net.kdt.pojavlaunch.utils.HighFpsRenderScale.resolveForSize(savedScale,
+                            LauncherPreferences.PREF_HIGH_FPS_MODE,
+                            metrics.widthPixels, metrics.heightPixels);
+        } catch (Throwable ignored) {
+            // A wrong scale would only cost sharpness; never crash over it.
+        }
     }
 
     /**

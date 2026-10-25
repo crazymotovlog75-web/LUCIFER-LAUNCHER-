@@ -52,6 +52,7 @@ import net.kdt.pojavlaunch.modloaders.modpacks.api.ModLoader;
 import net.kdt.pojavlaunch.modloaders.modpacks.api.ModpackInstaller;
 import net.kdt.pojavlaunch.modloaders.modpacks.api.NotificationDownloadListener;
 import net.kdt.pojavlaunch.modloaders.modpacks.imagecache.IconCacheJanitor;
+import net.kdt.pojavlaunch.compat.GameCompatBootstrap;
 import net.kdt.pojavlaunch.performance.PerformanceMode;
 import net.kdt.pojavlaunch.prefs.LauncherPreferences;
 import net.kdt.pojavlaunch.prefs.screens.LauncherPreferenceFragment;
@@ -194,6 +195,11 @@ public class LauncherActivity extends BaseActivity {
             }
         }
 
+        String compatMessage = GameCompatBootstrap.applyForVersion(this, normalizedVersionId);
+        if (compatMessage != null) {
+            Toast.makeText(this, compatMessage, Toast.LENGTH_LONG).show();
+        }
+
         new MinecraftDownloader().start(
                 this,
                 mcVersion,
@@ -291,6 +297,9 @@ public class LauncherActivity extends BaseActivity {
         getWindow().setBackgroundDrawable(null);
         // Activate the high-FPS profile for anyone who has never chosen (once, ever).
         PerformanceMode.ensureSeeded(this);
+        // 1.21.11+ needs the GL3 / SurfaceView profile; apply it to the currently selected instance
+        // as soon as the launcher opens so a black-screen instance fixes itself.
+        applyModernCompat(LauncherProfiles.getCurrentProfile());
         bindViews();
         setupNavButtons();
         checkNotificationPermission();
@@ -562,6 +571,11 @@ public class LauncherActivity extends BaseActivity {
         View telemetryFps = findViewById(R.id.tv_hud_fps);
         if (telemetryFps != null) {
             telemetryFps.setOnClickListener(this::togglePerformanceMode);
+            // Long-press walks the renderer ladder used to fix black screens on 1.21.11+.
+            telemetryFps.setOnLongClickListener(v -> {
+                cycleRendererFix(v);
+                return true;
+            });
         }
         refreshShadowDragonTelemetry();
         updateNavSkinIcon();
@@ -571,16 +585,18 @@ public class LauncherActivity extends BaseActivity {
         android.widget.TextView tvRenderer = findViewById(R.id.tv_hud_renderer);
         android.widget.TextView tvFps = findViewById(R.id.tv_hud_fps);
         android.widget.TextView tvRam = findViewById(R.id.tv_hud_ram);
-        if (tvRenderer != null && LauncherPreferences.DEFAULT_PREF != null) {
-            String raw = LauncherPreferences.DEFAULT_PREF.getString("renderer", "vulkan_zink");
-            String label = "VULKAN 1.3";
-            if (raw != null) {
-                String lower = raw.toLowerCase(java.util.Locale.ROOT);
-                if (lower.contains("zink") || lower.contains("vulkan")) label = "VULKAN ZINK";
-                else if (lower.contains("ltw") || lower.contains("gl4es") || lower.contains("holy")) label = "GL4ES TURBO";
-                else if (lower.contains("angle") || lower.contains("mg")) label = "MOBILEGLUES";
+        if (tvRenderer != null) {
+            // Report the renderer the instance actually launches with, not a generic label.
+            String renderer = null;
+            try {
+                net.kdt.pojavlaunch.value.launcherprofiles.MinecraftProfile profile =
+                        LauncherProfiles.getCurrentProfile();
+                renderer = profile == null ? null : profile.pojavRendererName;
+            } catch (Throwable ignored) {
+                // keep the generic label if the profile cannot be read
             }
-            tvRenderer.setText(label);
+            if (renderer == null) renderer = net.kdt.pojavlaunch.Tools.LOCAL_RENDERER;
+            tvRenderer.setText(GameCompatBootstrap.shortRendererName(renderer));
         }
         if (tvFps != null) {
             boolean perfOn = PerformanceMode.isEnabled(this);
@@ -592,6 +608,28 @@ public class LauncherActivity extends BaseActivity {
             tvRam.setText(String.format(java.util.Locale.US, "%.1f GB RAM",
                     LauncherPreferences.PREF_RAM_ALLOCATION / 1024.0));
         }
+    }
+
+    /** Applies the modern-GL profile for the selected instance, if it needs it. */
+    private void applyModernCompat(net.kdt.pojavlaunch.value.launcherprofiles.MinecraftProfile profile) {
+        if (profile == null) return;
+        try {
+            GameCompatBootstrap.applyForVersion(this, profile.lastVersionId);
+        } catch (Throwable ignored) {
+            // compatibility work must never block the launcher
+        }
+    }
+
+    /** Tries the next GL3 renderer on the black-screen fix ladder. */
+    private void cycleRendererFix(View source) {
+        String applied = GameCompatBootstrap.cycleStep(this);
+        refreshShadowDragonTelemetry();
+        String message = applied == null
+                ? "Koi GL3 renderer is device par available nahi mila."
+                : "Renderer set: " + GameCompatBootstrap.shortRendererName(applied)
+                        + " — ab PLAY dabao aur check karo.";
+        Toast.makeText(this, message, Toast.LENGTH_LONG).show();
+        if (source != null) source.announceForAccessibility(message);
     }
 
     /**
