@@ -70,110 +70,116 @@
 </head>
 <body>
 <div class="wrap">
-  <div class="kicker">LUCIFER LAUNCHER · UI exploration round</div>
-  <h1>10 UI variants — <span>same layout, new colours &amp; backgrounds</span></h1>
+  <div class="kicker">LUCIFER LAUNCHER · UI colour round · 2</div>
+  <h1>10 colour variants — <span>same screen, same skin, only the palette changes</span></h1>
   <p class="sub">
-    Layout bilkul wahi hai jo launcher me hai: top HUD plates (LUCIER brand + telemetry + profile), left me LUCIFERMC server card
-    aur ACTIVE BUILD card, center me character pedestal, right me 4 quick actions + crystal PLAY, aur neeche crystal dock.
-    Sirf <b>colour palette aur background scene</b> badla hai — 10 alag moods.
+    Ye <b>AI art nahi</b> hai. Ye har screen launcher ke apne resources se code se render hui hai —
+    <code>activity_pojav_launcher.xml</code> (header plates, nav items, account plate, dock),
+    <code>fragment_right_pane_home.xml</code> (server card, active-build card, hero stage, launch reactor),
+    <code>bg_sd_crystal_card.xml</code> / <code>bg_sd_hud_plate.xml</code> / <code>bg_sd_dock_shell.xml</code> ke exact shapes,
+    <code>ic_sd_reactor_idle.xml</code> ka crystal PLAY, aur <b>asli skin atlas</b> ko
+    <code>MinecraftSkinPreviewRenderer.renderFront()</code> ke same algorithm se compose kiya gaya hai.
+    Background wahi shipped <b>BG10 Abyss Teal</b> wallpaper hai. Sirf accent colour (cyan/magenta), panel tint aur
+    wallpaper ka colour grade badla hai.
   </p>
 
   <div class="grid">
     <div class="card">
-      <img src="u01-abyss-teal.jpg" alt="01 Abyss Teal launcher UI" />
+      <img src="v01-abyss-teal.png" alt="01 ABYSS TEAL — real launcher screen" />
       <div class="meta">
         <div class="num">01</div>
-        <div><b>ABYSS TEAL</b><span>Bioluminescent reef · cyan + violet</span></div>
-        <div class="swatches"><div class="sw" style="background:#00e5ff"></div><div class="sw" style="background:#22d3ee"></div><div class="sw" style="background:#1b1036"></div></div>
+        <div><b>ABYSS TEAL</b><span>current palette · BG10 wallpaper as-is</span></div>
+        <div class="swatches"><div class="sw" style="background:#2FE9FF"></div><div class="sw" style="background:#D946EF"></div><div class="sw" style="background:#061A22"></div></div>
       </div>
     </div>
 
     <div class="card">
-      <img src="u02-ember-forge.jpg" alt="02 Ember Forge launcher UI" />
+      <img src="v02-ember-forge.png" alt="02 EMBER FORGE — real launcher screen" />
       <div class="meta">
         <div class="num">02</div>
-        <div><b>EMBER FORGE</b><span>Lava cathedral · molten orange + basalt</span></div>
-        <div class="swatches"><div class="sw" style="background:#ff7a18"></div><div class="sw" style="background:#ffd166"></div><div class="sw" style="background:#1a1113"></div></div>
+        <div><b>EMBER FORGE</b><span>molten orange · warm wallpaper grade</span></div>
+        <div class="swatches"><div class="sw" style="background:#FF8A2E"></div><div class="sw" style="background:#FFC454"></div><div class="sw" style="background:#180C08"></div></div>
       </div>
     </div>
 
     <div class="card">
-      <img src="u03-frost-lich.jpg" alt="03 Frost Lich launcher UI" />
+      <img src="v03-frost-lich.png" alt="03 FROST LICH — real launcher screen" />
       <div class="meta">
         <div class="num">03</div>
-        <div><b>FROST LICH</b><span>Aurora glacier · ice cyan + steel silver</span></div>
-        <div class="swatches"><div class="sw" style="background:#7dd3fc"></div><div class="sw" style="background:#a5f3fc"></div><div class="sw" style="background:#0b1a2b"></div></div>
+        <div><b>FROST LICH</b><span>ice blue · cold wallpaper grade</span></div>
+        <div class="swatches"><div class="sw" style="background:#8CDCFF"></div><div class="sw" style="background:#BAD6FF"></div><div class="sw" style="background:#08121E"></div></div>
       </div>
     </div>
 
     <div class="card">
-      <img src="u04-blood-moon.jpg" alt="04 Blood Moon launcher UI" />
+      <img src="v04-blood-moon.png" alt="04 BLOOD MOON — real launcher screen" />
       <div class="meta">
         <div class="num">04</div>
-        <div><b>BLOOD MOON</b><span>Crimson eclipse · ruby red + obsidian</span></div>
-        <div class="swatches"><div class="sw" style="background:#ef4444"></div><div class="sw" style="background:#fb7185"></div><div class="sw" style="background:#1a0a10"></div></div>
+        <div><b>BLOOD MOON</b><span>crimson · red wallpaper grade</span></div>
+        <div class="swatches"><div class="sw" style="background:#FF565C"></div><div class="sw" style="background:#FF809C"></div><div class="sw" style="background:#18080C"></div></div>
       </div>
     </div>
 
     <div class="card">
-      <img src="u05-gilded-dusk.jpg" alt="05 Gilded Dusk launcher UI" />
+      <img src="v05-gilded-dusk.png" alt="05 GILDED DUSK — real launcher screen" />
       <div class="meta">
         <div class="num">05</div>
-        <div><b>GILDED DUSK</b><span>Bronze palace · champagne gold + espresso</span></div>
-        <div class="swatches"><div class="sw" style="background:#f5c76b"></div><div class="sw" style="background:#b07d3a"></div><div class="sw" style="background:#15100c"></div></div>
+        <div><b>GILDED DUSK</b><span>champagne gold · amber grade</span></div>
+        <div class="swatches"><div class="sw" style="background:#F8D07A"></div><div class="sw" style="background:#C48A42"></div><div class="sw" style="background:#16100A"></div></div>
       </div>
     </div>
 
     <div class="card">
-      <img src="u06-violet-void.jpg" alt="06 Violet Void launcher UI" />
+      <img src="v06-violet-void.png" alt="06 VIOLET VOID — real launcher screen" />
       <div class="meta">
         <div class="num">06</div>
-        <div><b>VIOLET VOID</b><span>Floating isles · purple + fuchsia</span></div>
-        <div class="swatches"><div class="sw" style="background:#a855f7"></div><div class="sw" style="background:#e879f9"></div><div class="sw" style="background:#150a2b"></div></div>
+        <div><b>VIOLET VOID</b><span>amethyst · violet grade</span></div>
+        <div class="swatches"><div class="sw" style="background:#B28CFF"></div><div class="sw" style="background:#E879F9"></div><div class="sw" style="background:#0E081C"></div></div>
       </div>
     </div>
 
     <div class="card">
-      <img src="u07-toxic-jade.jpg" alt="07 Toxic Jade launcher UI" />
+      <img src="v07-toxic-jade.png" alt="07 TOXIC JADE — real launcher screen" />
       <div class="meta">
         <div class="num">07</div>
-        <div><b>TOXIC JADE</b><span>Sculk cavern · emerald + lime</span></div>
-        <div class="swatches"><div class="sw" style="background:#22c55e"></div><div class="sw" style="background:#a3e635"></div><div class="sw" style="background:#08140f"></div></div>
+        <div><b>TOXIC JADE</b><span>emerald · green grade</span></div>
+        <div class="swatches"><div class="sw" style="background:#58E6A0"></div><div class="sw" style="background:#A3E635"></div><div class="sw" style="background:#08160F"></div></div>
       </div>
     </div>
 
     <div class="card">
-      <img src="u08-midnight-sapphire.jpg" alt="08 Midnight Sapphire launcher UI" />
+      <img src="v08-midnight-sapphire.png" alt="08 MIDNIGHT SAPPHIRE — real launcher screen" />
       <div class="meta">
         <div class="num">08</div>
-        <div><b>MIDNIGHT SAPPHIRE</b><span>Storm peaks · sapphire blue + navy</span></div>
-        <div class="swatches"><div class="sw" style="background:#3b82f6"></div><div class="sw" style="background:#60a5fa"></div><div class="sw" style="background:#0a1024"></div></div>
+        <div><b>MIDNIGHT SAPPHIRE</b><span>sapphire · deep blue grade</span></div>
+        <div class="swatches"><div class="sw" style="background:#60A5FA"></div><div class="sw" style="background:#818CF8"></div><div class="sw" style="background:#080E1E"></div></div>
       </div>
     </div>
 
     <div class="card">
-      <img src="u09-cyber-nocturne.jpg" alt="09 Cyber Nocturne launcher UI" />
+      <img src="v09-cyber-nocturne.png" alt="09 CYBER NOCTURNE — real launcher screen" />
       <div class="meta">
         <div class="num">09</div>
-        <div><b>CYBER NOCTURNE</b><span>Neon city · electric cyan + hot pink</span></div>
-        <div class="swatches"><div class="sw" style="background:#22d3ee"></div><div class="sw" style="background:#ff2fb3"></div><div class="sw" style="background:#0b0f1d"></div></div>
+        <div><b>CYBER NOCTURNE</b><span>neon cyan + hot pink</span></div>
+        <div class="swatches"><div class="sw" style="background:#26E7FF"></div><div class="sw" style="background:#FF3EB0"></div><div class="sw" style="background:#0A0C18"></div></div>
       </div>
     </div>
 
     <div class="card">
-      <img src="u10-bone-crypt.jpg" alt="10 Bone Crypt launcher UI" />
+      <img src="v10-bone-crypt.png" alt="10 BONE CRYPT — real launcher screen" />
       <div class="meta">
         <div class="num">10</div>
-        <div><b>BONE CRYPT</b><span>Necropolis · bone sand + slate</span></div>
-        <div class="swatches"><div class="sw" style="background:#e7d6b3"></div><div class="sw" style="background:#9aa6b2"></div><div class="sw" style="background:#141310"></div></div>
+        <div><b>BONE CRYPT</b><span>bone + slate · neutral grade</span></div>
+        <div class="swatches"><div class="sw" style="background:#ECE0C4"></div><div class="sw" style="background:#A0ACB8"></div><div class="sw" style="background:#161512"></div></div>
       </div>
     </div>
   </div>
 
   <div class="note">
-    <b>Kaise chunna hai:</b> bas number bolo (jaise “04” ya “06 aur 08”) — main us variant ka colour palette
-    <code>colors.xml</code>, HUD plates, dock, PLAY crystal aur background drawable me apply kar dunga, phir naya APK build karunga.
-    Agar ek se zyada pasand ho to top 2-3 bata do, main unko mix karke ek final de dunga.
+    <b>Kaise chunna hai:</b> bas number bolo (jaise “04” ya “06 aur 08”) — main us palette ko
+    <code>values/colors.xml</code> (<code>sd_cyan</code>, <code>sd_magenta</code>, <code>sd_void</code>, <code>sd_obsidian</code>),
+    card/hud/dock drawables aur wallpaper tint me apply karke naya APK build kar dunga.
+    Layout, skin, dock aur FPS pack bilkul same rahenge. Agar 2-3 pasand ho to bata do, main unka mix bana dunga.
   </div>
 </div>
 </body>
