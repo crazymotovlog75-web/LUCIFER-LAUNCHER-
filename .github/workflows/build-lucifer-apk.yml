@@ -30,7 +30,7 @@ jobs:
       - name: Apply Abyssal Tide UI + Performance Mode + Modern-GL Compat
         run: |
           cp -rv overhaul/launcher-ui-overhaul/app_pojavlauncher/* engine/app_pojavlauncher/
-          sed -i 's/versionCode 10000000/versionCode 10000002/; s/versionCode 10000002/versionCode 10000003/; s/versionCode 10000003/versionCode 10000004/' engine/app_pojavlauncher/build.gradle
+          sed -i 's/versionCode 10000000/versionCode 10000002/; s/versionCode 10000002/versionCode 10000003/; s/versionCode 10000003/versionCode 10000004/; s/versionCode 10000004/versionCode 10000005/' engine/app_pojavlauncher/build.gradle
 
       - name: Set up JDK 21
         uses: actions/setup-java@v4
@@ -68,10 +68,10 @@ jobs:
             exit 1
           fi
 
-          cp "$RELEASE_APK" "$GITHUB_WORKSPACE/dist-apk/LUCIFER-LAUNCHER-CLEARVISION.apk"
-          cp "$RELEASE_APK" "$GITHUB_WORKSPACE/dist-apk/LUCIFER-LAUNCHER-CLEARVISION-v2.9.apk"
-          sha256sum "$GITHUB_WORKSPACE/dist-apk/LUCIFER-LAUNCHER-CLEARVISION.apk" > "$GITHUB_WORKSPACE/dist-apk/LUCIFER-LAUNCHER-CLEARVISION.sha256"
-          md5sum "$GITHUB_WORKSPACE/dist-apk/LUCIFER-LAUNCHER-CLEARVISION.apk" > "$GITHUB_WORKSPACE/dist-apk/LUCIFER-LAUNCHER-CLEARVISION.md5"
+          cp "$RELEASE_APK" "$GITHUB_WORKSPACE/dist-apk/LUCIFER-LAUNCHER-RENDERERHUB.apk"
+          cp "$RELEASE_APK" "$GITHUB_WORKSPACE/dist-apk/LUCIFER-LAUNCHER-RENDERERHUB-v3.0.apk"
+          sha256sum "$GITHUB_WORKSPACE/dist-apk/LUCIFER-LAUNCHER-RENDERERHUB.apk" > "$GITHUB_WORKSPACE/dist-apk/LUCIFER-LAUNCHER-RENDERERHUB.sha256"
+          md5sum "$GITHUB_WORKSPACE/dist-apk/LUCIFER-LAUNCHER-RENDERERHUB.apk" > "$GITHUB_WORKSPACE/dist-apk/LUCIFER-LAUNCHER-RENDERERHUB.md5"
 
           ls -lh "$GITHUB_WORKSPACE/dist-apk/"
 
@@ -99,34 +99,34 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         working-directory: dist-apk
         run: |
-          TAG="clearvision-v2.9"
-          TITLE="LUCIFER LAUNCHER v2.9 — ClearVision (Sharp, Cutout-free, Black-Screen Fixed)"
-          NOTES="### LUCIFER LAUNCHER v2.9 — ClearVision
+          TAG="renderer-hub-v3.0"
+          TITLE="LUCIFER LAUNCHER v3.0 — Renderer Hub (One-tap Renderer Switching)"
+          NOTES="### LUCIFER LAUNCHER v3.0 — Renderer Hub
 
-          - **Blurry game fixed:** v2.8 capped the render surface at a flat 30% per axis (about 720x324 on a 1080p phone). v2.9 budgets by pixels instead: the surface now targets an **800 px short side** (~1778x800) and never drops below 45% of the screen, so the world and the text are sharp again.
-          - **Black screen on Minecraft 1.21.11+ fixed:** those versions moved to the modern GPU pipeline, which needs a **GL 3.3+ core context**. The engine was still answering with a GLES2 context (and could fall back to the GL2-only GL4ES wrapper), so the world rendered black while the game kept running. v2.9 detects 1.21.11+ instances and applies the modern profile automatically: GLES3 context, a GL3-capable renderer (Zink first, then MobileGlues / Krypton / ANGLE, whichever the device supports) and the zero-copy SurfaceView path.
-          - **If one renderer does not work on your driver:** long-press the FPS chip in the launcher HUD to walk to the next GL3 renderer, then press PLAY. The choice is saved to the instance.
-          - **Left side cut fixed:** the game window was being inset away from the camera cutout in landscape (black strip on the left edge). The window now uses \`LAYOUT_IN_DISPLAY_CUTOUT_MODE_ALWAYS\` and stops subtracting the notch from the display size, so the surface covers the whole screen.
-          - **More performance:** mipmaps are back on (sharper *and* cheaper on modern drivers), the game surface is zero-copy, and the Mesa/Turnip stack now runs with \`ZINK_DESCRIPTORS=lazy\`, \`mesa_glthread=true\`, \`MESA_NO_ERROR=1\`, a 512 MB shader cache and immediate WSI presentation. The display frame-rate hint no longer drops the panel into a lower refresh mode.
-          - **Direct Installable APK:** LUCIFER-LAUNCHER-CLEARVISION-v2.9.apk (versionCode 10000004, upgrades cleanly over v2.8)
-          - **Still Included:** BG10 Abyss Teal theme, crash-free profile startup, Shadow-Dragon HUD, crystal-shard dock, LUCIFERMC server card, one-tap Performance Mode
+          - **Renderer picker is now at the TOP of Video & Graphics:** open Settings → Video & Graphics and the first row is the renderer selector for the selected instance. It lists every renderer this device can actually run, with plain-language labels (Zink = OpenGL 4.6, MobileGlues = fast GL3, GL4ES = legacy GL2) and an "Engine default (auto)" option.
+          - **No more hidden page:** before this build the only renderer selector lived inside the per-instance editor. Now it is one tap from the launcher: tapping the renderer chip in the top HUD opens Video & Graphics directly at that picker.
+          - **It tells you which one you need:** for a 1.21.11+ instance the row warns in red when the current renderer cannot provide GL3 (that is what caused the black screen), and the summary confirms when the GL3 profile is active.
+          - **Change applies immediately:** picking a renderer writes it straight into the selected instance profile, no separate save step, and survives restarts.
+          - **Notch toggle fixed:** "Ignore notch" is now shown on every Android 9+ device (its default is ON, so it can also be switched back off) instead of being hidden when no cutout was detected.
+          - **Direct Installable APK:** LUCIFER-LAUNCHER-RENDERERHUB-v3.0.apk (versionCode 10000005, upgrades cleanly over v2.9)
+          - **Still Included:** sharp pixel-budgeted render scale, GL3 auto-profile for 1.21.11+, cutout-free fullscreen, Zink/Turnip tuning, BG10 Abyss Teal theme, crash-free profile startup
           - **Branch:** ${GITHUB_REF_NAME} · **Commit:** ${GITHUB_SHA}"
 
           if gh release view "$TAG" --repo "${GITHUB_REPOSITORY}" >/dev/null 2>&1; then
             gh release upload "$TAG" \
-              LUCIFER-LAUNCHER-CLEARVISION-v2.9.apk \
-              LUCIFER-LAUNCHER-CLEARVISION.apk \
-              LUCIFER-LAUNCHER-CLEARVISION.sha256 \
-              LUCIFER-LAUNCHER-CLEARVISION.md5 \
+              LUCIFER-LAUNCHER-RENDERERHUB-v3.0.apk \
+              LUCIFER-LAUNCHER-RENDERERHUB.apk \
+              LUCIFER-LAUNCHER-RENDERERHUB.sha256 \
+              LUCIFER-LAUNCHER-RENDERERHUB.md5 \
               --clobber \
               --repo "${GITHUB_REPOSITORY}"
             gh release edit "$TAG" --title "$TITLE" --notes "$NOTES" --repo "${GITHUB_REPOSITORY}" --latest
           else
             gh release create "$TAG" \
-              LUCIFER-LAUNCHER-CLEARVISION-v2.9.apk \
-              LUCIFER-LAUNCHER-CLEARVISION.apk \
-              LUCIFER-LAUNCHER-CLEARVISION.sha256 \
-              LUCIFER-LAUNCHER-CLEARVISION.md5 \
+              LUCIFER-LAUNCHER-RENDERERHUB-v3.0.apk \
+              LUCIFER-LAUNCHER-RENDERERHUB.apk \
+              LUCIFER-LAUNCHER-RENDERERHUB.sha256 \
+              LUCIFER-LAUNCHER-RENDERERHUB.md5 \
               --target "${GITHUB_SHA}" \
               --title "$TITLE" \
               --notes "$NOTES" \

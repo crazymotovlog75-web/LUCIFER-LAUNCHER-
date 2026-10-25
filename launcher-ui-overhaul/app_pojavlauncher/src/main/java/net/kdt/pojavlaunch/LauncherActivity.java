@@ -577,6 +577,12 @@ public class LauncherActivity extends BaseActivity {
                 return true;
             });
         }
+        // Tap the renderer chip to jump straight to the renderer picker at the top of
+        // Video & Graphics. It is the setting people look for first.
+        View hudRenderer = findViewById(R.id.tv_hud_renderer);
+        if (hudRenderer != null) {
+            hudRenderer.setOnClickListener(v -> openGraphicsSettings());
+        }
         refreshShadowDragonTelemetry();
         updateNavSkinIcon();
     }
@@ -608,6 +614,13 @@ public class LauncherActivity extends BaseActivity {
             tvRam.setText(String.format(java.util.Locale.US, "%.1f GB RAM",
                     LauncherPreferences.PREF_RAM_ALLOCATION / 1024.0));
         }
+    }
+
+    /** Opens Settings at the Video & Graphics page (renderer picker lives at the top there). */
+    private void openGraphicsSettings() {
+        android.os.Bundle args = new android.os.Bundle();
+        args.putString("category", "Video & Graphics");
+        Tools.swapFragment(this, LauncherPreferenceFragment.class, SETTING_FRAGMENT_TAG, args);
     }
 
     /** Applies the modern-GL profile for the selected instance, if it needs it. */
