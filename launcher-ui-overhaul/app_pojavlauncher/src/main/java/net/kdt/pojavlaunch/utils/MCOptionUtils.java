@@ -10,7 +10,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import net.kdt.pojavlaunch.Tools;
-import net.kdt.pojavlaunch.compat.VersionEra;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -134,47 +133,19 @@ public class MCOptionUtils {
     }
 
     /**
-     * Apply the reversible FPS options for the instance that is about to launch.
+     * Kept for the engine's launch hook, but deliberately does nothing.
      *
-     * <p>The era is resolved from the selected instance, so the exact keys the running Minecraft
-     * build understands are the ones written: {@code limitFramerate} for 1.12 and older,
-     * {@code maxFps} + {@code simulationDistance} for 1.17 and newer, and so on.
+     * <p>The forced FPS profile (render distance, simulation distance, graphics preset, effects) is
+     * gone: it overwrote the player's own video settings and, with the extra CPU/clock pins, ended up
+     * slower than the plain defaults. Only {@link #restorePerformancePreset()} still runs, so any
+     * instance that was touched by an older build gets its original options back.
      */
     public static void applyPerformancePreset() {
-        if (sOptionFolderPath == null) {
-            Log.w(Tools.APP_NAME, "Cannot apply performance options before loading an instance");
-            return;
-        }
-
-        VersionEra era = VersionEra.ofCurrentInstance();
+        if (sOptionFolderPath == null) return;
         File backupFile = new File(sOptionFolderPath, PERFORMANCE_BACKUP_FILE);
-
-        // An existing snapshot is merged instead of ignored: switching between instances of
-        // different eras must still restore every value that was ever touched.
-        PerformanceOptionsPreset.Snapshot existing = null;
-        if (backupFile.exists()) {
-            existing = readPerformanceSnapshot(backupFile);
-            if (existing == null) {
-                // Do not overwrite an unreadable backup: doing so would make restoring the user's
-                // original options impossible.
-                return;
-            }
-        }
-
-        PerformanceOptionsPreset.Snapshot snapshot =
-                PerformanceOptionsPreset.capture(existing, sParameterMap, era);
-        try {
-            Tools.write(backupFile.getAbsolutePath(), Tools.GLOBAL_GSON.toJson(snapshot));
-        } catch (IOException | RuntimeException e) {
-            Log.w(Tools.APP_NAME, "Could not back up instance options; performance profile was not applied", e);
-            return;
-        }
-
-        PerformanceOptionsPreset.apply(sParameterMap, era);
-        save();
-        Log.i(Tools.APP_NAME, "FPS profile applied for " + era.label()
-                + " (" + era.renderDistance + " chunks, "
-                + PerformanceOptionsPreset.forEra(era).size() + " options)");
+        if (!backupFile.isFile()) return;
+        // A backup exists, which means an older build modified this instance: undo it now.
+        restorePerformancePreset();
     }
 
     /** Restore the loaded instance's previous options after the high-FPS mode is disabled. */

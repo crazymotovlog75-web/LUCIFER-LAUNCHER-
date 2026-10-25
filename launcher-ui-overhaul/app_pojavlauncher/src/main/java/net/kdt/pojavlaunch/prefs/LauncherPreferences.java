@@ -124,19 +124,8 @@ public class LauncherPreferences {
         PREF_JAVA_SANDBOX = DEFAULT_PREF.getBoolean("java_sandbox", true);
         float savedResolutionScale = DEFAULT_PREF.getInt(
                 "resolutionRatio", findBestResolution(ctx, isDevicePowerful)) / 100f;
-        // The high-FPS profile budgets the render surface by pixels (target short side), so the
-        // game stays sharp instead of being crushed down to 30% of the screen. The saved slider
-        // value is left untouched and used again as soon as the profile is switched off.
-        DisplayMetrics realMetrics = new DisplayMetrics();
-        try {
-            ctx.getDisplay().getRealMetrics(realMetrics);
-        } catch (Throwable ignored) {
-            realMetrics = ctx.getResources().getDisplayMetrics();
-        }
-        net.kdt.pojavlaunch.compat.VersionEra era =
-                net.kdt.pojavlaunch.compat.VersionEra.ofCurrentInstance();
-        PREF_SCALE_FACTOR = net.kdt.pojavlaunch.compat.VersionTuning.renderScale(savedResolutionScale,
-                PREF_HIGH_FPS_MODE, realMetrics.widthPixels, realMetrics.heightPixels, era);
+        // The resolution slider is the only input: no automatic down-scaling is applied.
+        PREF_SCALE_FACTOR = savedResolutionScale;
         PREF_ENABLE_GYRO = DEFAULT_PREF.getBoolean("enableGyro", false);
         PREF_GYRO_SENSITIVITY = ((float)DEFAULT_PREF.getInt("gyroSensitivity", 100))/100f;
         PREF_GYRO_SAMPLE_RATE = DEFAULT_PREF.getInt("gyroSampleRate", 16);

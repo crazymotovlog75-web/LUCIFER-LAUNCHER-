@@ -295,11 +295,9 @@ public class LauncherActivity extends BaseActivity {
                 }
         );
         getWindow().setBackgroundDrawable(null);
-        // Activate the high-FPS profile for anyone who has never chosen (once, ever).
-        PerformanceMode.ensureSeeded(this);
-        // 1.21.11+ needs the GL3 / SurfaceView profile; apply it to the currently selected instance
-        // as soon as the launcher opens so a black-screen instance fixes itself.
-        applyModernCompat(LauncherProfiles.getCurrentProfile());
+        // v3.2 rollback: installs that had the forced FPS profile are moved back to the plain
+        // engine defaults once (render scale, video options, JVM flags, CPU/clock pins).
+        PerformanceMode.rollbackOnce(this);
         bindViews();
         setupNavButtons();
         checkNotificationPermission();
@@ -562,16 +560,11 @@ public class LauncherActivity extends BaseActivity {
         View telemetryPlate = findViewById(R.id.hud_telemetry_plate);
         if (telemetryPlate != null) {
             telemetryPlate.setOnClickListener(mSettingButtonListener);
-            telemetryPlate.setOnLongClickListener(v -> {
-                togglePerformanceMode(v);
-                return true;
-            });
         }
-        // Tap the FPS chip in the HUD to switch Performance Mode on/off.
         View telemetryFps = findViewById(R.id.tv_hud_fps);
         if (telemetryFps != null) {
-            telemetryFps.setOnClickListener(this::togglePerformanceMode);
             // Long-press walks the renderer ladder used to fix black screens on 1.21.11+.
+            // There is no performance toggle any more: the engine keeps its own defaults.
             telemetryFps.setOnLongClickListener(v -> {
                 cycleRendererFix(v);
                 return true;
@@ -605,10 +598,18 @@ public class LauncherActivity extends BaseActivity {
             tvRenderer.setText(GameCompatBootstrap.shortRendererName(renderer));
         }
         if (tvFps != null) {
-            boolean perfOn = PerformanceMode.isEnabled(this);
-            tvFps.setText(PerformanceMode.statusLabel(this));
-            tvFps.setTextColor(ContextCompat.getColor(this,
-                    perfOn ? R.color.sd_cyan : R.color.text_secondary_light));
+            // Shows the render profile the instance will use, nothing performance-related.
+            boolean modern = false;
+            try {
+                net.kdt.pojavlaunch.value.launcherprofiles.MinecraftProfile profile =
+                        LauncherProfiles.getCurrentProfile();
+                modern = profile != null
+                        && net.kdt.pojavlaunch.compat.MinecraftCompat.requiresModernGl(profile.lastVersionId);
+            } catch (Throwable ignored) {
+                // keep the neutral label
+            }
+            tvFps.setText(modern ? "GL3 READY" : "GAME READY");
+            tvFps.setTextColor(ContextCompat.getColor(this, R.color.text_secondary_light));
         }
         if (tvRam != null && LauncherPreferences.PREF_RAM_ALLOCATION > 0) {
             tvRam.setText(String.format(java.util.Locale.US, "%.1f GB RAM",
@@ -623,16 +624,6 @@ public class LauncherActivity extends BaseActivity {
         Tools.swapFragment(this, LauncherPreferenceFragment.class, SETTING_FRAGMENT_TAG, args);
     }
 
-    /** Applies the modern-GL profile for the selected instance, if it needs it. */
-    private void applyModernCompat(net.kdt.pojavlaunch.value.launcherprofiles.MinecraftProfile profile) {
-        if (profile == null) return;
-        try {
-            GameCompatBootstrap.applyForVersion(this, profile.lastVersionId);
-        } catch (Throwable ignored) {
-            // compatibility work must never block the launcher
-        }
-    }
-
     /** Tries the next GL3 renderer on the black-screen fix ladder. */
     private void cycleRendererFix(View source) {
         String applied = GameCompatBootstrap.cycleStep(this);
@@ -643,18 +634,6 @@ public class LauncherActivity extends BaseActivity {
                         + " — ab PLAY dabao aur check karo.";
         Toast.makeText(this, message, Toast.LENGTH_LONG).show();
         if (source != null) source.announceForAccessibility(message);
-    }
-
-    /**
-     * One-tap performance switch. Toggles the engine's high-FPS pipeline (render scale cap,
-     * low-cost video preset, vsync off, big-core affinity, sustained clocks) and reflects the
-     * state in the HUD telemetry chip immediately.
-     */
-    private void togglePerformanceMode(View source) {
-        boolean enabled = PerformanceMode.toggle(this);
-        refreshShadowDragonTelemetry();
-        Toast.makeText(this, PerformanceMode.summary(this, enabled), Toast.LENGTH_LONG).show();
-        if (source != null) source.announceForAccessibility(PerformanceMode.statusLabel(this));
     }
 
     private void openWallpaperStudio() {
