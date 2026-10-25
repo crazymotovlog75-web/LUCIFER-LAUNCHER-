@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>LUCIFER LAUNCHER — 10 New Dark Concepts</title>
+<style>
+  :root{
+    --bg:#08080a; --panel:#101014; --line:#22222a; --txt:#eceaf2; --muted:#8b8898;
+    --hot:#ff3b3b; --gold:#d9a441;
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0; background:
+      radial-gradient(1200px 600px at 50% -10%, #1a0b10 0%, transparent 60%),
+      radial-gradient(900px 500px at 100% 100%, #0d1420 0%, transparent 60%),
+      var(--bg);
+    color:var(--txt);
+    font-family:'Segoe UI',system-ui,-apple-system,sans-serif;
+    padding:28px 22px 70px;
+  }
+  header{max-width:1500px;margin:0 auto 26px}
+  .kicker{
+    display:inline-block;font-size:11px;letter-spacing:.22em;text-transform:uppercase;
+    color:var(--gold);border:1px solid #3a2c14;background:#1a1308;
+    padding:6px 12px;border-radius:999px;margin-bottom:14px;
+  }
+  h1{
+    margin:0 0 8px;font-size:clamp(26px,4vw,44px);line-height:1.05;
+    font-weight:800;letter-spacing:-.02em;
+  }
+  h1 span{
+    background:linear-gradient(92deg,#ff4747,#ff9b3d 55%,#ffd24a);
+    -webkit-background-clip:text;background-clip:text;color:transparent;
+  }
+  p.sub{margin:0;color:var(--muted);font-size:14.5px;max-width:760px;line-height:1.6}
+  .grid{
+    max-width:1500px;margin:30px auto 0;
+    display:grid;gap:20px;
+    grid-template-columns:repeat(auto-fill,minmax(430px,1fr));
+  }
+  .card{
+    background:var(--panel);border:1px solid var(--line);border-radius:16px;
+    overflow:hidden;transition:.22s ease;position:relative;
+  }
+  .card:hover{transform:translateY(-4px);border-color:#3a3a48;box-shadow:0 20px 50px -20px #000}
+  .thumb{
+    display:block;width:100%;aspect-ratio:16/9;object-fit:cover;cursor:zoom-in;
+    border-bottom:1px solid var(--line);
+  }
+  .meta{display:flex;align-items:center;gap:12px;padding:13px 15px}
+  .num{
+    flex:0 0 auto;width:34px;height:34px;border-radius:10px;
+    display:grid;place-items:center;font-weight:800;font-size:14px;
+    background:#1c1c22;border:1px solid #2c2c36;color:var(--gold);
+  }
+  .name{font-weight:700;font-size:15px;letter-spacing:.01em}
+  .tag{font-size:12px;color:var(--muted);margin-top:2px}
+  .pick{
+    margin-left:auto;flex:0 0 auto;font-size:12.5px;font-weight:700;
+    padding:9px 14px;border-radius:9px;border:1px solid #4a1f1f;
+    background:linear-gradient(180deg,#7e1c1c,#5d1212);color:#ffd9d9;
+    text-decoration:none;white-space:nowrap;
+  }
+  .pick:hover{background:linear-gradient(180deg,#a52424,#7a1717)}
+  .hint{
+    max-width:1500px;margin:34px auto 0;padding:18px 20px;border-radius:14px;
+    background:#101014;border:1px solid var(--line);color:var(--muted);
+    font-size:13.5px;line-height:1.75;
+  }
+  .hint b{color:var(--txt)}
+  .hint code{background:#1b1b21;padding:2px 7px;border-radius:5px;color:#ffb3b3}
+  /* lightbox */
+  .lb{
+    position:fixed;inset:0;background:#000000f2;display:none;place-items:center;
+    z-index:99;padding:24px;cursor:zoom-out;backdrop-filter:blur(6px);
+  }
+  .lb.on{display:grid}
+  .lb img{max-width:100%;max-height:100%;border-radius:10px;box-shadow:0 0 80px #000}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="kicker">Round 3 · New Set</div>
+  <h1>LUCIFER LAUNCHER — <span>10 New Dark Fantasy UI Concepts</span></h1>
+  <p class="sub">
+    Ye sab usi league ke hain jaisi <b>#02 Shadow Monarch + #05 Ender Cataclysm</b> thi — full keyart,
+    fierce vibe, complete launcher layout (left dock + PLAY + instance cards + server card + FPS/RAM HUD).
+    Har concept ka apna theme hai. Jo pasand aaye uska number bolo, usko main Android me as-is build kar dunga.
+  </p>
+</header>
+
+<div class="grid" id="grid"></div>
+
+<div class="hint">
+  <b>Kaise chuno:</b> image pe click karo → full size khul jayegi. Phir bas number bolo, jaise
+  <code>v03</code> ya <code>v03 + v07</code> (2 mix bhi kar sakte ho — jaisa pehle kiya tha).
+  Bolo to main usko sahi tarike se Android XML layout + drawables me convert karke naya APK bana dunga.
+</div>
+
+<div class="lb" id="lb"><img id="lbImg" alt="preview" /></div>
+
+<script>
+const items = [
+  ["v01","Bloodmoon Warlord","Crimson + black · horned knight · blood moon","v01-blood-moon-warlord.jpg"],
+  ["v02","Frost Lich Throne","Glacial cyan · crowned lich · ice shards","v02-frost-lich-throne.jpg"],
+  ["v03","Abyss Kraken","Teal + emerald · bioluminescent kraken · deep sea","v03-abyss-kraken.jpg"],
+  ["v04","Inferno Warden","Molten gold + lava · forge · burning helm","v04-inferno-warden.jpg"],
+  ["v05","Void Reaper","Violet + magenta · nebula · hooded reaper","v05-void-reaper.jpg"],
+  ["v06","Plague Lord","Acid green · swamp ruins · censer","v06-plague-lord.jpg"],
+  ["v07","Storm Titan","Electric blue · lightning · shattered peak","v07-storm-titan.jpg"],
+  ["v08","Bone Necropolis","Bone + witchfire · skull throne · crypt","v08-bone-necropolis.jpg"],
+  ["v09","Crimson Ronin","Ink black + red sun · samurai · sakura","v09-crimson-ronin.jpg"],
+  ["v10","Obsidian Serpent","Emerald + gold · rune pillars · dragon serpent","v10-obsidian-serpent.jpg"]
+];
+
+const grid = document.getElementById('grid');
+items.forEach(([id,name,tag,file],i)=>{
+  grid.insertAdjacentHTML('beforeend', `
+    <div class="card">
+      <img class="thumb" src="${file}" alt="${name}" data-src="${file}" loading="lazy" />
+      <div class="meta">
+        <div class="num">${String(i+1).padStart(2,'0')}</div>
+        <div>
+          <div class="name">${name}</div>
+          <div class="tag">${tag}</div>
+        </div>
+        <a class="pick" href="${file}" target="_blank" rel="noopener">Open full ↗</a>
+      </div>
+    </div>`);
+});
+
+const lb = document.getElementById('lb'), lbImg = document.getElementById('lbImg');
+grid.addEventListener('click', e=>{
+  const img = e.target.closest('.thumb');
+  if(!img) return;
+  lbImg.src = img.dataset.src;
+  lb.classList.add('on');
+});
+lb.addEventListener('click', ()=> lb.classList.remove('on'));
+document.addEventListener('keydown', e=>{ if(e.key==='Escape') lb.classList.remove('on'); });
+</script>
+</body>
+</html>

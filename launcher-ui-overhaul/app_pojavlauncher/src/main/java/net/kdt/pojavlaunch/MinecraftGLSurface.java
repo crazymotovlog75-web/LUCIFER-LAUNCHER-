@@ -133,6 +133,13 @@ public class MinecraftGLSurface extends View implements GrabListener, DirectGame
             if (kopper && !net.kdt.pojavlaunch.compat.GameCompatBootstrap.isModernInstance()) {
                 useSurfaceView = false;
             }
+            // 1.21+ FPS pack: SurfaceView is zero-copy (no full-screen blit per frame) and it is the
+            // only surface path that draws the 1.21.11+ pipeline without black geometry. The user's
+            // stored preference is left alone; this only affects the current session.
+            if (net.kdt.pojavlaunch.compat.FrameProfile.isActive(
+                    net.kdt.pojavlaunch.compat.FrameProfile.currentVersionId())) {
+                useSurfaceView = true;
+            }
         } catch (NullPointerException ignored){}
         if(useSurfaceView){
             SurfaceView surfaceView = new SurfaceView(getContext());

@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>LUCIFER LAUNCHER — 10 Launcher UI Concepts</title>
+<style>
+  :root{
+    --bg:#08090c; --panel:#101219; --line:#22252f; --txt:#eef0f6; --muted:#8b8fa2; --acc:#19C6B4;
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0; padding:26px 20px 72px;
+    background:radial-gradient(1100px 560px at 50% -10%,#0e2027 0%,transparent 60%),var(--bg);
+    color:var(--txt); font-family:'Segoe UI',system-ui,-apple-system,sans-serif;
+  }
+  header{max-width:1560px;margin:0 auto 26px}
+  .kicker{
+    display:inline-block;font-size:10.5px;letter-spacing:.22em;text-transform:uppercase;font-weight:600;
+    color:#7ef0e2;border:1px solid #17414a;background:#071a1e;padding:6px 14px;border-radius:999px;margin-bottom:14px;
+  }
+  h1{margin:0 0 10px;font-size:clamp(24px,3.5vw,40px);line-height:1.08;font-weight:800;letter-spacing:-.02em}
+  h1 span{background:linear-gradient(92deg,#19C6B4,#7C5CFF 55%,#F0A63C);-webkit-background-clip:text;background-clip:text;color:transparent}
+  p.sub{margin:0;color:var(--muted);font-size:14.5px;max-width:870px;line-height:1.68}
+  p.sub b{color:#d6dae6}
+
+  .grid{max-width:1560px;margin:30px auto 0;display:grid;gap:20px;grid-template-columns:repeat(auto-fill,minmax(460px,1fr))}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:15px;overflow:hidden;transition:.2s}
+  .card:hover{transform:translateY(-4px);border-color:#3a3f4e;box-shadow:0 22px 55px -22px #000}
+  .thumb{display:block;width:100%;aspect-ratio:16/9;object-fit:cover;cursor:zoom-in;border-bottom:1px solid var(--line)}
+  .meta{display:flex;align-items:center;gap:12px;padding:13px 15px}
+  .num{
+    flex:0 0 auto;width:40px;height:38px;border-radius:10px;display:grid;place-items:center;
+    font-weight:800;font-size:12px;letter-spacing:.03em;background:#171a24;border:1px solid #2b2f3c;color:#7ef0e2;
+  }
+  .name{font-weight:700;font-size:15px}
+  .tag{font-size:12px;color:var(--muted);margin-top:2px}
+  .pick{
+    margin-left:auto;font-size:12.5px;font-weight:700;padding:9px 14px;border-radius:8px;text-decoration:none;
+    white-space:nowrap;color:#04211e;background:linear-gradient(180deg,#5ff0dc,#19c6b4);border:1px solid #12a293;
+  }
+  .pick:hover{filter:brightness(1.08)}
+  .hint{
+    max-width:1560px;margin:34px auto 0;padding:18px 20px;border-radius:12px;
+    background:#0d0f16;border:1px solid var(--line);color:var(--muted);font-size:13.5px;line-height:1.8;
+  }
+  .hint b{color:var(--txt)}
+  .hint code{background:#1a1d27;padding:2px 8px;border-radius:5px;color:#7ef0e2}
+  .lb{position:fixed;inset:0;background:#000000f5;display:none;place-items:center;z-index:99;padding:18px;cursor:zoom-out}
+  .lb.on{display:grid}
+  .lb img{max-width:100%;max-height:100%;border-radius:8px;box-shadow:0 0 90px #000}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="kicker">Round 6 · Real Launcher App UI</div>
+  <h1>LUCIFER LAUNCHER — <span>10 Actual Launcher UI Concepts</span></h1>
+  <p class="sub">
+    Ye ab <b>asli launcher app ke screens</b> hain — sidebar, instance cards, version list, account panel,
+    RAM slider, PLAY button. Koi poster nahi, koi game art nahi, koi cartoon nahi. Bas clean usable interface.
+    Number bolo, usko exactly Android XML me bana dunga.
+  </p>
+</header>
+
+<div class="grid" id="grid"></div>
+
+<div class="hint">
+  <b>Selection:</b> image par click → fullscreen. Phir number bolo — jaise <code>L02</code> ya <code>L01 + L10</code>.
+  Selected design ka pura Android layout + drawables + theme bana ke naya APK release kar dunga.
+</div>
+
+<div class="lb" id="lb"><img id="lbImg" alt="preview" /></div>
+
+<script>
+const items = [
+  ["L01","Slate Teal","Sidebar + 4 instance cards grid · teal accent","l01-slate-teal.jpg"],
+  ["L02","Graphite Amber","Top tabs + version list + detail panel · amber PLAY","l02-graphite-amber.jpg"],
+  ["L03","Indigo Violet","Icon rail + hero card + account panel · violet","l03-indigo-violet.jpg"],
+  ["L04","Carbon Lime","Two-column dashboard + quick launch · lime","l04-carbon-lime.jpg"],
+  ["L05","Midnight Blue","Mobile bottom nav + greeting + featured card · sky blue","l05-midnight-blue.jpg"],
+  ["L06","Forest Cream","Pill tabs + instance list + detail · cream on green","l06-forest-cream.jpg"],
+  ["L07","Plum Pink","3-column instance grid + sticky panel · pink","l07-plum-pink.jpg"],
+  ["L08","Copper Library","Table-style library rows + notes card · copper","l08-copper-library.jpg"],
+  ["L09","Black Orange","Stat tiles + quick play + detail panel · orange","l09-black-orange.jpg"],
+  ["L10","Navy Mint","Featured card + system settings panel · mint","l10-navy-mint.jpg"]
+];
+const grid = document.getElementById('grid');
+items.forEach(([id,name,tag,file])=>{
+  grid.insertAdjacentHTML('beforeend', `
+    <div class="card">
+      <img class="thumb" src="${file}" data-src="${file}" alt="${name}" loading="lazy" />
+      <div class="meta">
+        <div class="num">${id}</div>
+        <div>
+          <div class="name">${name}</div>
+          <div class="tag">${tag}</div>
+        </div>
+        <a class="pick" href="${file}" target="_blank" rel="noopener">Open ↗</a>
+      </div>
+    </div>`);
+});
+const lb = document.getElementById('lb'), lbImg = document.getElementById('lbImg');
+grid.addEventListener('click', e=>{
+  const img = e.target.closest('.thumb'); if(!img) return;
+  lbImg.src = img.dataset.src; lb.classList.add('on');
+});
+lb.addEventListener('click', ()=> lb.classList.remove('on'));
+document.addEventListener('keydown', e=>{ if(e.key==='Escape') lb.classList.remove('on'); });
+</script>
+</body>
+</html>

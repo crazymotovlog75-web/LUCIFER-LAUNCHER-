@@ -37,6 +37,39 @@ public final class PerformanceOptionsPreset {
         return Collections.unmodifiableMap(VersionTuning.videoOptions(era));
     }
 
+    /** Map-driven variant: used by the 1.21+ FPS pack, whose table depends on current values. */
+    public static Snapshot capture(Snapshot existing, Map<String, String> current,
+                                   Map<String, String> preset) {
+        Snapshot snapshot = isValidSnapshot(existing) ? existing : new Snapshot();
+        ensureCollections(snapshot);
+        if (preset == null) return snapshot;
+        for (Map.Entry<String, String> entry : preset.entrySet()) {
+            String key = entry.getKey();
+            if (snapshot.originalValues.containsKey(key) || snapshot.originallyMissing.contains(key)) {
+                continue;
+            }
+            if (current.containsKey(key)) {
+                snapshot.originalValues.put(key, current.get(key));
+            } else {
+                snapshot.originallyMissing.add(key);
+            }
+        }
+        snapshot.appliedValues.putAll(preset);
+        return snapshot;
+    }
+
+    /** Map-driven variant of {@link #apply(Map, VersionEra)}. */
+    public static void apply(Map<String, String> currentOptions, Map<String, String> preset) {
+        if (currentOptions == null || preset == null) return;
+        currentOptions.putAll(preset);
+    }
+
+    private static void ensureCollections(Snapshot snapshot) {
+        if (snapshot.originalValues == null) snapshot.originalValues = new LinkedHashMap<>();
+        if (snapshot.originallyMissing == null) snapshot.originallyMissing = new LinkedHashSet<>();
+        if (snapshot.appliedValues == null) snapshot.appliedValues = new LinkedHashMap<>();
+    }
+
     /**
      * Records the instance's current values for everything this era will write, keeping anything a
      * previous run already captured (the era can change when the user switches instance).
@@ -46,26 +79,7 @@ public final class PerformanceOptionsPreset {
      * @param era       version era of the instance being launched
      */
     public static Snapshot capture(Snapshot existing, Map<String, String> current, VersionEra era) {
-        Snapshot snapshot = isValidSnapshot(existing) ? existing : new Snapshot();
-        if (snapshot.originalValues == null) snapshot.originalValues = new LinkedHashMap<>();
-        if (snapshot.originallyMissing == null) snapshot.originallyMissing = new LinkedHashSet<>();
-        if (snapshot.appliedValues == null) snapshot.appliedValues = new LinkedHashMap<>();
-
-        Map<String, String> options = forEra(era);
-        for (Map.Entry<String, String> entry : options.entrySet()) {
-            String key = entry.getKey();
-            if (snapshot.originalValues.containsKey(key) || snapshot.originallyMissing.contains(key)) {
-                continue; // already captured by an earlier apply
-            }
-            if (current.containsKey(key)) {
-                snapshot.originalValues.put(key, current.get(key));
-            } else {
-                snapshot.originallyMissing.add(key);
-            }
-        }
-        // Remember what we are about to write, for every era applied to this instance.
-        snapshot.appliedValues.putAll(options);
-        return snapshot;
+        return capture(existing, current, forEra(era));
     }
 
     /** Writes the era options into the instance map. */

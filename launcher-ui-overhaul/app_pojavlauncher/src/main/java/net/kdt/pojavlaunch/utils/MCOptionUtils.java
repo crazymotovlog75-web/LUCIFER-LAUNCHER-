@@ -19,6 +19,7 @@ import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.List;
 import java.util.Objects;
 
@@ -133,19 +134,46 @@ public class MCOptionUtils {
     }
 
     /**
-     * Kept for the engine's launch hook, but deliberately does nothing.
+     * Single entry point called when an instance launches.
      *
-     * <p>The forced FPS profile (render distance, simulation distance, graphics preset, effects) is
-     * gone: it overwrote the player's own video settings and, with the extra CPU/clock pins, ended up
-     * slower than the plain defaults. Only {@link #restorePerformancePreset()} still runs, so any
-     * instance that was touched by an older build gets its original options back.
+     * <p>For 1.21+ instances (and only while the user keeps the pack on) this applies the moderate
+     * FPS profile through the reversible snapshot. Every other instance — and every instance whose
+     * pack was switched off — is restored to the player's own values, which also cleans up after the
+     * older aggressive builds.
      */
     public static void applyPerformancePreset() {
         if (sOptionFolderPath == null) return;
+
+        if (!net.kdt.pojavlaunch.compat.FrameProfile.isActive(
+                net.kdt.pojavlaunch.compat.FrameProfile.currentVersionId())) {
+            restorePerformancePreset();
+            return;
+        }
+
         File backupFile = new File(sOptionFolderPath, PERFORMANCE_BACKUP_FILE);
-        if (!backupFile.isFile()) return;
-        // A backup exists, which means an older build modified this instance: undo it now.
-        restorePerformancePreset();
+        PerformanceOptionsPreset.Snapshot existing = null;
+        if (backupFile.exists()) {
+            existing = readPerformanceSnapshot(backupFile);
+            if (existing == null) {
+                Log.w(Tools.APP_NAME, "Performance backup unreadable; leaving the options alone");
+                return;
+            }
+        }
+
+        Map<String, String> preset =
+                net.kdt.pojavlaunch.compat.FrameProfile.optionsFor(sParameterMap);
+        PerformanceOptionsPreset.Snapshot snapshot =
+                PerformanceOptionsPreset.capture(existing, sParameterMap, preset);
+        try {
+            Tools.write(backupFile.getAbsolutePath(), Tools.GLOBAL_GSON.toJson(snapshot));
+        } catch (IOException | RuntimeException e) {
+            Log.w(Tools.APP_NAME, "Could not back up instance options; pack not applied", e);
+            return;
+        }
+
+        PerformanceOptionsPreset.apply(sParameterMap, preset);
+        save();
+        Log.i(Tools.APP_NAME, "1.21+ FPS pack applied: " + preset);
     }
 
     /** Restore the loaded instance's previous options after the high-FPS mode is disabled. */

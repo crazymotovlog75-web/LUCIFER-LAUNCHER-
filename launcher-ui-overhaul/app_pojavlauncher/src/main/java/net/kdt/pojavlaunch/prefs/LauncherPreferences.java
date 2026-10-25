@@ -287,6 +287,23 @@ public class LauncherPreferences {
             MGConfigJson.put("multidrawMode", 5); // Special handling for the (special mayhaps) compute emulation
         } else MGConfigJson.put("multidrawMode", Integer.parseInt(DEFAULT_PREF.getString("mg_renderer_setting_multidraw", "0")));
         MGConfigJson.put("maxGlslCacheSize", Integer.parseInt(DEFAULT_PREF.getString("mg_renderer_setting_glsl_cache_size", "128")));
+
+        // 1.21.11+ draws its terrain through multi-draw indirect, which Mali drivers only accept
+        // through MobileGlues' fully emulated path; the indirect path is what leaves black /
+        // transparent wedges across the ground. These values only affect the generated config file,
+        // so nothing in the user's own renderer settings changes.
+        if (net.kdt.pojavlaunch.compat.FrameProfile.needsWrapperCompat()) {
+            MGConfigJson.put("multidrawMode", 4);
+            MGConfigJson.put("enableNoError", 1);
+            int cacheSize;
+            try {
+                cacheSize = Integer.parseInt(
+                        DEFAULT_PREF.getString("mg_renderer_setting_glsl_cache_size", "128").trim());
+            } catch (NumberFormatException e) {
+                cacheSize = 128;
+            }
+            MGConfigJson.put("maxGlslCacheSize", Math.max(cacheSize, 512));
+        }
         File configFile = new File(Tools.DIR_DATA + "/MobileGlues", "config.json");
         FileUtils.ensureParentDirectory(configFile);
         try {

@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>LUCIFER LAUNCHER — Background Pack</title>
+<style>
+  :root{--bg:#050507;--panel:#0e0e12;--line:#20202a;--txt:#f0eff5;--muted:#8a8898;--acc:#ff4d4d}
+  *{box-sizing:border-box}
+  body{
+    margin:0;padding:26px 20px 70px;
+    background:radial-gradient(1100px 560px at 50% -8%,#1a0a0d 0%,transparent 60%),var(--bg);
+    color:var(--txt);font-family:'Segoe UI',system-ui,-apple-system,sans-serif;
+  }
+  header{max-width:1560px;margin:0 auto 24px}
+  .kicker{
+    display:inline-block;font-size:10.5px;letter-spacing:.22em;text-transform:uppercase;font-weight:600;
+    color:#ffb3b3;border:1px solid #46201f;background:#1a0808;padding:6px 14px;border-radius:999px;margin-bottom:14px;
+  }
+  h1{margin:0 0 10px;font-size:clamp(24px,3.4vw,39px);line-height:1.08;font-weight:800;letter-spacing:-.02em}
+  h1 span{background:linear-gradient(92deg,#ff5e5e,#ffb347 55%,#9d7bff);-webkit-background-clip:text;background-clip:text;color:transparent}
+  p.sub{margin:0;color:var(--muted);font-size:14.5px;max-width:860px;line-height:1.68}
+  p.sub b{color:#dcdae6}
+
+  .grid{max-width:1560px;margin:28px auto 0;display:grid;gap:18px;grid-template-columns:repeat(auto-fill,minmax(470px,1fr))}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:14px;overflow:hidden;transition:.2s}
+  .card:hover{transform:translateY(-4px);border-color:#3a3a4a;box-shadow:0 22px 55px -22px #000}
+  .thumb{display:block;width:100%;aspect-ratio:16/9;object-fit:cover;cursor:zoom-in;border-bottom:1px solid var(--line)}
+  .meta{display:flex;align-items:center;gap:12px;padding:12px 14px}
+  .num{
+    flex:0 0 auto;width:38px;height:36px;border-radius:9px;display:grid;place-items:center;
+    font-weight:800;font-size:11.5px;background:#17171f;border:1px solid #2a2a37;color:#ff9b9b;
+  }
+  .name{font-weight:700;font-size:14.5px}
+  .tag{font-size:11.5px;color:var(--muted);margin-top:2px}
+  .pick{
+    margin-left:auto;font-size:12px;font-weight:700;padding:8px 13px;border-radius:8px;text-decoration:none;
+    white-space:nowrap;color:#fff;background:linear-gradient(180deg,#e04343,#b52d2d);border:1px solid #8f2222;
+  }
+  .pick:hover{filter:brightness(1.1)}
+  .hint{
+    max-width:1560px;margin:32px auto 0;padding:18px 20px;border-radius:12px;
+    background:#0c0c11;border:1px solid var(--line);color:var(--muted);font-size:13.5px;line-height:1.8;
+  }
+  .hint b{color:var(--txt)}
+  .hint code{background:#1a1a24;padding:2px 8px;border-radius:5px;color:#ff9b9b}
+  .lb{position:fixed;inset:0;background:#000000f7;display:none;place-items:center;z-index:99;padding:16px;cursor:zoom-out}
+  .lb.on{display:grid}
+  .lb img{max-width:100%;max-height:100%;border-radius:6px;box-shadow:0 0 90px #000}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="kicker">Background Pack · 10 Options</div>
+  <h1>LUCIFER LAUNCHER — <span>Launcher Background Wallpapers</span></h1>
+  <p class="sub">
+    Ye sirf <b>backgrounds</b> hain (koi text, koi UI, koi icon nahi) — inhe launcher ke peeche lagaya jayega,
+    aur upar tumhare cards / buttons / HUD waise hi dikhenge. Sab <b>1920×1080</b>, dark aur low-brightness
+    rakhe hain taaki text clear padhe. <b>BG01</b> wahi current pure black hai (reference ke liye).
+  </p>
+</header>
+
+<div class="grid" id="grid"></div>
+
+<div class="hint">
+  <b style="color:#5ff0dc">✓ BG10 Abyss Teal launcher me lag gaya hai.</b><br>
+  Wallpaper <code>lucifer_wallpaper_01.webp</code> replace ho gaya, palette bhi teal me retune ho gaya
+  (accent <code>#2FE9FF</code>, deep-teal surfaces) — aur naya APK build + release ho gaya:
+  <br><br>
+  <a href="https://github.com/crazymotovlog75-web/LUCIFER-LAUNCHER-/releases/download/abyssal-tide-v2.7/LUCIFER-LAUNCHER-ABYSSAL-TIDE-v2.7.apk"
+     target="_blank" rel="noopener"
+     style="display:inline-block;padding:11px 20px;border-radius:9px;text-decoration:none;font-weight:800;color:#04211e;background:linear-gradient(180deg,#5ff0dc,#19c6b4);border:1px solid #12a293">
+     ⬇ Download APK v2.7 (Abyssal Tide)
+  </a>
+  &nbsp;
+  <a href="https://github.com/crazymotovlog75-web/LUCIFER-LAUNCHER-/releases/tag/abyssal-tide-v2.7"
+     target="_blank" rel="noopener"
+     style="display:inline-block;padding:11px 18px;border-radius:9px;text-decoration:none;font-weight:700;color:#dcdae6;background:#1a1a24;border:1px solid #33333f">
+     Release &amp; Checksums ↗
+  </a>
+  <br><br>
+  Baaki 9 backgrounds bhi yahin hain — future me koi aur chahiye to bas number bolo.
+</div>
+
+<div class="lb" id="lb"><img id="lbImg" alt="preview" /></div>
+
+<script>
+const items = [
+  ["BG01","Pure Black","Current launcher background — reference","bg01-pure-black.jpg"],
+  ["BG02","Crimson Nebula","Deep space nebula · red maroon + gold dust","bg02-crimson-nebula.jpg"],
+  ["BG03","Obsidian Dragon","Dragon silhouette on peaks · amber haze + embers","bg03-obsidian-dragon.jpg"],
+  ["BG04","Violet Void","Indigo nebula · magenta glow","bg04-violet-void.jpg"],
+  ["BG05","Ember Forge","Molten ember glow · drifting sparks","bg05-ember-forge.jpg"],
+  ["BG06","Frost Ridge","Night glacier · steel blue + milky way","bg06-frost-ridge.jpg"],
+  ["BG07","Shadow Forest","Dark woods · teal moonlight + spores","bg07-shadow-forest.jpg"],
+  ["BG08","Storm Veil","Storm clouds · electric blue lightning","bg08-storm-veil.jpg"],
+  ["BG09","Gilded Dusk","Mountain silhouettes · antique gold horizon","bg09-gilded-dusk.jpg"],
+  ["BG10","Abyss Teal ✓","APPLIED in v2.7 · underwater abyss · turquoise rays","bg10-abyss-teal.jpg"]
+];
+const grid = document.getElementById('grid');
+items.forEach(([id,name,tag,file])=>{
+  grid.insertAdjacentHTML('beforeend', `
+    <div class="card">
+      <img class="thumb" src="${file}" data-src="${file}" alt="${name}" loading="lazy" />
+      <div class="meta">
+        <div class="num">${id}</div>
+        <div>
+          <div class="name">${name}</div>
+          <div class="tag">${tag}</div>
+        </div>
+        <a class="pick" href="${file}" download>Download ⬇</a>
+      </div>
+    </div>`);
+});
+const lb = document.getElementById('lb'), lbImg = document.getElementById('lbImg');
+grid.addEventListener('click', e=>{
+  const img = e.target.closest('.thumb'); if(!img) return;
+  lbImg.src = img.dataset.src; lb.classList.add('on');
+});
+lb.addEventListener('click', ()=> lb.classList.remove('on'));
+document.addEventListener('keydown', e=>{ if(e.key==='Escape') lb.classList.remove('on'); });
+</script>
+</body>
+</html>

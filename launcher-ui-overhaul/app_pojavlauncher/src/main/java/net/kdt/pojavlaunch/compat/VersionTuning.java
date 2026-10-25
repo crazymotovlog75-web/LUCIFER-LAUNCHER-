@@ -134,6 +134,62 @@ public final class VersionTuning {
         return env;
     }
 
+    /** Highest render distance the 1.21+ pack will leave in place; it never raises yours. */
+    public static final int MODERN_MAX_RENDER_DISTANCE = 6;
+    /** Same for simulation distance: 1.17+ ticks chunks around the player. */
+    public static final int MODERN_MAX_SIMULATION_DISTANCE = 5;
+    /** Smallest mipmap level the pack accepts; mipmaps cut texture bandwidth. */
+    public static final int MODERN_MIN_MIPMAPS = 2;
+
+    /**
+     * The 1.21+ FPS pack: a deliberately <b>moderate</b> profile.
+     *
+     * <p>It only turns off things that cost frames without changing how the game looks from a
+     * normal viewing distance (clouds, entity shadows, fancy leaves, biome blend, view-bob nausea,
+     * portal distortion, excessive particles), and it only ever <b>lowers</b> render/simulation
+     * distance — a player who already runs 4 chunks keeps 4.
+     *
+     * <p>It deliberately does not touch resolution, CPU affinity, clock modes, heap or JVM flags:
+     * those are the knobs that made earlier builds slower than the defaults.
+     *
+     * @param current the instance's options as they are right now
+     */
+    public static Map<String, String> modernFpsOptions(Map<String, String> current) {
+        LinkedHashMap<String, String> options = new LinkedHashMap<>();
+        options.put("renderDistance", String.valueOf(
+                Math.min(readInt(current, "renderDistance", 12), MODERN_MAX_RENDER_DISTANCE)));
+        options.put("simulationDistance", String.valueOf(
+                Math.min(readInt(current, "simulationDistance", 12), MODERN_MAX_SIMULATION_DISTANCE)));
+        options.put("enableVsync", "false");
+        options.put("maxFps", UNLIMITED_FPS);
+        // Fast graphics: also drops fancy leaves + the expensive translucent pass.
+        options.put("graphicsMode", "0");
+        options.put("fancyGraphics", "false");
+        options.put("clouds", "false");
+        options.put("renderClouds", "false");
+        options.put("entityShadows", "false");
+        options.put("entityDistanceScaling", "0.5");
+        options.put("particles", "2");
+        options.put("biomeBlendRadius", "0");
+        options.put("ao", "false");
+        options.put("fovEffectScale", "0.0");
+        options.put("distortionEffectScale", "0.0");
+        options.put("mipmapLevels", String.valueOf(
+                Math.max(readInt(current, "mipmapLevels", 0), MODERN_MIN_MIPMAPS)));
+        return options;
+    }
+
+    private static int readInt(Map<String, String> map, String key, int fallback) {
+        if (map == null) return fallback;
+        String raw = map.get(key);
+        if (raw == null) return fallback;
+        try {
+            return Integer.parseInt(raw.trim());
+        } catch (NumberFormatException ignored) {
+            return fallback;
+        }
+    }
+
     /**
      * Render scale for one instance: the era decides the target short side and the quality floor.
      * Thin wrapper so callers do not need to know the era table.

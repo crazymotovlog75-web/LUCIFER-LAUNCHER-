@@ -121,4 +121,80 @@ public class VersionTuningTest {
         assertTrue(VersionTuning.driverEnv(VersionEra.LEGACY_LWJGL2).containsKey("LIBGL_NOBANNER"));
         assertEquals("0", VersionTuning.driverEnv(VersionEra.NEW_PIPELINE).get("vblank_mode"));
     }
+
+    // ---- 1.21+ FPS pack ----------------------------------------------------------------
+
+    @Test
+    public void modernPackNeverRaisesWhatThePlayerAlreadySet() {
+        Map<String, String> current = new java.util.HashMap<>();
+        current.put("renderDistance", "2");
+        current.put("simulationDistance", "3");
+
+        Map<String, String> options = VersionTuning.modernFpsOptions(current);
+
+        assertEquals("2", options.get("renderDistance"));
+        assertEquals("3", options.get("simulationDistance"));
+    }
+
+    @Test
+    public void modernPackClampsHugeDistancesAndFillsDefaults() {
+        Map<String, String> current = new java.util.HashMap<>();
+        current.put("renderDistance", "32");
+        current.put("simulationDistance", "32");
+
+        Map<String, String> clamped = VersionTuning.modernFpsOptions(current);
+        assertEquals(String.valueOf(VersionTuning.MODERN_MAX_RENDER_DISTANCE), clamped.get("renderDistance"));
+        assertEquals(String.valueOf(VersionTuning.MODERN_MAX_SIMULATION_DISTANCE), clamped.get("simulationDistance"));
+
+        Map<String, String> defaults = VersionTuning.modernFpsOptions(null);
+        assertEquals("6", defaults.get("renderDistance"));
+        assertEquals("5", defaults.get("simulationDistance"));
+    }
+
+    @Test
+    public void modernPackKeepsExistingMipmapsAndRaisesOnlyMissingOnes() {
+        Map<String, String> current = new java.util.HashMap<>();
+        current.put("mipmapLevels", "4");
+        assertEquals("4", VersionTuning.modernFpsOptions(current).get("mipmapLevels"));
+
+        current.put("mipmapLevels", "0");
+        assertEquals("2", VersionTuning.modernFpsOptions(current).get("mipmapLevels"));
+
+        current.remove("mipmapLevels");
+        assertEquals(String.valueOf(VersionTuning.MODERN_MIN_MIPMAPS),
+                VersionTuning.modernFpsOptions(current).get("mipmapLevels"));
+    }
+
+    @Test
+    public void modernPackTurnsOffTheExpensiveVisualsAndUncapsFps() {
+        Map<String, String> options = VersionTuning.modernFpsOptions(new java.util.HashMap<>());
+        assertEquals("0", options.get("graphicsMode"));
+        assertEquals("false", options.get("fancyGraphics"));
+        assertEquals("false", options.get("clouds"));
+        assertEquals("false", options.get("entityShadows"));
+        assertEquals("0", options.get("biomeBlendRadius"));
+        assertEquals("false", options.get("enableVsync"));
+        assertEquals(VersionTuning.UNLIMITED_FPS, options.get("maxFps"));
+    }
+
+    @Test
+    public void modernPackDoesNotTouchResolutionOrCpuKnobs() {
+        Map<String, String> options = VersionTuning.modernFpsOptions(new java.util.HashMap<>());
+        for (String forbidden : new String[]{"resolutionRatio", "guiScale", "javaArgs", "gcFlags",
+                "cpuAffinity", "sustainedPerformance", "renderScale"}) {
+            assertFalse("pack must not touch " + forbidden, options.containsKey(forbidden));
+        }
+    }
+
+    @Test
+    public void packTargetsOneTwentyOneAndNewerOnly() {
+        assertTrue(FrameProfile.isTargetVersion("1.21"));
+        assertTrue(FrameProfile.isTargetVersion("1.21.4"));
+        assertTrue(FrameProfile.isTargetVersion("1.21.10"));
+        assertTrue(FrameProfile.isTargetVersion("1.21.11"));
+        assertTrue(FrameProfile.isTargetVersion("1.22"));
+        assertFalse(FrameProfile.isTargetVersion("1.20.6"));
+        assertFalse(FrameProfile.isTargetVersion("1.16.5"));
+        assertFalse(FrameProfile.isTargetVersion(null));
+    }
 }

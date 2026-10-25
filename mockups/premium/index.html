@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>LUCIFER LAUNCHER — 10 Premium UI Concepts</title>
+<style>
+  :root{
+    --bg:#06060a; --panel:#121117; --line:#25232e; --txt:#efeef5; --muted:#8f8ca0;
+    --amber:#e8b45c; --steel:#a9bdd4; --crimson:#d9463f;
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0; padding:26px 20px 72px;
+    background:
+      radial-gradient(1200px 600px at 50% -12%, #16131c 0%, transparent 62%),
+      radial-gradient(900px 520px at 100% 108%, #101520 0%, transparent 62%),
+      var(--bg);
+    color:var(--txt);
+    font-family:'Segoe UI',system-ui,-apple-system,sans-serif;
+  }
+  header{max-width:1540px;margin:0 auto 26px}
+  .kicker{
+    display:inline-block;font-size:10.5px;letter-spacing:.24em;text-transform:uppercase;
+    color:var(--amber);border:1px solid #3d2f18;background:#181206;
+    padding:6px 14px;border-radius:999px;margin-bottom:14px;font-weight:600;
+  }
+  h1{margin:0 0 10px;font-size:clamp(24px,3.5vw,40px);line-height:1.08;font-weight:800;letter-spacing:-.02em}
+  h1 span{background:linear-gradient(92deg,#e8b45c,#f5e3c0 45%,#a9bdd4);-webkit-background-clip:text;background-clip:text;color:transparent}
+  p.sub{margin:0;color:var(--muted);font-size:14.5px;max-width:840px;line-height:1.65}
+  p.sub b{color:#d9d6e4}
+
+  .grid{
+    max-width:1540px;margin:30px auto 0;
+    display:grid;gap:20px;
+    grid-template-columns:repeat(auto-fill,minmax(450px,1fr));
+  }
+  .card{
+    background:var(--panel);border:1px solid var(--line);border-radius:14px;
+    overflow:hidden;transition:.22s ease;
+  }
+  .card:hover{transform:translateY(-4px);border-color:#413a4c;box-shadow:0 22px 55px -22px #000}
+  .thumb{display:block;width:100%;aspect-ratio:16/9;object-fit:cover;cursor:zoom-in;border-bottom:1px solid var(--line)}
+  .meta{display:flex;align-items:center;gap:12px;padding:13px 15px}
+  .num{
+    flex:0 0 auto;width:38px;height:38px;border-radius:9px;display:grid;place-items:center;
+    font-weight:800;font-size:12px;letter-spacing:.04em;
+    background:#1a1820;border:1px solid #322d3a;color:var(--amber);
+  }
+  .name{font-weight:700;font-size:15px}
+  .tag{font-size:12px;color:var(--muted);margin-top:2px}
+  .pick{
+    margin-left:auto;font-size:12.5px;font-weight:700;padding:9px 14px;border-radius:8px;
+    text-decoration:none;white-space:nowrap;color:#1a1206;
+    background:linear-gradient(180deg,#f0c578,#d9a34b);border:1px solid #b98a3c;
+  }
+  .pick:hover{filter:brightness(1.08)}
+  .hint{
+    max-width:1540px;margin:34px auto 0;padding:18px 20px;border-radius:12px;
+    background:#0f0e13;border:1px solid var(--line);color:var(--muted);font-size:13.5px;line-height:1.8;
+  }
+  .hint b{color:var(--txt)}
+  .hint code{background:#1b1922;padding:2px 8px;border-radius:5px;color:var(--amber)}
+  .lb{position:fixed;inset:0;background:#000000f5;display:none;place-items:center;z-index:99;padding:18px;cursor:zoom-out}
+  .lb.on{display:grid}
+  .lb img{max-width:100%;max-height:100%;border-radius:8px;box-shadow:0 0 90px #000}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="kicker">Round 5 · Premium Photoreal</div>
+  <h1>LUCIFER LAUNCHER — <span>10 Premium Photoreal UI Concepts</span></h1>
+  <p class="sub">
+    Ab bilkul <b>no cartoon, no blocky</b> — real cinematic backgrounds, premium glass panels, thin hairline borders,
+    refined typography, aur classy PLAY button. Ye wahi level hai jo AAA game launchers (Steam / Epic / Riot) use karte hain.
+    Number bolo, usko Android launcher me exactly build kar dunga.
+  </p>
+</header>
+
+<div class="grid" id="grid"></div>
+
+<div class="hint">
+  <b>Selection:</b> image par click → fullscreen. Phir number bolo — jaise <code>p03</code>, ya 2 mix <code>p02 + p03</code>.
+  Jo bologe usi ka Android XML layout + drawables + theme bana ke APK release kar dunga.
+</div>
+
+<div class="lb" id="lb"><img id="lbImg" alt="preview" /></div>
+
+<script>
+const items = [
+  ["P01","Cyberpunk Noir","Rain-soaked neon city · smoked glass · amber PLAY","p01-cyberpunk-noir.jpg"],
+  ["P02","Cathedral Veil","Gothic cathedral · armored knight · silver glass","p02-knight-cathedral.jpg"],
+  ["P03","Dragon's Crest","Golden-hour peaks · colossal dragon · gold panel","p03-dragon-peaks.jpg"],
+  ["P04","Orbital Station","Earth from orbit · aerospace HUD · frosted blue","p04-orbital-station.jpg"],
+  ["P05","Ronin's Shadow","Rainy Edo street · lantern light · crimson PLAY","p05-ronin-rain.jpg"],
+  ["P06","Desert Tomb","Torch-lit tomb · bronze glass · gold hairlines","p06-desert-tomb.jpg"],
+  ["P07","Steel Vanguard","Industrial mecha hangar · carbon panels · orange","p07-mecha-hangar.jpg"],
+  ["P08","Frozen Fjord","Blue-hour ice cliffs · crystalline glass · cyan","p08-frozen-fjord.jpg"],
+  ["P09","Wasteland Road","Dust convoy at sunset · gunmetal · burnt orange","p09-wasteland-convoy.jpg"],
+  ["P10","Royal Observatory","Brass telescope dome · walnut glass · polished brass","p10-royal-observatory.jpg"]
+];
+const grid = document.getElementById('grid');
+items.forEach(([id,name,tag,file])=>{
+  grid.insertAdjacentHTML('beforeend', `
+    <div class="card">
+      <img class="thumb" src="${file}" data-src="${file}" alt="${name}" loading="lazy" />
+      <div class="meta">
+        <div class="num">${id}</div>
+        <div>
+          <div class="name">${name}</div>
+          <div class="tag">${tag}</div>
+        </div>
+        <a class="pick" href="${file}" target="_blank" rel="noopener">Open ↗</a>
+      </div>
+    </div>`);
+});
+const lb = document.getElementById('lb'), lbImg = document.getElementById('lbImg');
+grid.addEventListener('click', e=>{
+  const img = e.target.closest('.thumb'); if(!img) return;
+  lbImg.src = img.dataset.src; lb.classList.add('on');
+});
+lb.addEventListener('click', ()=> lb.classList.remove('on'));
+document.addEventListener('keydown', e=>{ if(e.key==='Escape') lb.classList.remove('on'); });
+</script>
+</body>
+</html>

@@ -598,17 +598,8 @@ public class LauncherActivity extends BaseActivity {
             tvRenderer.setText(GameCompatBootstrap.shortRendererName(renderer));
         }
         if (tvFps != null) {
-            // Shows the render profile the instance will use, nothing performance-related.
-            boolean modern = false;
-            try {
-                net.kdt.pojavlaunch.value.launcherprofiles.MinecraftProfile profile =
-                        LauncherProfiles.getCurrentProfile();
-                modern = profile != null
-                        && net.kdt.pojavlaunch.compat.MinecraftCompat.requiresModernGl(profile.lastVersionId);
-            } catch (Throwable ignored) {
-                // keep the neutral label
-            }
-            tvFps.setText(modern ? "GL3 READY" : "GAME READY");
+            // Shows whether the 1.21+ FPS pack is in effect for the selected instance.
+            tvFps.setText(net.kdt.pojavlaunch.compat.FrameProfile.statusLabel());
             tvFps.setTextColor(ContextCompat.getColor(this, R.color.text_secondary_light));
         }
         if (tvRam != null && LauncherPreferences.PREF_RAM_ALLOCATION > 0) {
