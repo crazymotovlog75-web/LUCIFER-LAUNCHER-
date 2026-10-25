@@ -103,11 +103,11 @@ jobs:
           TITLE="LUCIFER LAUNCHER v3.0 — Renderer Hub (One-tap Renderer Switching)"
           NOTES="### LUCIFER LAUNCHER v3.0 — Renderer Hub
 
-          - **Renderer picker is now at the TOP of Video & Graphics:** open Settings → Video & Graphics and the first row is the renderer selector for the selected instance. It lists every renderer this device can actually run, with plain-language labels (Zink = OpenGL 4.6, MobileGlues = fast GL3, GL4ES = legacy GL2) and an "Engine default (auto)" option.
+          - **Renderer picker is now at the TOP of Video & Graphics:** open Settings → Video & Graphics and the first row is the renderer selector for the selected instance. It lists every renderer this device can actually run, with plain-language labels (Zink = OpenGL 4.6, MobileGlues = fast GL3, GL4ES = legacy GL2) and an 'Engine default (auto)' option.
           - **No more hidden page:** before this build the only renderer selector lived inside the per-instance editor. Now it is one tap from the launcher: tapping the renderer chip in the top HUD opens Video & Graphics directly at that picker.
           - **It tells you which one you need:** for a 1.21.11+ instance the row warns in red when the current renderer cannot provide GL3 (that is what caused the black screen), and the summary confirms when the GL3 profile is active.
           - **Change applies immediately:** picking a renderer writes it straight into the selected instance profile, no separate save step, and survives restarts.
-          - **Notch toggle fixed:** "Ignore notch" is now shown on every Android 9+ device (its default is ON, so it can also be switched back off) instead of being hidden when no cutout was detected.
+          - **Notch toggle fixed:** 'Ignore notch' is now shown on every Android 9+ device (its default is ON, so it can also be switched back off) instead of being hidden when no cutout was detected.
           - **Direct Installable APK:** LUCIFER-LAUNCHER-RENDERERHUB-v3.0.apk (versionCode 10000005, upgrades cleanly over v2.9)
           - **Still Included:** sharp pixel-budgeted render scale, GL3 auto-profile for 1.21.11+, cutout-free fullscreen, Zink/Turnip tuning, BG10 Abyss Teal theme, crash-free profile startup
           - **Branch:** ${GITHUB_REF_NAME} · **Commit:** ${GITHUB_SHA}"
