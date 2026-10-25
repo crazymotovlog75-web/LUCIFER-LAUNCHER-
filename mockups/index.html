@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>LUCIFER LAUNCHER v3.2 · Performance Rollback (Engine Defaults)</title>
+  <title>LUCIFER LAUNCHER v3.3 · 1.21+ FPS Pack</title>
   <style>
     :root {
       --void: #05040b;
@@ -437,21 +437,23 @@
       <div class="dl-left">
         <img src="shadow-dragon-emblem.png" alt="Lucifer Shadow Dragon Emblem" />
         <div>
-          <div class="kicker">v3.0 RENDERER HUB · RENDERER PICKER AT TOP OF VIDEO & GRAPHICS</div>
-          <h1 class="dl-title">LUCIFER LAUNCHER — <span>STOCK ENGINE ROLLBACK v3.2</span></h1>
+          <div class="kicker">v3.3 · 1.21+ FPS PACK · SURFACEVIEW + MODERATE VIDEO PROFILE + NEW-PIPELINE ARTIFACT FIX</div>
+          <h1 class="dl-title">LUCIFER LAUNCHER — <span>1.21+ FPS PACK v3.3</span></h1>
           <p class="dl-sub">
-            Rollback build: the forced performance profile (resolution cap, video-options preset, JVM GC flags, big-core pin, sustained clocks,
-            raised heap, driver env, renderer auto-switch) is removed — it made the game slower than stock on real devices. Your own options.txt
-            is restored on first launch. Kept, because they were bugs: the 1.21.11+ black-screen GL3 fix, the cutout strip fix, and the renderer
-            picker at the top of Video &amp; Graphics.
+            Scope: 1.21 and newer only — everything below 1.21 is untouched, and the v3.2 rollback stays in place (no resolution cap, no GC flags,
+            no CPU pins, no clock mode, no driver env, no renderer auto-switch). 1.21+ instances now render into a zero-copy SurfaceView instead of
+            TextureView (one full-screen GPU copy per frame removed) and get a moderate video profile — clouds, entity shadows, fancy leaves,
+            smooth lighting, biome blend and heavy particles off, render 6 / simulation 5, unlimited FPS, reversible from Settings. For 1.21.11+
+            the MobileGlues config forces the fully emulated multidraw path plus a 512 MB shader cache, which is what removes the black/transparent
+            wedges the new pipeline drew across the ground on Mali GPUs.
           </p>
         </div>
       </div>
       <div class="dl-actions">
-        <a class="btn-apk" href="https://github.com/crazymotovlog75-web/LUCIFER-LAUNCHER-/releases/download/rollback-stock-v3.2/LUCIFER-LAUNCHER-STOCK-v3.2.apk" target="_blank" rel="noopener">
-          ⬇ Download Rollback APK (v3.2)
+        <a class="btn-apk" href="https://github.com/crazymotovlog75-web/LUCIFER-LAUNCHER-/releases/download/modernfps-v3.3/LUCIFER-LAUNCHER-PACK-v3.3.apk" target="_blank" rel="noopener">
+          ⬇ Download 1.21+ FPS Pack APK (v3.3)
         </a>
-        <a class="btn-secondary" href="https://github.com/crazymotovlog75-web/LUCIFER-LAUNCHER-/releases/tag/rollback-stock-v3.2" target="_blank" rel="noopener">
+        <a class="btn-secondary" href="https://github.com/crazymotovlog75-web/LUCIFER-LAUNCHER-/releases/tag/modernfps-v3.3" target="_blank" rel="noopener">
           Release &amp; Checksums ↗
         </a>
       </div>
