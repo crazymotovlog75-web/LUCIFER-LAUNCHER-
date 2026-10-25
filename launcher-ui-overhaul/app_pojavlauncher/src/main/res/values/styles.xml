@@ -6,13 +6,13 @@
         <item name="windowNoTitle">true</item>
         <item name="windowActionBar">false</item>
         <item name="android:windowContentOverlay">@null</item>
-        <item name="android:statusBarColor">#080B12</item>
-        <item name="android:navigationBarColor">#080B12</item>
+        <item name="android:statusBarColor">#04121A</item>
+        <item name="android:navigationBarColor">#04121A</item>
         <item name="preferenceTheme">@style/PreferenceThemeOverlay.v14.Material</item>
         <item name="android:textSize">@dimen/_12ssp</item>
         <item name="colorBgApp">?attr/luciferBackdrop</item>
-        <item name="colorBgBottomBar">#0A101A</item>
-        <item name="colorBgStatusBar">#06090F</item>
+        <item name="colorBgBottomBar">#072029</item>
+        <item name="colorBgStatusBar">#030D12</item>
         <item name="colorDivider">#3C526273</item>
         <item name="themeAccent">?attr/luciferAccent</item>
         <item name="colorTextPrimary">@color/primary_text</item>

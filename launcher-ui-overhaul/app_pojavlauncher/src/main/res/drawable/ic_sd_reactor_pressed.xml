@@ -13,21 +13,21 @@
         android:pathData="M90,8 L108,22 L138,14 L142,40 L168,54 L156,78 L168,100 L142,112 L134,136 L108,128 L90,140 L72,128 L46,136 L38,112 L12,100 L24,78 L12,54 L38,40 L42,14 L72,22 Z" />
     <!-- Electric Shadow-Cyan Crystal Facets -->
     <path
-        android:fillColor="#FF00D4FF"
+        android:fillColor="#FF2FE9FF"
         android:pathData="M90,6 L104,22 L90,28 L76,22 Z M6,52 L32,42 L28,62 Z M174,52 L148,42 L152,62 Z M8,104 L30,92 L36,112 Z M172,104 L150,92 L144,112 Z" />
     <!-- Inner Forged Hexagonal Plasma Core -->
     <path
         android:fillColor="#F20A061C"
-        android:strokeColor="#FF00E5FF"
+        android:strokeColor="#FF45F3FF"
         android:strokeWidth="2.5"
         android:pathData="M44,32 L136,32 L158,75 L136,118 L44,118 L22,75 Z" />
     <!-- High-Voltage Inner Neon Glow -->
     <path
-        android:fillColor="#FF00B4D8"
+        android:fillColor="#FF14C9E2"
         android:strokeColor="#FFF0ABFC"
         android:strokeWidth="1.5"
         android:pathData="M50,39 L130,39 L149,75 L130,111 L50,111 L31,75 Z" />
     <path
-        android:fillColor="#5500D4FF"
+        android:fillColor="#552FE9FF"
         android:pathData="M50,39 L130,39 L142,64 L38,64 Z" />
 </vector>

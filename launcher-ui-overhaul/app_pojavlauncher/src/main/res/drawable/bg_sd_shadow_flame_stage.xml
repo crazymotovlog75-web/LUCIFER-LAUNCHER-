@@ -10,7 +10,7 @@
         android:pathData="M110,18 C158,38 195,95 190,162 C186,204 152,228 110,228 C68,228 34,204 30,162 C25,95 62,38 110,18 Z" />
     <!-- Left & Right Shadow Monarch electric blue flame tongues -->
     <path
-        android:fillColor="#5500D4FF"
+        android:fillColor="#552FE9FF"
         android:pathData="M36,208 C18,176 22,132 42,102 C35,134 46,154 58,136 C48,100 64,62 84,42 C74,78 82,106 94,94 C88,132 76,178 110,214 Z" />
     <path
         android:fillColor="#55D946EF"
@@ -25,7 +25,7 @@
     <!-- Obsidian & End-Crystal Pedestal Ring -->
     <path
         android:fillColor="#E6090618"
-        android:strokeColor="#FF00D4FF"
+        android:strokeColor="#FF2FE9FF"
         android:strokeWidth="2"
         android:pathData="M34,212 L68,198 L152,198 L186,212 L156,228 L64,228 Z" />
     <path
@@ -33,7 +33,7 @@
         android:pathData="M50,212 L76,203 L144,203 L170,212 L146,222 L74,222 Z" />
     <!-- Pedestal Crystal Spikes -->
     <path
-        android:fillColor="#FF00D4FF"
+        android:fillColor="#FF2FE9FF"
         android:pathData="M28,212 L38,192 L46,214 Z" />
     <path
         android:fillColor="#FFD946EF"

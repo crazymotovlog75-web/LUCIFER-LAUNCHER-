@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- 01. Shadow Monarch x Ender Dragon Cataclysm (#02 + #05 Fusion) -->
-    <color name="wallpaper_01_accent">#00D4FF</color>
+    <!-- 01. Abyssal Tide (deep-sea light rays) — teal scene, aqua accent -->
+    <color name="wallpaper_01_accent">#2FE9FF</color>
     <color name="wallpaper_01_secondary">#D946EF</color>
-    <color name="wallpaper_01_highlight">#E0F7FF</color>
-    <color name="wallpaper_01_surface">#06040E</color>
-    <color name="wallpaper_01_surface_high">#150B2B</color>
-    <color name="wallpaper_01_glass">#DC080616</color>
-    <color name="wallpaper_01_glass_high">#EC120B28</color>
-    <color name="wallpaper_01_border">#9900D4FF</color>
-    <color name="wallpaper_01_accent_dim">#4D00D4FF</color>
-    <color name="wallpaper_01_backdrop">#4204030A</color>
+    <color name="wallpaper_01_highlight">#DCFBFF</color>
+    <color name="wallpaper_01_surface">#04141A</color>
+    <color name="wallpaper_01_surface_high">#0B2C36</color>
+    <color name="wallpaper_01_glass">#DC04141A</color>
+    <color name="wallpaper_01_glass_high">#EC0A2630</color>
+    <color name="wallpaper_01_border">#992FE9FF</color>
+    <color name="wallpaper_01_accent_dim">#4D2FE9FF</color>
+    <color name="wallpaper_01_backdrop">#42030D11</color>
 
     <!-- 02. Snowy Spruce Village -->
     <color name="wallpaper_02_accent">#72C8FF</color>

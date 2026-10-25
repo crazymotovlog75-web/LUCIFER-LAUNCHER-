@@ -6,11 +6,11 @@
     <color name="control_button_pressed_color">#6639FF14</color>
 
     <!-- Main Button -->
-    <color name="minebutton_color">#00D4FF</color>
-    <color name="cu_bg_app">#05040B</color>
-    <color name="cu_bg_status_bar">#040309</color>
-    <color name="cu_bg_bottom_bar">#090616</color>
-    <color name="cu_divider">#1A7BE7E4</color>
+    <color name="minebutton_color">#2FE9FF</color>
+    <color name="cu_bg_app">#04121A</color>
+    <color name="cu_bg_status_bar">#030D12</color>
+    <color name="cu_bg_bottom_bar">#061B23</color>
+    <color name="cu_divider">#1A2FE9FF</color>
 
     <!-- BACKGROUND SYSTEM (DARK THEME) -->
     <!-- Dark layered surfaces -->
@@ -73,25 +73,25 @@
 
     <!-- ── LUCIFER LAUNCHER Colors (Dark Gaming Theme) ── -->
     <!-- Base backgrounds -->
-    <color name="bg_primary">#05040B</color>
-    <color name="bg_launcher_dark">#05040B</color>
-    <color name="bg_sidebar">#080513</color>
-    <color name="bg_header">#0C081D</color>
-    <color name="bg_bottom_bar">#0A0718</color>
-    <color name="bg_card">#0E0920</color>
-    <color name="bg_card_dark">#150D2E</color>
+    <color name="bg_primary">#04121A</color>
+    <color name="bg_launcher_dark">#04121A</color>
+    <color name="bg_sidebar">#05171F</color>
+    <color name="bg_header">#072029</color>
+    <color name="bg_bottom_bar">#061C25</color>
+    <color name="bg_card">#072029</color>
+    <color name="bg_card_dark">#0B2C36</color>
     <color name="bg_elevated">#202D3C</color>
 
     <!-- Accent colors (Neon Green + Purple) -->
-    <color name="accent_primary">#00D4FF</color>
-    <color name="accent_light">#7CEEFF</color>
+    <color name="accent_primary">#2FE9FF</color>
+    <color name="accent_light">#A8F5FF</color>
     <color name="accent_purple">#D946EF</color>
     <color name="accent_purple_deep">#7C3AED</color>
-    <color name="accent_bg_subtle">#18202E</color>
-    <color name="accent_border">#00D4FF</color>
+    <color name="accent_bg_subtle">#0E2E38</color>
+    <color name="accent_border">#2FE9FF</color>
 
     <!-- Legacy/Alias colors (kept for back-compat) -->
-    <color name="accent_green">#39FF14</color>
+    <color name="accent_green">#2FE9FF</color>
     <color name="accent_green_light">#00FF88</color>
     <color name="accent_green_bg">#1A1C2C</color>
     <color name="accent_green_border">#39FF14</color>
@@ -110,35 +110,35 @@
     <color name="divider_color">#333333</color>
 
     <!-- Lucifer liquid-crystal palette -->
-    <color name="lucifer_bg">#05040B</color>
-    <color name="lucifer_surface">#0C081C</color>
-    <color name="lucifer_surface_high">#160E30</color>
-    <color name="lucifer_glass_edge">#8800D4FF</color>
-    <color name="lucifer_cyan">#00D4FF</color>
+    <color name="lucifer_bg">#04121A</color>
+    <color name="lucifer_surface">#061B23</color>
+    <color name="lucifer_surface_high">#0B2C36</color>
+    <color name="lucifer_glass_edge">#882FE9FF</color>
+    <color name="lucifer_cyan">#2FE9FF</color>
     <color name="lucifer_violet">#D946EF</color>
 
     <!-- Legacy PLAY tokens are retained for compatibility with existing screens -->
-    <color name="play_btn_bg">#00D4FF</color>
+    <color name="play_btn_bg">#2FE9FF</color>
     <color name="play_btn_text">#071017</color>
 
     <!-- Settings UI Colors -->
-    <color name="settings_bg">#05040B</color>
-    <color name="card_bg">#0C081C</color>
-    <color name="card_bg_pressed">#1C1138</color>
-    <color name="neon_green">#00D4FF</color>
-    <color name="neon_green_dim">#4400D4FF</color>
+    <color name="settings_bg">#04121A</color>
+    <color name="card_bg">#061B23</color>
+    <color name="card_bg_pressed">#0E3540</color>
+    <color name="neon_green">#2FE9FF</color>
+    <color name="neon_green_dim">#442FE9FF</color>
     <color name="stroke_neon">#80D946EF</color>
     <color name="like_active">#FF668B</color>
     <color name="installed_color">#56D6A2</color>
 
-    <color name="bg_nav_item_active">#6600D4FF</color>
+    <color name="bg_nav_item_active">#662FE9FF</color>
 
     <!-- Shadow Monarch (#02) + Ender Dragon Cataclysm (#05) Fused Tokens -->
-    <color name="sd_void">#05040B</color>
-    <color name="sd_obsidian">#090616</color>
-    <color name="sd_obsidian_high">#140C2C</color>
-    <color name="sd_cyan">#00D4FF</color>
-    <color name="sd_cyan_bright">#67E8F9</color>
+    <color name="sd_void">#04121A</color>
+    <color name="sd_obsidian">#061B23</color>
+    <color name="sd_obsidian_high">#0B2C36</color>
+    <color name="sd_cyan">#2FE9FF</color>
+    <color name="sd_cyan_bright">#A8F5FF</color>
     <color name="sd_violet">#8B5CF6</color>
     <color name="sd_magenta">#D946EF</color>
     <color name="sd_magenta_bright">#F0ABFC</color>
