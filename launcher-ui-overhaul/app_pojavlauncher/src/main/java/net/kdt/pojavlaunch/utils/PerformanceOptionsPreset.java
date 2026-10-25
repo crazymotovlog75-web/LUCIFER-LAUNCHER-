@@ -7,86 +7,104 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 
-/** Reversible, per-instance Minecraft video settings for the opt-in high-FPS profile. */
-public final class PerformanceOptionsPreset {
-    private static final Map<String, String> PRESET;
+import net.kdt.pojavlaunch.compat.VersionEra;
+import net.kdt.pojavlaunch.compat.VersionTuning;
 
-    static {
-        LinkedHashMap<String, String> options = new LinkedHashMap<>();
-        options.put("renderDistance", "4");
-        options.put("simulationDistance", "4");
-        options.put("enableVsync", "false");
-        options.put("maxFps", "150");
-        options.put("graphicsMode", "0");
-        options.put("fancyGraphics", "false");
-        options.put("clouds", "false");
-        options.put("renderClouds", "false");
-        options.put("entityShadows", "false");
-        options.put("entityDistanceScaling", "0.5");
-        // Mipmaps are close to free on modern drivers and they stop the resolution-scaled frame from
-        // shimmering, so they stay on instead of being disabled for a couple of percent.
-        options.put("mipmapLevels", "4");
-        options.put("particles", "2");
-        options.put("biomeBlendRadius", "0");
-        // 0 is the off value in older versions and is also parsed as false by newer ones.
-        options.put("ao", "0");
-        options.put("fovEffectScale", "0.0");
-        options.put("distortionEffectScale", "0.0");
-        PRESET = Collections.unmodifiableMap(options);
-    }
+/**
+ * Reversible, per-era Minecraft video settings for the FPS profile.
+ *
+ * <p>The keys are produced by {@link VersionTuning#videoOptions(VersionEra)}, so a 1.8.9 instance
+ * gets {@code limitFramerate} and a 1.21.11 instance gets {@code maxFps} + {@code simulationDistance}.
+ * Everything written is recorded in the snapshot, which is what makes switching the profile off
+ * restore exactly the values the user had (and remove keys that did not exist before).
+ */
+public final class PerformanceOptionsPreset {
 
     private PerformanceOptionsPreset() { }
 
-    /** Stores the original values, including which options were absent before the preset. */
+    /** What the instance looked like before the profile was applied. */
     public static final class Snapshot {
+        /** Values the user had, for every key the profile ever wrote. */
         public Map<String, String> originalValues = new LinkedHashMap<>();
+        /** Keys that did not exist before the profile wrote them. */
         public Set<String> originallyMissing = new LinkedHashSet<>();
+        /** Values the profile wrote, so restore can tell its own edits from the user's. */
+        public Map<String, String> appliedValues = new LinkedHashMap<>();
     }
 
-    public static Snapshot capture(Map<String, String> currentOptions) {
-        Snapshot snapshot = new Snapshot();
-        for (String key : PRESET.keySet()) {
-            if (currentOptions.containsKey(key)) {
-                snapshot.originalValues.put(key, currentOptions.get(key));
+    /** Options for one era. */
+    public static Map<String, String> forEra(VersionEra era) {
+        return Collections.unmodifiableMap(VersionTuning.videoOptions(era));
+    }
+
+    /**
+     * Records the instance's current values for everything this era will write, keeping anything a
+     * previous run already captured (the era can change when the user switches instance).
+     *
+     * @param existing  snapshot read from disk, or {@code null} on the first apply
+     * @param current   the instance's options as loaded from {@code options.txt}
+     * @param era       version era of the instance being launched
+     */
+    public static Snapshot capture(Snapshot existing, Map<String, String> current, VersionEra era) {
+        Snapshot snapshot = isValidSnapshot(existing) ? existing : new Snapshot();
+        if (snapshot.originalValues == null) snapshot.originalValues = new LinkedHashMap<>();
+        if (snapshot.originallyMissing == null) snapshot.originallyMissing = new LinkedHashSet<>();
+        if (snapshot.appliedValues == null) snapshot.appliedValues = new LinkedHashMap<>();
+
+        Map<String, String> options = forEra(era);
+        for (Map.Entry<String, String> entry : options.entrySet()) {
+            String key = entry.getKey();
+            if (snapshot.originalValues.containsKey(key) || snapshot.originallyMissing.contains(key)) {
+                continue; // already captured by an earlier apply
+            }
+            if (current.containsKey(key)) {
+                snapshot.originalValues.put(key, current.get(key));
             } else {
                 snapshot.originallyMissing.add(key);
             }
         }
+        // Remember what we are about to write, for every era applied to this instance.
+        snapshot.appliedValues.putAll(options);
         return snapshot;
     }
 
-    /** Applies conservative graphics settings without changing RAM or renderer selection. */
+    /** Writes the era options into the instance map. */
+    public static void apply(Map<String, String> currentOptions, VersionEra era) {
+        currentOptions.putAll(forEra(era));
+    }
+
+    /** Convenience overload used before an era is known (tests, legacy callers). */
     public static void apply(Map<String, String> currentOptions) {
-        currentOptions.putAll(PRESET);
+        apply(currentOptions, VersionEra.MODERN);
     }
 
     /**
-     * Restores an option only if it still has the value written by this preset. If a user changed
-     * an option while the mode was enabled, that edit is kept instead of being overwritten.
+     * Restores an option only if it still holds the value this preset wrote. An option the user
+     * changed while the profile was on is kept as the user left it.
      */
     public static void restore(Map<String, String> currentOptions, Snapshot snapshot) {
         if (!isValidSnapshot(snapshot)) return;
-        for (Map.Entry<String, String> entry : PRESET.entrySet()) {
+
+        Map<String, String> applied = snapshot.appliedValues;
+        if (applied == null || applied.isEmpty()) {
+            // Snapshots written by older builds: fall back to the modern table.
+            applied = forEra(VersionEra.MODERN);
+        }
+        for (Map.Entry<String, String> entry : applied.entrySet()) {
             String key = entry.getKey();
             if (!Objects.equals(currentOptions.get(key), entry.getValue())) continue;
-            if (snapshot.originallyMissing.contains(key)) {
+            if (snapshot.originallyMissing != null && snapshot.originallyMissing.contains(key)) {
                 currentOptions.remove(key);
-            } else {
-                currentOptions.put(key, snapshot.originalValues.get(key));
+            } else if (snapshot.originalValues != null) {
+                String original = snapshot.originalValues.get(key);
+                if (original != null) currentOptions.put(key, original);
             }
         }
     }
 
     public static boolean isValidSnapshot(Snapshot snapshot) {
-        if (snapshot == null || snapshot.originalValues == null || snapshot.originallyMissing == null) {
-            return false;
-        }
-        for (String key : PRESET.keySet()) {
-            boolean hasValue = snapshot.originalValues.containsKey(key);
-            boolean wasMissing = snapshot.originallyMissing.contains(key);
-            if (hasValue == wasMissing) return false;
-            if (hasValue && snapshot.originalValues.get(key) == null) return false;
-        }
-        return true;
+        return snapshot != null
+                && snapshot.originalValues != null
+                && snapshot.originallyMissing != null;
     }
 }

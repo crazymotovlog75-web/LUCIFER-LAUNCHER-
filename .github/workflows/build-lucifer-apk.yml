@@ -30,7 +30,7 @@ jobs:
       - name: Apply Abyssal Tide UI + Performance Mode + Modern-GL Compat
         run: |
           cp -rv overhaul/launcher-ui-overhaul/app_pojavlauncher/* engine/app_pojavlauncher/
-          sed -i 's/versionCode 10000000/versionCode 10000002/; s/versionCode 10000002/versionCode 10000003/; s/versionCode 10000003/versionCode 10000004/; s/versionCode 10000004/versionCode 10000005/' engine/app_pojavlauncher/build.gradle
+          sed -i 's/versionCode 10000000/versionCode 10000002/; s/versionCode 10000002/versionCode 10000003/; s/versionCode 10000003/versionCode 10000004/; s/versionCode 10000004/versionCode 10000005/; s/versionCode 10000005/versionCode 10000006/' engine/app_pojavlauncher/build.gradle
 
       - name: Set up JDK 21
         uses: actions/setup-java@v4
@@ -44,7 +44,7 @@ jobs:
           validate-wrappers: false
           gradle-version: '8.11'
 
-      - name: Run JVM Unit Tests (Profile, Performance, Compat, Render Scale)
+      - name: Run JVM Unit Tests (Profile, Performance, Compat, Eras, Render Scale)
         working-directory: engine
         run: |
           ./gradlew :app_pojavlauncher:testDebugUnitTest --no-daemon --stacktrace
@@ -68,10 +68,10 @@ jobs:
             exit 1
           fi
 
-          cp "$RELEASE_APK" "$GITHUB_WORKSPACE/dist-apk/LUCIFER-LAUNCHER-RENDERERHUB.apk"
-          cp "$RELEASE_APK" "$GITHUB_WORKSPACE/dist-apk/LUCIFER-LAUNCHER-RENDERERHUB-v3.0.apk"
-          sha256sum "$GITHUB_WORKSPACE/dist-apk/LUCIFER-LAUNCHER-RENDERERHUB.apk" > "$GITHUB_WORKSPACE/dist-apk/LUCIFER-LAUNCHER-RENDERERHUB.sha256"
-          md5sum "$GITHUB_WORKSPACE/dist-apk/LUCIFER-LAUNCHER-RENDERERHUB.apk" > "$GITHUB_WORKSPACE/dist-apk/LUCIFER-LAUNCHER-RENDERERHUB.md5"
+          cp "$RELEASE_APK" "$GITHUB_WORKSPACE/dist-apk/LUCIFER-LAUNCHER-ALLVERSE.apk"
+          cp "$RELEASE_APK" "$GITHUB_WORKSPACE/dist-apk/LUCIFER-LAUNCHER-ALLVERSE-v3.1.apk"
+          sha256sum "$GITHUB_WORKSPACE/dist-apk/LUCIFER-LAUNCHER-ALLVERSE.apk" > "$GITHUB_WORKSPACE/dist-apk/LUCIFER-LAUNCHER-ALLVERSE.sha256"
+          md5sum "$GITHUB_WORKSPACE/dist-apk/LUCIFER-LAUNCHER-ALLVERSE.apk" > "$GITHUB_WORKSPACE/dist-apk/LUCIFER-LAUNCHER-ALLVERSE.md5"
 
           ls -lh "$GITHUB_WORKSPACE/dist-apk/"
 
@@ -99,34 +99,37 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         working-directory: dist-apk
         run: |
-          TAG="renderer-hub-v3.0"
-          TITLE="LUCIFER LAUNCHER v3.0 — Renderer Hub (One-tap Renderer Switching)"
-          NOTES="### LUCIFER LAUNCHER v3.0 — Renderer Hub
+          TAG="allversion-fps-v3.1"
+          TITLE="LUCIFER LAUNCHER v3.1 — All-Version FPS Engine"
+          NOTES="### LUCIFER LAUNCHER v3.1 — All-Version FPS Engine
 
-          - **Renderer picker is now at the TOP of Video & Graphics:** open Settings → Video & Graphics and the first row is the renderer selector for the selected instance. It lists every renderer this device can actually run, with plain-language labels (Zink = OpenGL 4.6, MobileGlues = fast GL3, GL4ES = legacy GL2) and an 'Engine default (auto)' option.
-          - **No more hidden page:** before this build the only renderer selector lived inside the per-instance editor. Now it is one tap from the launcher: tapping the renderer chip in the top HUD opens Video & Graphics directly at that picker.
-          - **It tells you which one you need:** for a 1.21.11+ instance the row warns in red when the current renderer cannot provide GL3 (that is what caused the black screen), and the summary confirms when the GL3 profile is active.
-          - **Change applies immediately:** picking a renderer writes it straight into the selected instance profile, no separate save step, and survives restarts.
-          - **Notch toggle fixed:** 'Ignore notch' is now shown on every Android 9+ device (its default is ON, so it can also be switched back off) instead of being hidden when no cutout was detected.
-          - **Direct Installable APK:** LUCIFER-LAUNCHER-RENDERERHUB-v3.0.apk (versionCode 10000005, upgrades cleanly over v2.9)
-          - **Still Included:** sharp pixel-budgeted render scale, GL3 auto-profile for 1.21.11+, cutout-free fullscreen, Zink/Turnip tuning, BG10 Abyss Teal theme, crash-free profile startup
+          - **Version-aware FPS engine:** the launcher now classifies the selected instance into a Minecraft render era and applies the exact settings that build understands, instead of one compromise profile for everything.
+          - **The eras:** 1.0-1.2.5 (GL1) · 1.3-1.12.2 (LWJGL2) · 1.13-1.16.5 (LWJGL3) · 1.17-1.20.6 · 1.21-1.21.10 · 1.21.11+ (new pipeline). Fabric/Forge/Quilt ids and snapshots are parsed too.
+          - **Correct option keys per era:** 1.12 and older get limitFramerate / fancyGraphics / ambientOcclusion / useVbo; 1.13+ gets maxFps / renderClouds / graphicsMode / ao; 1.17+ also gets simulationDistance=4 (the single cheapest 1.17+ win). Previously the modern keys were written to legacy instances and silently ignored.
+          - **Per-era resolution budget:** 1.0-1.12.2 render up to native 1080p short side, 1.13-1.16.5 up to 960p, 1.17-1.20.6 900p, 1.21-1.21.10 850p, 1.21.11+ 800p — each newer era costs more per frame, so it gets a tighter budget and a 45% quality floor.
+          - **Per-era chunk distance:** 8 / 6 / 5 / 4 / 4 / 4 blocks-of-chunks, tuned to what each era's renderer can actually push.
+          - **GC and hitch flags:** G1 with 20 ms pause target, ParallelRefProc, AlwaysPreTouch, PerfDisableSharedMem, DisableExplicitGC (removes the random 10 FPS seconds). A collector you chose yourself is never overridden, and the flags this build adds are tracked and removed exactly when you switch the profile off.
+          - **Era-specific JVM properties:** legacy LWJGL2 gets no-software-GL + quiet Forge signatures; LWJGL3+ gets a capped direct-buffer cache.
+          - **Snapshot/restore is now era-safe:** switching one instance between Minecraft versions merges the backup instead of losing the original values, and only values this profile wrote are ever restored.
+          - **Direct Installable APK:** LUCIFER-LAUNCHER-ALLVERSE-v3.1.apk (versionCode 10000006, upgrades cleanly over v3.0)
+          - **Still Included:** renderer picker at the top of Video & Graphics, GL3 auto-profile + black-screen fix for 1.21.11+, cutout-free fullscreen, sharp pixel-budgeted rendering, BG10 Abyss Teal theme
           - **Branch:** ${GITHUB_REF_NAME} · **Commit:** ${GITHUB_SHA}"
 
           if gh release view "$TAG" --repo "${GITHUB_REPOSITORY}" >/dev/null 2>&1; then
             gh release upload "$TAG" \
-              LUCIFER-LAUNCHER-RENDERERHUB-v3.0.apk \
-              LUCIFER-LAUNCHER-RENDERERHUB.apk \
-              LUCIFER-LAUNCHER-RENDERERHUB.sha256 \
-              LUCIFER-LAUNCHER-RENDERERHUB.md5 \
+              LUCIFER-LAUNCHER-ALLVERSE-v3.1.apk \
+              LUCIFER-LAUNCHER-ALLVERSE.apk \
+              LUCIFER-LAUNCHER-ALLVERSE.sha256 \
+              LUCIFER-LAUNCHER-ALLVERSE.md5 \
               --clobber \
               --repo "${GITHUB_REPOSITORY}"
             gh release edit "$TAG" --title "$TITLE" --notes "$NOTES" --repo "${GITHUB_REPOSITORY}" --latest
           else
             gh release create "$TAG" \
-              LUCIFER-LAUNCHER-RENDERERHUB-v3.0.apk \
-              LUCIFER-LAUNCHER-RENDERERHUB.apk \
-              LUCIFER-LAUNCHER-RENDERERHUB.sha256 \
-              LUCIFER-LAUNCHER-RENDERERHUB.md5 \
+              LUCIFER-LAUNCHER-ALLVERSE-v3.1.apk \
+              LUCIFER-LAUNCHER-ALLVERSE.apk \
+              LUCIFER-LAUNCHER-ALLVERSE.sha256 \
+              LUCIFER-LAUNCHER-ALLVERSE.md5 \
               --target "${GITHUB_SHA}" \
               --title "$TITLE" \
               --notes "$NOTES" \

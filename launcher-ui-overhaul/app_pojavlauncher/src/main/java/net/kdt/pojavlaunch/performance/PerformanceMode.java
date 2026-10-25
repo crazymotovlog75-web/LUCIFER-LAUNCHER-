@@ -39,6 +39,8 @@ public final class PerformanceMode {
     public static final String KEY_JAVA_ARGS = "javaArgs";
     /** SurfaceView instead of TextureView: zero-copy, one less full-screen blit per frame. */
     public static final String KEY_ALTERNATE_SURFACE = "alternate_surface";
+    /** Exactly the JVM flags this launcher appended, so switching the mode off can remove them. */
+    public static final String KEY_ADDED_FLAGS = "perfJvmFlagsAdded";
 
 
     /** Bookkeeping only: makes the automatic first-run activation happen exactly once. */
@@ -130,10 +132,12 @@ public final class PerformanceMode {
             float savedScale = pref == null ? 1f
                     : pref.getInt("resolutionRatio", 100) / 100f;
             android.util.DisplayMetrics metrics = context.getResources().getDisplayMetrics();
+            net.kdt.pojavlaunch.compat.VersionEra era =
+                    net.kdt.pojavlaunch.compat.VersionEra.ofCurrentInstance();
             LauncherPreferences.PREF_SCALE_FACTOR =
-                    net.kdt.pojavlaunch.utils.HighFpsRenderScale.resolveForSize(savedScale,
+                    net.kdt.pojavlaunch.compat.VersionTuning.renderScale(savedScale,
                             LauncherPreferences.PREF_HIGH_FPS_MODE,
-                            metrics.widthPixels, metrics.heightPixels);
+                            metrics.widthPixels, metrics.heightPixels, era);
         } catch (Throwable ignored) {
             // A wrong scale would only cost sharpness; never crash over it.
         }
@@ -147,12 +151,40 @@ public final class PerformanceMode {
         if (pref == null) return;
         String current = pref.getString(KEY_JAVA_ARGS, "");
         if (current == null) current = "";
-        String updated = enabled
-                ? PerformanceBudget.addPerfFlags(current)
-                : PerformanceBudget.removePerfFlags(current);
+
+        String updated;
+        if (enabled) {
+            String[] additions = PerformanceBudget.flagsToAdd(current);
+            updated = PerformanceBudget.applyFlags(current, additions);
+            pref.edit().putString(KEY_ADDED_FLAGS, join(additions)).apply();
+        } else {
+            String[] tracked = split(pref.getString(KEY_ADDED_FLAGS, ""));
+            updated = tracked.length > 0
+                    ? PerformanceBudget.removeFlags(current, tracked)
+                    // No record (first run after an update): fall back to the managed set, but keep
+                    // a collector the user picked themselves.
+                    : PerformanceBudget.removeFlags(current, PerformanceBudget.flagsToRemoveWithoutUserCollector(current));
+            pref.edit().remove(KEY_ADDED_FLAGS).apply();
+        }
+
         if (updated.equals(current)) return;
         pref.edit().putString(KEY_JAVA_ARGS, updated).apply();
         LauncherPreferences.PREF_CUSTOM_JAVA_ARGS = updated;
+    }
+
+    private static String join(String[] values) {
+        StringBuilder builder = new StringBuilder();
+        for (String value : values) {
+            if (value == null || value.isEmpty()) continue;
+            if (builder.length() > 0) builder.append(' ');
+            builder.append(value);
+        }
+        return builder.toString();
+    }
+
+    private static String[] split(String value) {
+        if (value == null || value.trim().isEmpty()) return new String[0];
+        return value.trim().split("\\s+");
     }
 
     /** Raises a too-small heap allocation; never lowers an allocation the user picked. */
@@ -202,7 +234,10 @@ public final class PerformanceMode {
         if (!enabled) {
             return "Performance Mode OFF — Minecraft ke original graphics settings wapas.";
         }
-        return "Performance Mode ON — 30% render scale, low-cost video preset, vsync off, "
-                + "big cores + sustained clocks. 80+ FPS target, frame time stable.";
+        net.kdt.pojavlaunch.compat.VersionEra era =
+                net.kdt.pojavlaunch.compat.VersionEra.ofCurrentInstance();
+        return "Performance Mode ON — " + era.label() + ": "
+                + era.renderShortSide + "p render, " + era.renderDistance + " chunks, effects off, "
+                + "vsync off, big cores, GC hitch flags. 80+ FPS target.";
     }
 }

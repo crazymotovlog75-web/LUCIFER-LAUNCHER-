@@ -133,8 +133,10 @@ public class LauncherPreferences {
         } catch (Throwable ignored) {
             realMetrics = ctx.getResources().getDisplayMetrics();
         }
-        PREF_SCALE_FACTOR = HighFpsRenderScale.resolveForSize(savedResolutionScale,
-                PREF_HIGH_FPS_MODE, realMetrics.widthPixels, realMetrics.heightPixels);
+        net.kdt.pojavlaunch.compat.VersionEra era =
+                net.kdt.pojavlaunch.compat.VersionEra.ofCurrentInstance();
+        PREF_SCALE_FACTOR = net.kdt.pojavlaunch.compat.VersionTuning.renderScale(savedResolutionScale,
+                PREF_HIGH_FPS_MODE, realMetrics.widthPixels, realMetrics.heightPixels, era);
         PREF_ENABLE_GYRO = DEFAULT_PREF.getBoolean("enableGyro", false);
         PREF_GYRO_SENSITIVITY = ((float)DEFAULT_PREF.getInt("gyroSensitivity", 100))/100f;
         PREF_GYRO_SAMPLE_RATE = DEFAULT_PREF.getInt("gyroSampleRate", 16);

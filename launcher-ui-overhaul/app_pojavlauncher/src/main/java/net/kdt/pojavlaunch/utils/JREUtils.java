@@ -257,7 +257,9 @@ public class JREUtils {
             envMap.put("MESA_SHADER_CACHE_MAX_SIZE", "512M");
             envMap.put("MESA_VK_WSI_PRESENT_MODE", "immediate"); // present now, do not wait for vblank
             envMap.put("TU_DEBUG", "noconform");          // Turnip: skip Vulkan conformance checks
-            envMap.put("vblank_mode", "0");
+            // Per-era wrapper tuning (gl4es banner/stub chatter on old versions, no vblank wait).
+            envMap.putAll(net.kdt.pojavlaunch.compat.VersionTuning.driverEnv(
+                    net.kdt.pojavlaunch.compat.VersionEra.ofCurrentInstance()));
         }
         if(LauncherPreferences.PREF_BIG_CORE_AFFINITY) envMap.put("POJAV_BIG_CORE_AFFINITY", "1");
         envMap.put("AWTSTUB_WIDTH", Integer.toString(CallbackBridge.windowWidth > 0 ? CallbackBridge.windowWidth : CallbackBridge.physicalWidth));
@@ -415,6 +417,13 @@ public class JREUtils {
 
         // Some phones are not using the right number of cores, fix that
         userArgs.add("-XX:ActiveProcessorCount=" + java.lang.Runtime.getRuntime().availableProcessors());
+        // Era-specific -D properties (legacy LWJGL2 needs a hard "no software GL" and quiet Forge,
+        // LWJGL3 wants its direct-buffer cache capped). Added last so the user cannot shadow them
+        // by accident, and they are plain properties, so they cannot stop a launch.
+        for (String property : net.kdt.pojavlaunch.compat.VersionTuning.systemProperties(
+                net.kdt.pojavlaunch.compat.VersionEra.ofCurrentInstance())) {
+            userArgs.add(property);
+        }
         // Adds/changes methods for compatibility
         userArgs.add("-javaagent:"+new File(Tools.DIR_DATA,"methods_injector_agent/methods_injector_agent.jar").getAbsolutePath());
 

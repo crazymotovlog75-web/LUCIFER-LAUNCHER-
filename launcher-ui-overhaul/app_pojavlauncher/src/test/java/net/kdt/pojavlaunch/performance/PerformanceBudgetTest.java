@@ -51,8 +51,34 @@ public class PerformanceBudgetTest {
 
     @Test
     public void removingPerfFlagsRestoresTheUserArguments() {
-        String user = "-XX:+UseG1GC -Xss1M";
+        String user = "-Xss1M";
         assertEquals(user, PerformanceBudget.removePerfFlags(PerformanceBudget.addPerfFlags(user)));
+    }
+
+    @Test
+    public void trackedRemovalKeepsACollectorTheUserWrote() {
+        String user = "-XX:+UseSerialGC -Xss1M";
+        String[] added = PerformanceBudget.flagsToAdd(user);
+        String withProfile = PerformanceBudget.applyFlags(user, added);
+        assertEquals(user, PerformanceBudget.removeFlags(withProfile, added));
+    }
+
+    @Test
+    public void untrackedRemovalStillKeepsTheUsersCollector() {
+        String user = "-XX:+UseSerialGC";
+        String withProfile = PerformanceBudget.applyFlags(user, PerformanceBudget.PERF_JVM_FLAGS);
+        String cleaned = PerformanceBudget.removeFlags(withProfile,
+                PerformanceBudget.flagsToRemoveWithoutUserCollector(withProfile));
+        assertTrue(cleaned.contains("-XX:+UseSerialGC"));
+        assertFalse(cleaned.contains("-XX:+DisableExplicitGC"));
+    }
+
+    @Test
+    public void aUserChosenCollectorIsNeverOverridden() {
+        String serial = PerformanceBudget.addPerfFlags("-XX:+UseSerialGC");
+        assertTrue("user collector must stay", serial.contains("-XX:+UseSerialGC"));
+        assertFalse("second collector must not be added", serial.contains("-XX:+UseG1GC"));
+        assertTrue("the rest of the profile still applies", serial.contains("-XX:+DisableExplicitGC"));
     }
 
     @Test

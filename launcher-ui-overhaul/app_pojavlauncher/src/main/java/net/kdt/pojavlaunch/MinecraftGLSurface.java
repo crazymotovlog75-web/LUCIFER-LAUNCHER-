@@ -418,8 +418,19 @@ public class MinecraftGLSurface extends View implements GrabListener, DirectGame
         // Use the width and height of the View instead of display dimensions to avoid
         // getting squiched/stretched due to inconsistencies between the layout and
         // screen dimensions.
-        int newWidth = Tools.getDisplayFriendlyRes(getWidth(), LauncherPreferences.PREF_SCALE_FACTOR);
-        int newHeight = Tools.getDisplayFriendlyRes(getHeight(), LauncherPreferences.PREF_SCALE_FACTOR);
+        // The window is sized for the era of the instance that is actually launching: a 1.8.9
+        // world can afford native resolution, a 1.21.11 world cannot. The result is written back
+        // into PREF_SCALE_FACTOR because the same value maps touch coordinates into the game.
+        float savedScale = 1f;
+        if (LauncherPreferences.DEFAULT_PREF != null) {
+            savedScale = LauncherPreferences.DEFAULT_PREF.getInt("resolutionRatio", 100) / 100f;
+        }
+        float renderScale = net.kdt.pojavlaunch.compat.VersionTuning.renderScale(
+                savedScale, LauncherPreferences.PREF_HIGH_FPS_MODE, getWidth(), getHeight(),
+                net.kdt.pojavlaunch.compat.VersionEra.ofCurrentInstance());
+        LauncherPreferences.PREF_SCALE_FACTOR = renderScale;
+        int newWidth = Tools.getDisplayFriendlyRes(getWidth(), renderScale);
+        int newHeight = Tools.getDisplayFriendlyRes(getHeight(), renderScale);
         if (newHeight < 1 || newWidth < 1) {
             Log.e("MGLSurface", String.format("Impossible resolution : %dx%d", newWidth, newHeight));
             return;
