@@ -110,6 +110,32 @@ jobs:
           printf '%s\n' "$REPORT" > "$RUNNER_TEMP/verify.md"
           gh api "repos/${GITHUB_REPOSITORY}/commits/${GITHUB_SHA}/comments" -F body=@"$RUNNER_TEMP/verify.md" > /dev/null || echo "could not post the report"
 
+      - name: Assert FPS hook, HOLY GL4ES and the EGL fix are in the APK
+        run: |
+          set -e
+          APK="$GITHUB_WORKSPACE/dist-apk/LUCIFER-LAUNCHER-PACK.apk"
+          shim_jars=0
+          for j in $(find engine/app_pojavlauncher/src/main/assets/components/lwjgl3 -name '*merged-modules.jar' | sort); do
+            shim_jars=$((shim_jars + 1))
+            unzip -l "$j" | grep -q 'org/lwjgl/glfw/FrameStats.class' \
+              || { echo "FAIL: FrameStats.class missing from ${j#engine/}"; exit 1; }
+            unzip -p "$j" org/lwjgl/glfw/GLFW.class | grep -aq 'FrameStats' \
+              || { echo "FAIL: glfwSwapBuffers is not hooked in ${j#engine/}"; exit 1; }
+            echo "shim ok: ${j#engine/}"
+          done
+          test "$shim_jars" -ge 2 || { echo "FAIL: expected both LWJGL shim jars, found $shim_jars"; exit 1; }
+
+          # HOLY GL4ES: the renderer id is in resources.arsc (picker list) and in the dex (library map)
+          HOLY=$( (unzip -p "$APK" resources.arsc; \
+                    for d in $(unzip -l "$APK" | awk '/classes.*[.]dex/{print $4}'); do unzip -p "$APK" "$d"; done) \
+                  | grep -ac 'holy_gl4es' || true)
+          test "${HOLY:-0}" -gt 0 || { echo "FAIL: holy_gl4es is not in the shipped APK"; exit 1; }
+          echo "holy_gl4es occurrences: $HOLY"
+
+          unzip -p "$APK" lib/arm64-v8a/libpojavexec.so | grep -aq 'No stencil' \
+            || { echo "FAIL: the stencil/ES3 EGL config is not in libpojavexec.so"; exit 1; }
+          echo "OK: FPS hook in both shim jars, HOLY GL4ES registered, EGL config compiled in"
+
       - name: Surface Build Diagnostics on Failure
         if: failure()
         run: |
