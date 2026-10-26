@@ -195,9 +195,14 @@ class LiquidScreen(base.Screen):
                      box[2] - self.s(inset), box[3] - self.s(inset)],
                     max(1, r - self.s(inset)),
                     outline=rgba(edge_col, int(a * rim)), width=max(1, self.s(wd)))
-            # bottom inner shade = thickness of the glass
-            self.d.arc([box[0] - r * 0.1, box[1] + ph * 0.55, box[2] + r * 0.1, box[3] + ph * 0.20],
-                       start=18, end=162, fill=rgba((0, 0, 0), 46), width=self.s(3))
+            # bottom inner shade = thickness of the glass, clipped to the pane
+            thick = Image.new("RGBA", (pw, ph), (0, 0, 0, 0))
+            ImageDraw.Draw(thick).rounded_rectangle(
+                [-r, int(ph * 0.80), pw + r, ph + r], r, fill=(0, 0, 0, 54))
+            thick = thick.filter(ImageFilter.GaussianBlur(self.s(9)))
+            thick.putalpha(ImageChops.multiply(thick.split()[3], mask))
+            self.img.alpha_composite(thick, (box[0], box[1]))
+            self.redraw()
 
         # 7. crisp top refraction line + a corner glint
         if rim > 0:
@@ -356,7 +361,8 @@ def server_panel(sc, x, y, w, h, accent=CYAN, radius=24, compact=False):
     sc.send(x + w - 18, row, live, 8.6, OK_GREEN, True, 0.5)
 
 
-def hero_panel(sc, x, y, w, h, accent=CYAN, radius=30, skin=True, launch=True, compact=False):
+def hero_panel(sc, x, y, w, h, accent=CYAN, radius=30, skin=True, launch=True, compact=False,
+               worlds=False):
     """Instance hero: stats on top, spec rows on the left, the skin preview on the right.
 
     Type and sprite scale with the panel width, so a full-width hero does not end up as a
@@ -382,15 +388,28 @@ def hero_panel(sc, x, y, w, h, accent=CYAN, radius=30, skin=True, launch=True, c
         sc.text(x + 24, yy, lab, 7.2, TEXT_3, True, 1.4)
         sc.stext(x + 104, yy - 1.5, val, 9.4, WHITE, True, 0.2)
 
+    if worlds and h > 470:
+        wy = ry + 3 * 24 + 16
+        sc.stext(x + 24, wy, "RECENT WORLDS", 7.6, TEXT_3, True, 1.4)
+        for i, (nm, meta) in enumerate((("Lifesteel Base", "creative · spawn"),
+                                        ("Shadow Arena", "pvp · 1v1"),
+                                        ("Dragon Vault", "survival · day 42"))):
+            yy = wy + 22 + i * 32
+            sc.rect(x + 24, yy, min(w * 0.47, 250), 26, rgba(WHITE, 34), radius=9,
+                    outline=rgba(WHITE, 74), width=0.9)
+            sc.dot(x + 36, yy + 13, 3.0, accent)
+            sc.text(x + 48, yy + 8, nm, 8.6, WHITE, True, 0.3)
+            sc.text_end(x + min(w * 0.47, 250) - 10, yy + 9, meta, 6.8, TEXT_3, False, 0.2)
+
     if skin:
         cx = x + w * (0.72 if w < 900 else 0.78)
         sprite = base.skin_sprite(scale=13)
-        avail = (y + h - 54) - (stat_y + 34)
+        avail = (y + h - 68) - (stat_y + 34)
         th = max(90, min(avail * 0.94, 330 * k, w * (0.34 if w >= 900 else 0.62)))
         tw = th * sprite.width / sprite.height
-        sc.halo(cx, y + h - 54 - th * 0.45, tw * 0.62, accent, 42)
+        sc.halo(cx, y + h - 68 - th * 0.45, tw * 0.62, accent, 42)
         img = sprite.resize((int(tw * S), int(th * S)), Image.LANCZOS)
-        sc.img.alpha_composite(img, (sc.s(cx - tw / 2), sc.s(y + h - 52 - th)))
+        sc.img.alpha_composite(img, (sc.s(cx - tw / 2), sc.s(y + h - 66 - th)))
         sc.redraw()
         if w >= 900:
             # wide heroes get the instance badge floating under the preview
@@ -558,10 +577,10 @@ def l02(sc):
     for i, (lab, val) in enumerate((("VERSION", "1.21.10"), ("FABRIC", "0.16.9"), ("ACTIVE", "42"))):
         sc.stat_block(hx + 20 + i * 92, hy + 58, lab, val, accent=WHITE)
     sprite = base.skin_sprite(scale=11)
-    th = 150
+    th = 122
     tw = th * sprite.width / sprite.height
     sc.img.alpha_composite(sprite.resize((int(tw * S), int(th * S)), Image.LANCZOS),
-                           (sc.s(hx + hw * 0.66), sc.s(hy + 40)))
+                           (sc.s(hx + hw * 0.66), sc.s(hy + 30)))
     sc.redraw()
     sc.halo(hx + hw * 0.72, hy + 120, 76, CYAN, 34)
     sc.grad_rect(hx + 20, hy + 156, hw - 40, 34, lerp(CYAN, WHITE, 0.5), CYAN, radius=17)
@@ -592,18 +611,17 @@ def l03(sc):
     """Side rail: vertical glass rail on the left, big hero on the right."""
     rail_w = 108
     sc.liquid(PAD, PAD, rail_w, H - PAD * 2, radius=40, tint=40, scrim=64, magnify=0.02)
-    sc.avatar(PAD + rail_w / 2, PAD + 44, 18)
-    sc.smid(PAD + rail_w / 2, PAD + 74, "SAIF", 8, WHITE, True, 1.0)
-    top = 108
+    sc.avatar(PAD + rail_w / 2, PAD + 46, 18)
+    top = 120
     for i, name in enumerate(DOCK):
-        cy = top + i * 92
+        cy = top + i * 104
         on = i == 0
         if on:
             sc.rect(PAD + 14, cy - 26, rail_w - 28, 74, rgba(WHITE, 52), radius=22,
                     outline=rgba(WHITE, 170), width=1.2)
             sc.rect(PAD + 8, cy + 6, 3.4, 30, rgba(CYAN, 255), radius=2)
         sc.glyph(sc.glyph_id(name), PAD + rail_w / 2, cy, 16, WHITE if on else TEXT_3)
-        sc.smid(PAD + rail_w / 2, cy + 26, name[:7], 6.8, WHITE if on else TEXT_3, True, 0.8)
+        sc.smid(PAD + rail_w / 2, cy + 26, name, 6.2, WHITE if on else TEXT_3, True, 0.8)
 
     x0 = PAD + rail_w + 18
     w0 = W - x0 - PAD
@@ -688,6 +706,22 @@ def l04(sc):
         yy = 584 + i * 26
         sc.text(rx + 18, yy, lab, 8.4, TEXT_3, True, 0.9)
         sc.text_end(rx + col_w - 18, yy, val, 8.8, WHITE, True, 0.4)
+
+    # footer: recent worlds, so the band above the dock is not dead space
+    fy = 712
+    sc.liquid(PAD, fy, W - PAD * 2, 84, radius=26, tint=28, scrim=64)
+    sc.stext(PAD + 20, fy + 14, "RECENT WORLDS", 8.2, TEXT_3, True, 1.4)
+    inner = W - PAD * 2 - 40
+    for i, (nm, sub) in enumerate((("Lifesteel Base", "creative · spawn"),
+                                   ("Shadow Arena", "pvp · 1v1"),
+                                   ("Dragon Vault", "survival · day 42"))):
+        wx = PAD + 20 + i * (inner / 3)
+        sc.rect(wx, fy + 34, inner / 3 - 16, 36, rgba(WHITE, 32), radius=12,
+                outline=rgba(WHITE, 72), width=0.9)
+        sc.dot(wx + 14, fy + 52, 3.2, CYAN)
+        sc.text(wx + 26, fy + 42, nm, 9.2, WHITE, True, 0.3)
+        sc.text(wx + 26, fy + 56, sub, 7.2, TEXT_3, False, 0.3)
+
     dock_bar(sc, PAD, H - PAD - 62, W - PAD * 2, 62)
 
 
@@ -794,37 +828,50 @@ def l06(sc):
     gw, gh = (W - PAD * 2 - 2 * 16) / 3, (H - 96 - PAD - 84 - 2 * 16) / 2
     gx0, gy0 = PAD, 96
     # big hero tile spans two rows in column 1
-    hero_panel(sc, gx0, gy0, gw, gh * 2 + 16, radius=32, compact=True)
+    hero_panel(sc, gx0, gy0, gw, gh * 2 + 16, radius=32, compact=True, worlds=True)
 
     server_panel(sc, gx0 + gw + 16, gy0, gw, 150, radius=28)
     sc.liquid(gx0 + gw + 16, gy0 + 166, gw, gh - 150, radius=28, tint=30, scrim=70)
-    sc.stext(gx0 + gw + 34, gy0 + 180, "MODS", 8.2, TEXT_3, True, 1.4)
-    sc.send(gx0 + gw * 2 + 16 - 18, gy0 + 180, "42 ACTIVE", 8.2, OK_GREEN, True, 0.8)
+    sc.stext(gx0 + gw + 34, gy0 + 188, "MODS", 8.2, TEXT_3, True, 1.4)
+    sc.send(gx0 + gw * 2 + 16 - 18, gy0 + 188, "42 ACTIVE", 8.2, OK_GREEN, True, 0.8)
     for i, m in enumerate(MODS):
-        yy = gy0 + 204 + i * 24
+        yy = gy0 + 212 + i * 24
         sc.dot(gx0 + gw + 38, yy + 5, 2.6, CYAN)
         sc.text(gx0 + gw + 50, yy - 2, m, 9, WHITE, True, 0.5)
         sc.text_end(gx0 + gw * 2 + 16 - 18, yy - 1, "on", 7.4, TEXT_3, True, 0.6)
 
     x3 = gx0 + (gw + 16) * 2
     sc.liquid(x3, gy0, gw, gh, radius=28, tint=30, scrim=70)
-    sc.stext(x3 + 18, gy0 + 14, "TOP MODS", 8.2, TEXT_3, True, 1.4)
+    sc.stext(x3 + 20, gy0 + 20, "TOP MODS", 8.2, TEXT_3, True, 1.4)
+    sc.send(x3 + gw - 20, gy0 + 20, "42 ACTIVE", 8.0, OK_GREEN, True, 0.8)
     for i, m in enumerate(MODS):
-        yy = gy0 + 38 + i * 24
+        yy = gy0 + 50 + i * 40
         sc.dot(x3 + 26, yy + 5, 2.8, CYAN)
         sc.text(x3 + 38, yy - 2, m, 9.2, WHITE, True, 0.5)
+        sc.text_end(x3 + gw - 18, yy - 2, "v2.%d" % (i + 3), 7.2, TEXT_3, True, 0.5)
+        sc.rect(x3 + 38, yy + 14, gw - 56, 4, rgba(WHITE, 44), radius=2)
+        sc.grad_rect(x3 + 38, yy + 14, (gw - 56) * (0.85 - i * 0.09), 4,
+                     lerp(CYAN, WHITE, 0.4), CYAN, radius=2)
     sc.liquid(x3, gy0 + gh + 16, gw, gh, radius=28, tint=30, scrim=70)
-    sc.stext(x3 + 18, gy0 + gh + 30, "SERVERS", 8.2, TEXT_3, True, 1.4)
-    sc.stext(x3 + 18, gy0 + gh + 46, "LUCIFERMC", 13, WHITE, True, 0.6)
-    sc.stext(x3 + 18, gy0 + gh + 64, "LIFESTEEL · 24ms", 8.4, OK_GREEN, False, 0.4)
-    sc.stext(x3 + 18, gy0 + gh + 82, "play.lucifermc.fun", 8.4, CYAN, False, 0.3)
+    sc.stext(x3 + 20, gy0 + gh + 38, "SERVERS", 8.2, TEXT_3, True, 1.4)
+    sc.send(x3 + gw - 26, gy0 + gh + 40, "1 ONLINE", 7.8, OK_GREEN, True, 0.8)
+    sc.stext(x3 + 20, gy0 + gh + 64, "LUCIFERMC", 15, WHITE, True, 0.7)
+    sc.stext(x3 + 20, gy0 + gh + 88, "LIFESTEEL SMP · 24ms", 8.4, OK_GREEN, False, 0.4)
+    sc.stext(x3 + 20, gy0 + gh + 104, "play.lucifermc.fun", 8.4, CYAN, False, 0.3)
+    for i, (lab, val) in enumerate((("PLAYERS", "12 / 200"), ("VERSION", "1.21.4 · Fabric"),
+                                    ("REGION", "Asia · Mumbai"))):
+        yy = gy0 + gh + 130 + i * 26
+        sc.text(x3 + 18, yy, lab, 7.2, TEXT_3, True, 1.3)
+        sc.text_end(x3 + gw - 18, yy, val, 8.6, TEXT_2, True, 0.4)
+    sc.grad_rect(x3 + 18, gy0 + gh + gh - 44, gw - 36, 26, lerp(CYAN, WHITE, 0.5), CYAN, radius=13)
+    sc.text_mid(x3 + gw / 2, gy0 + gh + gh - 37, "JOIN SERVER", 8.5, INK, True, 1.0)
 
     cx2 = gx0 + gw + 16
     sc.liquid(cx2, gy0 + gh + 16, gw, gh, radius=28, tint=30, scrim=70)
-    sc.stext(cx2 + 18, gy0 + gh + 30, "INSTANCES", 8.2, TEXT_3, True, 1.4)
+    sc.stext(cx2 + 20, gy0 + gh + 38, "INSTANCES", 8.2, TEXT_3, True, 1.4)
     for i, (t2, sub2) in enumerate((("Fabric 1.21.10", "READY"), ("LuciferMC SMP", "ONLINE"),
                                     ("CS Client", "1.8.9"), ("+ New Instance", "VANILLA"))):
-        yy = gy0 + gh + 48 + i * 56
+        yy = gy0 + gh + 58 + i * 56
         sc.rect(cx2 + 16, yy, gw - 32, 48, rgba(WHITE, 42 if i < 3 else 26), radius=14,
                 outline=rgba(WHITE if i else CYAN, 110 if i else 200), width=1.0)
         sc.glyph("plus" if i == 3 else "servers", cx2 + 38, yy + 24, 8,
@@ -839,9 +886,9 @@ def l07(sc):
     sc.liquid(PAD, PAD, 940, H - PAD * 2, radius=42, tint=40, scrim=76, magnify=0.02)
     sc.stext(PAD + 30, PAD + 22, "SETTINGS", 20, WHITE, True, 1.8)
     sc.stext(PAD + 30, PAD + 52, "SAIFKHAN · SHADOW DRAGON", 8.2, TEXT_3, True, 1.2)
-    sc.liquid(W - PAD - 260, PAD + 18, 260, 44, radius=22, tint=40, scrim=24)
-    sc.glyph("search", W - PAD - 236, PAD + 40, 11, TEXT_2)
-    sc.text(W - PAD - 218, PAD + 34, "SEARCH SETTINGS", 7.6, TEXT_3, True, 1.1)
+    sc.liquid(PAD + 640, PAD + 22, 270, 42, radius=21, tint=40, scrim=30)
+    sc.glyph("search", PAD + 664, PAD + 43, 11, TEXT_2)
+    sc.text(PAD + 682, PAD + 37, "SEARCH SETTINGS", 7.6, TEXT_3, True, 1.1)
 
     y = PAD + 84
     groups = (
@@ -876,17 +923,28 @@ def l07(sc):
     rw = W - rx - PAD
     hero_panel(sc, rx, PAD, rw, 300, radius=32, compact=True, skin=True)
     server_panel(sc, rx, PAD + 316, rw, 124, radius=28)
-    sc.liquid(rx, PAD + 456, rw, 236, radius=30, tint=30, scrim=72)
-    sc.stext(rx + 20, PAD + 472, "INSTANCES", 8.2, TEXT_3, True, 1.4)
+    sc.liquid(rx, PAD + 456, rw, H - PAD - (PAD + 456), radius=30, tint=30, scrim=72)
+    sc.stext(rx + 20, PAD + 494, "INSTANCES", 8.2, TEXT_3, True, 1.4)
+    sc.send(rx + rw - 20, PAD + 494, "3 SAVED", 7.8, TEXT_3, True, 1.1)
     for i, (t, s2, a) in enumerate((("Fabric 1.21.10", "SHADOW PVP", True),
                                     ("LuciferMC SMP", "LIFESTEEL", False),
-                                    ("CS Client", "1.8.9", False))):
-        yy = PAD + 494 + i * 62
-        sc.rect(rx + 16, yy, rw - 32, 54, rgba(WHITE, 40 if not a else 66), radius=16,
+                                    ("CS Client", "1.8.9", False),
+                                    ("+ New Instance", "VANILLA", False))):
+        yy = PAD + 516 + i * 60
+        sc.rect(rx + 16, yy, rw - 32, 52, rgba(WHITE, 66 if a else 40), radius=16,
                 outline=rgba(CYAN if a else WHITE, 190 if a else 96), width=1.1)
-        sc.text(rx + 32, yy + 12, t, 9.6, WHITE, True, 0.5)
-        sc.text(rx + 32, yy + 30, s2, 7.6, TEXT_3, True, 0.8)
-        sc.glyph("play", rx + rw - 40, yy + 27, 9, CYAN if a else TEXT_3)
+        sc.text(rx + 32, yy + 11, t, 9.6, WHITE, True, 0.5)
+        sc.text(rx + 32, yy + 29, s2, 7.6, TEXT_3, True, 0.8)
+        sc.glyph("plus" if i == 3 else "play", rx + rw - 40, yy + 26, 9,
+                 CYAN if a or i == 3 else TEXT_3)
+    # storage footer, so the rail is not half empty next to the tall sheet
+    sc.rect(rx + 16, PAD + 770, rw - 32, 1, rgba(WHITE, 54), radius=1)
+    sc.stext(rx + 20, PAD + 786, "STORAGE", 7.6, TEXT_3, True, 1.4)
+    sc.send(rx + rw - 20, PAD + 786, "12.4 GB", 8.2, TEXT_2, True, 0.5)
+    sc.rect(rx + 20, PAD + 804, rw - 40, 8, rgba(WHITE, 54), radius=4)
+    sc.grad_rect(rx + 20, PAD + 804, (rw - 40) * 0.62, 8, lerp(CYAN, WHITE, 0.4), CYAN, radius=4)
+    sc.text(rx + 20, PAD + 818, "Java 21 · Gradle 8.11", 7.8, TEXT_3, True, 0.6)
+    sc.text_end(rx + rw - 20, PAD + 818, "v3.4 · MODERN FPS", 7.8, TEXT_3, True, 0.6)
 
 
 def l08(sc):
@@ -902,26 +960,26 @@ def l08(sc):
     # orbit ring
     ring = Image.new("RGBA", sc.img.size, (0, 0, 0, 0))
     ImageDraw.Draw(ring).ellipse([sc.s(cx - 300), sc.s(cy - 300), sc.s(cx + 300), sc.s(cy + 300)],
-                                 outline=rgba(WHITE, 54), width=sc.s(1.4))
+                                 outline=rgba(WHITE, 92), width=sc.s(1.6))
     ImageDraw.Draw(ring).ellipse([sc.s(cx - 210), sc.s(cy - 210), sc.s(cx + 210), sc.s(cy + 210)],
-                                 outline=rgba(WHITE, 34), width=sc.s(1.2))
+                                 outline=rgba(WHITE, 58), width=sc.s(1.3))
     sc.img.alpha_composite(ring.filter(ImageFilter.GaussianBlur(sc.s(0.6))))
     sc.redraw()
 
     # core
-    sc.liquid(cx - 170, cy - 170, 340, 340, radius=170, tint=44, scrim=62, magnify=0.09)
-    sc.smid(cx, cy - 108, "FABRIC 1.21.4", 8, CYAN, True, 1.6)
+    sc.liquid(cx - 170, cy - 170, 340, 340, radius=170, tint=58, scrim=34, magnify=0.09)
+    sc.smid(cx, cy - 116, "FABRIC 1.21.4", 8, CYAN, True, 1.6)
     sprite = base.skin_sprite(scale=9)
-    th = 150
+    th = 138
     tw = th * sprite.width / sprite.height
     sc.img.alpha_composite(sprite.resize((int(tw * S), int(th * S)), Image.LANCZOS),
-                           (sc.s(cx - tw / 2), sc.s(cy - 92)))
+                           (sc.s(cx - tw / 2), sc.s(cy - 96)))
     sc.redraw()
-    sc.smid(cx, cy + 62, "Shadow PvP", 15, WHITE, True, 0.3)
-    sc.smid(cx, cy + 82, "1.21.10 · 42 mods", 8, TEXT_3, True, 0.6)
-    sc.ellipse(cx - 46, cy + 98, 92, 92, fill=rgba(lerp(CYAN, WHITE, 0.45), 240),
+    sc.smid(cx, cy + 52, "Shadow PvP", 15, WHITE, True, 0.3)
+    sc.smid(cx, cy + 72, "1.21.10 · 42 mods", 8, TEXT_3, True, 0.6)
+    sc.ellipse(cx - 40, cy + 90, 80, 80, fill=rgba(lerp(CYAN, WHITE, 0.45), 240),
                outline=rgba(WHITE, 235), width=1.4)
-    sc.glyph("play", cx + 4, cy + 144, 15, INK, 2)
+    sc.glyph("play", cx + 2, cy + 122, 13, INK, 2)
 
     # orbit chips
     import math
@@ -956,6 +1014,15 @@ def l09(sc):
     sc.text(W - PAD - 154, PAD + 19, "SEARCH", 8.4, TEXT_3, True, 1.2)
 
     hero_panel(sc, PAD, 88, W - PAD * 2, 292, radius=36, compact=True)
+    # wide hero: three quick facts sit between the spec rows and the skin
+    for i, (lab, val, col) in enumerate((("WORLD", "Dragon Vault", WHITE),
+                                         ("SHADER", "Complementary Ultra", MAGENTA),
+                                         ("FPS PACK", "ON · 1.21+", OK_GREEN))):
+        qx = PAD + 24 + i * 232
+        sc.rect(qx, 252, 214, 58, rgba(WHITE, 30), radius=16, outline=rgba(WHITE, 70), width=0.9)
+        sc.text(qx + 14, 264, lab, 7.2, TEXT_3, True, 1.3)
+        sc.text(qx + 14, 279, val, 10.5, col, True, 0.3)
+        sc.rect(qx + 14, 298, 118, 3, rgba(WHITE, 60), radius=2)
 
     gy = 396
     cw = (W - PAD * 2 - 3 * 16) / 4
@@ -976,17 +1043,18 @@ def l09(sc):
     ix = PAD
     iw = W - PAD * 2
     sc.liquid(ix, 566, iw, 46, radius=23, tint=36, scrim=26)
-    sc.stext(ix + 16, 578, "LAST PLAYED", 8.2, TEXT_3, True, 1.5)
-    sc.send(ix + iw - 16, 578, "3 INSTANCES", 8.2, CYAN, True, 0.8)
+    sc.stext(ix + 18, 582, "LAST PLAYED", 8.2, TEXT_3, True, 1.5)
+    sc.send(ix + iw - 18, 582, "3 INSTANCES", 8.2, CYAN, True, 0.8)
     tile_w = (iw - 2 * 16) / 3
     for i, (t2, s2, a) in enumerate((("Fabric 1.21.10", "SHADOW PVP · READY", True),
                                      ("LuciferMC SMP", "LIFESTEEL · ONLINE", False),
                                      ("CS Client", "PVP · 1.8.9", False))):
         instance_tile(sc, ix + i * (tile_w + 16), 624, tile_w, 82, t2, s2, active=a, radius=22)
 
-    sc.liquid(ix, 716, iw, 62, radius=31, tint=30, scrim=54)
-    sc.stext(ix + 18, 730, "SHADOW DRAGON ARSENAL", 7.2, MAGENTA, True, 1.3)
-    sc.stext(ix + 18, 742, "MOD STORE", 11, WHITE, True, 0.8)
+    sc.liquid(ix, 716, iw, 74, radius=31, tint=30, scrim=54)
+    sc.stext(ix + 18, 730, "SHADOW DRAGON ARSENAL", 7.0, MAGENTA, True, 1.3)
+    sc.stext(ix + 18, 742, "MOD STORE", 11.5, WHITE, True, 0.8)
+    sc.text(ix + 130, 746, "Sodium · Iris · Lithium · new packs weekly", 8, TEXT_3, False, 0.2)
     sc.pill(ix + iw - 260, 733, 118, 28, fill=MAGENTA, alpha=80, edge=rgba(MAGENTA, 205))
     sc.text(ix + iw - 240, 740, "BROWSE", 8, WHITE, True, 1.0)
     sc.pill(ix + iw - 130, 733, 112, 28)
@@ -1072,12 +1140,12 @@ def l10(sc):
 
     sc.liquid(x3, top + 166, w3, 246, radius=30, tint=34, scrim=68, magnify=0.05)
     sprite = base.skin_sprite(scale=10)
-    th = 190
+    th = 166
     tw = th * sprite.width / sprite.height
     sc.img.alpha_composite(sprite.resize((int(tw * S), int(th * S)), Image.LANCZOS),
-                           (sc.s(x3 + w3 / 2 - tw / 2), sc.s(top + 186)))
+                           (sc.s(x3 + w3 / 2 - tw / 2), sc.s(top + 180)))
     sc.redraw()
-    sc.halo(x3 + w3 / 2, top + 300, 82, CYAN, 44)
+    sc.halo(x3 + w3 / 2, top + 288, 78, CYAN, 44)
     sc.grad_rect(x3 + 18, top + 366, w3 - 36, 36, lerp(CYAN, WHITE, 0.55), CYAN, radius=18)
     sc.glyph("play", x3 + 40, top + 384, 10, INK, 1.5)
     sc.text(x3 + 58, top + 377, "READY TO LAUNCH", 9.4, INK, True, 1.0)
@@ -1092,7 +1160,7 @@ def l10(sc):
         sc.text_end(x3 + w3 - 18, yy, "›", 10, TEXT_3, True, 0)
 
     # footer strip: recent worlds, fills the band under the three columns
-    fy = top + 592
+    fy = top + 584
     sc.liquid(PAD + 26, fy, W - PAD * 2 - 52, 74, radius=26, tint=28, scrim=64)
     sc.stext(PAD + 46, fy + 14, "RECENT WORLDS", 8.2, TEXT_3, True, 1.4)
     inner = W - PAD * 2 - 52 - 40
