@@ -31,7 +31,9 @@ LABEL_H = 62
 BG = (6, 7, 12)
 
 
-def main():
+def build(rows, out_path, title, subtitle):
+    ROWS = rows
+    OUT = out_path
     first = Image.open(VAR / ROWS[0][1]).convert("RGB")
     cell_h = round(CELL_W * first.height / first.width)
 
@@ -47,9 +49,8 @@ def main():
     f_name = ImageFont.truetype(FONT_B, 25)
     f_note = ImageFont.truetype(FONT_B, 17)
 
-    d.text((PAD + 2, 24), "LUCIFER LAUNCHER — 10 COLOUR VARIANTS", font=f_title, fill=(245, 248, 255))
-    d.text((PAD + 2, 66), "same layout · same real skin · same BG10 wallpaper · only the palette changes",
-           font=f_sub, fill=(150, 165, 180))
+    d.text((PAD + 2, 24), title, font=f_title, fill=(245, 248, 255))
+    d.text((PAD + 2, 66), subtitle, font=f_sub, fill=(150, 165, 180))
 
     for i, (num, fname, name, note, c1, c2) in enumerate(ROWS):
         col, row = i % COLS, i // COLS
@@ -82,5 +83,22 @@ def main():
     print("wrote", OUT.relative_to(ROOT), sheet.size)
 
 
+GLASS = [
+    ("01", "glass/g01-frosted-abyss.png", "FROSTED ABYSS", "deep-sea glass · cyan edge", (150, 244, 255), (240, 168, 255)),
+    ("02", "glass/g02-arctic-white.png", "ARCTIC WHITE", "silver-white glass", (236, 246, 255), (206, 224, 242)),
+    ("03", "glass/g03-sapphire-glass.png", "SAPPHIRE GLASS", "blue pane · electric edge", (136, 196, 255), (176, 156, 255)),
+    ("04", "glass/g04-rose-quartz.png", "ROSE QUARTZ", "pink glass · warm glow", (255, 198, 220), (255, 152, 196)),
+    ("05", "glass/g05-emerald-glass.png", "EMERALD GLASS", "green pane · jade edge", (160, 255, 214), (198, 255, 152)),
+    ("06", "glass/g06-amber-glass.png", "AMBER GLASS", "warm gold pane", (255, 218, 156), (255, 176, 118)),
+    ("07", "glass/g07-violet-haze.png", "VIOLET HAZE", "amethyst glass · neon rim", (204, 176, 255), (255, 152, 238)),
+    ("08", "glass/g08-liquid-chrome.png", "LIQUID CHROME", "smoked metal · mono", (238, 242, 248), (184, 196, 212)),
+]
+
+
 if __name__ == "__main__":
-    main()
+    build(ROWS, OUT,
+          "LUCIFER LAUNCHER — 10 COLOUR VARIANTS",
+          "same layout · same real skin · same BG10 wallpaper · only the palette changes")
+    build(GLASS, VAR / "glass" / "00-glass-variants.png",
+          "LUCIFER LAUNCHER — GLASS THEME (8 OPTIONS)",
+          "frosted panes: blurred backdrop · tint wash · edge light · specular sheen")

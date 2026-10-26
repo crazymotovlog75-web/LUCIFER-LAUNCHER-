@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>LUCIFER LAUNCHER · Glass Theme (8 options)</title>
+<style>
+  :root { --void:#05070c; --panel:rgba(14,18,26,0.86); --cyan:#96f4ff; --magenta:#f0a8ff; --text:#f6fafc; --muted:#96a3b0; }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background:
+      radial-gradient(900px 520px at 12% 0%, rgba(120, 220, 255, 0.16), transparent 65%),
+      radial-gradient(900px 520px at 88% 4%, rgba(200, 160, 255, 0.16), transparent 65%),
+      var(--void);
+    color: var(--text);
+    font-family: "Inter", "Segoe UI", Roboto, system-ui, sans-serif;
+    padding: 26px 20px 70px;
+  }
+  .wrap { max-width: 1400px; margin: 0 auto; }
+  .kicker { font-size: 11px; font-weight: 800; letter-spacing: 0.2em; text-transform: uppercase; color: var(--cyan); }
+  h1 { font-size: clamp(22px, 3vw, 34px); font-weight: 900; margin: 6px 0 10px; }
+  h1 span { background: linear-gradient(90deg, var(--cyan), #b9a3ff, var(--magenta)); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  .sub { color: #cbd5e1; font-size: 14px; line-height: 1.6; max-width: 1000px; margin-bottom: 22px; }
+  .sub code { color: var(--cyan); }
+  .note { margin: 0 0 22px; padding: 14px 18px; border-radius: 14px; background: rgba(18,22,30,0.85); border: 1px solid rgba(200,160,255,0.35); color: #cbd5e1; font-size: 13px; line-height: 1.6; }
+  .note b { color: #fff; }
+  .grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 22px; }
+  @media (max-width: 880px) { .grid { grid-template-columns: 1fr; } }
+  .card {
+    background: var(--panel);
+    border: 1.5px solid rgba(255,255,255,0.28);
+    border-radius: 16px; overflow: hidden;
+    box-shadow: 0 18px 48px rgba(0,0,0,0.65), inset 0 1px 0 rgba(255,255,255,0.28);
+    backdrop-filter: blur(10px);
+  }
+  .card img { display: block; width: 100%; height: auto; }
+  .card a { display: block; line-height: 0; }
+  .meta { display: flex; align-items: center; gap: 12px; padding: 12px 16px 14px; }
+  .num { width: 34px; height: 34px; flex-shrink: 0; border-radius: 9px; display: grid; place-items: center; font-weight: 900; font-size: 13px; color: #06080c; background: linear-gradient(135deg, #cfeeff, #e8d6ff); }
+  .meta b { display: block; font-size: 14px; }
+  .meta span { font-size: 12px; color: var(--muted); }
+  .swatches { margin-left: auto; display: flex; gap: 6px; }
+  .sw { width: 16px; height: 16px; border-radius: 5px; border: 1px solid rgba(255,255,255,0.45); }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="kicker">Glass theme · same screen, frosted panels</div>
+  <h1>Glass UI — <span>8 frosted variants</span></h1>
+  <p class="sub">
+    Ye bhi code se render hui hai, AI art nahi. Layout, cards, dock, real Steve skin aur BG10 wallpaper bilkul same —
+    bas panels ab <b>frosted glass</b> hain: peeche ka wallpaper blur hota hai, upar se halka tint + white sheen aata hai,
+    kinare par edge-light aur neeche soft shadow. Colour sirf accent/edge par hai, isliye pane asli kaanch jaisa lagta hai.
+  </p>
+  <div class="note">
+    Kisi bhi screen par <b>click</b> karo → 1600×900 full-size render khulega. <br>
+    <b>Kaise chunna hai:</b> number bolo (jaise <code>g04</code> ya <code>g02 aur g08</code>) — main us glass style ko
+    <code>bg_sd_crystal_card</code>, <code>bg_sd_hud_plate</code>, dock shell aur header plate me apply karke naya APK build kar dunga.
+  </div>
+
+  <div class="card" style="border-color:rgba(200,160,255,0.45);margin-bottom:26px">
+    <a href="00-glass-variants.png" target="_blank" rel="noopener"><img src="00-glass-variants.png" alt="All 8 glass variants on one sheet" /></a>
+    <div class="meta">
+      <div class="num">ALL</div>
+      <div><b>EK SAATH — 8 GLASS OPTIONS</b><span>ek hi image me compare karo</span></div>
+    </div>
+  </div>
+
+  <div class="grid">
+    <div class="card">
+      <a href="g01-frosted-abyss.png" target="_blank" rel="noopener"><img src="g01-frosted-abyss.png" alt="01 FROSTED ABYSS — glass launcher screen" /></a>
+      <div class="meta">
+        <div class="num">01</div>
+        <div><b>FROSTED ABYSS</b><span>deep-sea glass · cyan edge light</span></div>
+        <div class="swatches"><div class="sw" style="background:#96F4FF"></div><div class="sw" style="background:#F0A8FF"></div><div class="sw" style="background:#0E1E28"></div></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <a href="g02-arctic-white.png" target="_blank" rel="noopener"><img src="g02-arctic-white.png" alt="02 ARCTIC WHITE — glass launcher screen" /></a>
+      <div class="meta">
+        <div class="num">02</div>
+        <div><b>ARCTIC WHITE</b><span>silver-white glass · clean & cool</span></div>
+        <div class="swatches"><div class="sw" style="background:#ECF6FF"></div><div class="sw" style="background:#CEE0F2"></div><div class="sw" style="background:#1E2630"></div></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <a href="g03-sapphire-glass.png" target="_blank" rel="noopener"><img src="g03-sapphire-glass.png" alt="03 SAPPHIRE GLASS — glass launcher screen" /></a>
+      <div class="meta">
+        <div class="num">03</div>
+        <div><b>SAPPHIRE GLASS</b><span>blue pane · electric edge</span></div>
+        <div class="swatches"><div class="sw" style="background:#88C4FF"></div><div class="sw" style="background:#B09CFF"></div><div class="sw" style="background:#0C1A38"></div></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <a href="g04-rose-quartz.png" target="_blank" rel="noopener"><img src="g04-rose-quartz.png" alt="04 ROSE QUARTZ — glass launcher screen" /></a>
+      <div class="meta">
+        <div class="num">04</div>
+        <div><b>ROSE QUARTZ</b><span>pink glass · soft warm glow</span></div>
+        <div class="swatches"><div class="sw" style="background:#FFC6DC"></div><div class="sw" style="background:#FF98C4"></div><div class="sw" style="background:#2E1220"></div></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <a href="g05-emerald-glass.png" target="_blank" rel="noopener"><img src="g05-emerald-glass.png" alt="05 EMERALD GLASS — glass launcher screen" /></a>
+      <div class="meta">
+        <div class="num">05</div>
+        <div><b>EMERALD GLASS</b><span>green pane · jade edge light</span></div>
+        <div class="swatches"><div class="sw" style="background:#A0FFD6"></div><div class="sw" style="background:#C6FF98"></div><div class="sw" style="background:#0A261C"></div></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <a href="g06-amber-glass.png" target="_blank" rel="noopener"><img src="g06-amber-glass.png" alt="06 AMBER GLASS — glass launcher screen" /></a>
+      <div class="meta">
+        <div class="num">06</div>
+        <div><b>AMBER GLASS</b><span>warm gold pane · sunset light</span></div>
+        <div class="swatches"><div class="sw" style="background:#FFDA9C"></div><div class="sw" style="background:#FFB076"></div><div class="sw" style="background:#2C1C0C"></div></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <a href="g07-violet-haze.png" target="_blank" rel="noopener"><img src="g07-violet-haze.png" alt="07 VIOLET HAZE — glass launcher screen" /></a>
+      <div class="meta">
+        <div class="num">07</div>
+        <div><b>VIOLET HAZE</b><span>amethyst glass · neon rim</span></div>
+        <div class="swatches"><div class="sw" style="background:#CCB0FF"></div><div class="sw" style="background:#FF98EE"></div><div class="sw" style="background:#1C1034"></div></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <a href="g08-liquid-chrome.png" target="_blank" rel="noopener"><img src="g08-liquid-chrome.png" alt="08 LIQUID CHROME — glass launcher screen" /></a>
+      <div class="meta">
+        <div class="num">08</div>
+        <div><b>LIQUID CHROME</b><span>smoked metal glass · mono</span></div>
+        <div class="swatches"><div class="sw" style="background:#EEF2F8"></div><div class="sw" style="background:#B8C4D4"></div><div class="sw" style="background:#1A1C20"></div></div>
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+</html>

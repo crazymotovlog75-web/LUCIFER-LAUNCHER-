@@ -20,7 +20,7 @@ import math
 import sys
 from pathlib import Path
 
-from PIL import Image, ImageDraw, ImageEnhance, ImageFilter, ImageFont, ImageOps
+from PIL import Image, ImageChops, ImageDraw, ImageEnhance, ImageFilter, ImageFont, ImageOps
 
 ROOT = Path(__file__).resolve().parent.parent
 MOCK = ROOT / "mockups"
@@ -120,6 +120,8 @@ class Screen:
     # ---- panels ----------------------------------------------------------
     def card(self, x, y, w, h, p, radius=13, accent_alpha=255, glow=False):
         """bg_sd_crystal_card: 315deg gradient, outer stroke, inner stroke, corner shards."""
+        if p.get("glass"):
+            return self.glass_panel(x, y, w, h, p, radius=radius, kind="card")
         pw, ph = self.s(w), self.s(h)
         g = vgrad((pw, ph), lerp(p["panel"], (0, 0, 0), 0.05),
                   p["panel_hi"], lerp(p["panel"], (0, 0, 0), 0.02)).convert("RGBA")
@@ -148,6 +150,8 @@ class Screen:
 
     def plate(self, x, y, w, h, p, radius=10):
         """bg_sd_hud_plate: horizontal gradient + 1.5dp cyan stroke + inner magenta."""
+        if p.get("glass"):
+            return self.glass_panel(x, y, w, h, p, radius=radius, kind="plate")
         pw, ph = self.s(w), self.s(h)
         g = vgrad((pw, ph), lerp(p["panel"], p["cyan"], 0.05), lerp(p["panel"], p["magenta"], 0.10),
                   lerp(p["panel"], p["cyan"], 0.05)).convert("RGBA")
@@ -164,6 +168,73 @@ class Screen:
             self.poly([(cx, cy + sy * L * 0.5), (cx + sx * L * 0.5, cy),
                        (cx + sx * L * 0.8, cy + sy * 1.2), (cx, cy + sy * L * 0.56)],
                       fill=rgba(p["cyan"], 240))
+
+    # ---- frosted glass ------------------------------------------------
+    def glass_panel(self, x, y, w, h, p, radius=13, kind="card"):
+        """Glassmorphism panel: blurred backdrop, tint wash, edge light, specular sheen."""
+        g = p["glass"]
+        box = self.box(x, y, w, h)
+
+        # soft drop shadow so the pane lifts off the wallpaper
+        sh = Image.new("RGBA", self.img.size, (0, 0, 0, 0))
+        ImageDraw.Draw(sh).rounded_rectangle(
+            [box[0] - self.s(3), box[1] - self.s(1), box[2] + self.s(3), box[3] + self.s(7)],
+            self.s(radius + 3), fill=(0, 0, 0, int(105 * g.get("shadow", 1.0))))
+        self.img.alpha_composite(sh.filter(ImageFilter.GaussianBlur(self.s(9))))
+        self.redraw()
+
+        # backdrop blur (what the pane actually shows through)
+        region = self.img.crop((box[0], box[1], box[2] + 1, box[3] + 1))
+        blurred = region.filter(ImageFilter.GaussianBlur(self.s(g.get("blur", 9))))
+        blurred = ImageEnhance.Brightness(blurred).enhance(g.get("brighten", 1.30))
+        blurred = ImageEnhance.Color(blurred).enhance(g.get("saturate", 1.45))
+        blurred = ImageEnhance.Contrast(blurred).enhance(g.get("contrast", 1.04))
+        tw, th = blurred.size
+        mask = rounded_mask((tw, th), self.s(radius))
+        self.img.paste(blurred, (box[0], box[1]), mask)
+        self.redraw()
+
+        # tint wash: lighter at the top edge, deeper towards the bottom
+        tint = vgrad((tw, th), g["tint_top"], g["tint_bottom"]).convert("RGBA")
+        alpha = g.get("tint_alpha", 84) * (1.0 if kind == "card" else 0.85)
+        tint.putalpha(mask.point(lambda v: int(v * alpha / 255)))
+        self.img.alpha_composite(tint, (box[0], box[1]))
+        self.redraw()
+
+        # frosted grain so the pane does not look like a flat gradient
+        grain = Image.effect_noise((tw, th), g.get("grain", 16)).convert("L")
+        grain = Image.merge("RGBA", (grain, grain, grain,
+                                     grain.point(lambda v: int(abs(v - 128) * 0.9))))
+        self.img.alpha_composite(
+            Image.composite(grain, Image.new("RGBA", (tw, th), (0, 0, 0, 0)), mask),
+            (box[0], box[1]))
+        self.redraw()
+
+        # specular sweep across the upper part of the pane
+        sheen = Image.new("RGBA", (tw, th), (0, 0, 0, 0))
+        ImageDraw.Draw(sheen).polygon(
+            [(0, 0), (tw, 0), (tw, int(th * 0.20)), (0, int(th * 0.44))],
+            fill=rgba((255, 255, 255), int(g.get("sheen", 30))))
+        sheen = sheen.filter(ImageFilter.GaussianBlur(self.s(9)))
+        sheen.putalpha(ImageChops.multiply(sheen.split()[3], mask))
+        self.img.alpha_composite(sheen, (box[0], box[1]))
+        self.redraw()
+
+        edge = g.get("edge", (255, 255, 255))
+        self.d.rounded_rectangle(self.box(x, y, w, h), self.s(radius),
+                                 outline=rgba(edge, g.get("edge_alpha", 170)),
+                                 width=max(2, self.s(1.7)))
+        self.d.rounded_rectangle(self.box(x + 2.5, y + 2.5, w - 5, h - 5), self.s(radius - 2),
+                                 outline=rgba((255, 255, 255), 78), width=max(1, self.s(1)))
+        # crisp top highlight: the signature glass "refraction" line
+        self.d.line([(self.s(x + radius * 0.9), self.s(y + 1.4)),
+                     (self.s(x + w - radius * 0.9), self.s(y + 1.4))],
+                    fill=rgba((255, 255, 255), g.get("top_line", 150)),
+                    width=max(2, self.s(1.6)))
+        # coloured light leak in the bottom corner, so glass still carries the theme
+        self.soft_box(x + w * 0.10, y + h * 0.55, w * 0.80, h * 0.45, radius,
+                      p["cyan"], int(34 * g.get("leak", 1.0)), 6)
+        self.soft_box(x, y, w, h, radius, p["magenta"], int(22 * g.get("leak", 1.0)), 4)
 
     def soft_box(self, x, y, w, h, radius, color, strength=70, spread=9):
         layer = Image.new("RGBA", self.img.size, (0, 0, 0, 0))
@@ -543,16 +614,19 @@ def dock(sc, p):
     dy = H - 16 - dh
     dw = 760
     dx = (W - dw) / 2
-    pw, ph = sc.s(dw), sc.s(dh)
-    g = vgrad((pw, ph), lerp(p["panel"], (0, 0, 0), 0.1), p["panel_hi"]).convert("RGBA")
-    g.putalpha(rounded_mask((pw, ph), sc.s(14)).point(lambda v: int(v * 232 / 255)))
-    sc.img.alpha_composite(g, (sc.s(dx), sc.s(dy)))
-    sc.redraw()
-    sc.d.rounded_rectangle(sc.box(dx, dy, dw, dh), sc.s(14), outline=rgba(p["cyan"], 175),
-                           width=max(1, sc.s(1.5)))
-    sc.d.rounded_rectangle(sc.box(dx + 2, dy + 2, dw - 4, dh - 4), sc.s(12),
-                           outline=rgba(p["magenta"], 80), width=max(1, sc.s(1)))
-    sc.soft_box(dx, dy, dw, dh, 14, p["cyan"], 45, 8)
+    if p.get("glass"):
+        sc.glass_panel(dx, dy, dw, dh, p, radius=16, kind="plate")
+    else:
+        pw, ph = sc.s(dw), sc.s(dh)
+        g = vgrad((pw, ph), lerp(p["panel"], (0, 0, 0), 0.1), p["panel_hi"]).convert("RGBA")
+        g.putalpha(rounded_mask((pw, ph), sc.s(14)).point(lambda v: int(v * 232 / 255)))
+        sc.img.alpha_composite(g, (sc.s(dx), sc.s(dy)))
+        sc.redraw()
+        sc.d.rounded_rectangle(sc.box(dx, dy, dw, dh), sc.s(14), outline=rgba(p["cyan"], 175),
+                               width=max(1, sc.s(1.5)))
+        sc.d.rounded_rectangle(sc.box(dx + 2, dy + 2, dw - 4, dh - 4), sc.s(12),
+                               outline=rgba(p["magenta"], 80), width=max(1, sc.s(1)))
+        sc.soft_box(dx, dy, dw, dh, 14, p["cyan"], 45, 8)
 
     tabs = ["HOME", "PROFILES", "MODS", "SERVERS", "CONTROLS", "SKINS", "SETTINGS"]
     tw = dw / len(tabs)
@@ -602,7 +676,7 @@ def dock(sc, p):
 
 
 # --------------------------------------------------------------------------- composition
-def render(p):
+def render(p, out_dir=None):
     sc = Screen(build_bg(p))
     header(sc, p)
 
@@ -763,7 +837,9 @@ def render(p):
     sc.finish()
 
     out = sc.img.convert("RGB").resize((W, H), Image.LANCZOS)
-    path = OUT / f"{p['slug']}.png"
+    target = out_dir or OUT
+    target.mkdir(parents=True, exist_ok=True)
+    path = target / f"{p['slug']}.png"
     out.save(path, "PNG", optimize=True)
     return path
 
