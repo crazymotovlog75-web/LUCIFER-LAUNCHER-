@@ -1,20 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Cyan launch pill with the iOS highlight across its top half. -->
-<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
-    <item>
-        <shape android:shape="rectangle">
-            <gradient
-                android:angle="270"
-                android:startColor="#B8FBFF"
-                android:centerColor="#6FF3FF"
-                android:endColor="#2FE9FF" />
-            <corners android:radius="18dp" />
-        </shape>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:state_enabled="false">
+        <shape android:shape="rectangle"><solid android:color="#FF324553"/><corners android:radius="3dp"/></shape>
     </item>
-    <item android:gravity="top" android:height="1.6dp">
-        <shape android:shape="rectangle">
-            <solid android:color="#66FFFFFF" />
-            <corners android:radius="18dp" />
-        </shape>
-    </item>
-</layer-list>
+    <item android:state_pressed="true" android:drawable="@drawable/bg_lucifer_slanted_active" />
+    <item android:drawable="@drawable/bg_lucifer_slanted_cta" />
+</selector>

@@ -1,20 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- Liquid crystal clear tokens (L03 "side rail" revamp) -->
+    <!-- Lucifer navy / ice-blue palette retained for legacy screens during the flat angular redesign. -->
     <color name="lg_text_primary">#FFFFFF</color>
-    <color name="lg_text_secondary">#E4F1F7</color>
-    <color name="lg_text_tertiary">#C2DCE6</color>
-    <color name="lg_accent">#2FE9FF</color>
-    <color name="lg_accent_bright">#A8F5FF</color>
-    <color name="lg_secondary">#D946EF</color>
-    <color name="lg_online">#22C55E</color>
-    <color name="lg_ink">#06131B</color>
-    <color name="lg_chip">#38FFFFFF</color>
-    <color name="lg_chip_edge">#8CFFFFFF</color>
-    <color name="lg_row">#2EFFFFFF</color>
-    <color name="lg_row_selected">#5EFFFFFF</color>
-    <color name="lg_divider">#4DFFFFFF</color>
-    <color name="lg_rail_active">#4DFFFFFF</color>
-    <color name="lg_wallpaper_scrim_top">#1A0C1A28</color>
-    <color name="lg_wallpaper_scrim_bottom">#4D0C1A28</color>
+    <color name="lg_text_secondary">#D8EAF3</color>
+    <color name="lg_text_tertiary">#93AABB</color>
+    <color name="lg_accent">#38BDF8</color>
+    <color name="lg_accent_bright">#8BE4FF</color>
+    <color name="lg_secondary">#75D7FF</color>
+    <color name="lg_online">#67D9AE</color>
+    <color name="lg_ink">#06121A</color>
+    <color name="lg_chip">#F20D1721</color>
+    <color name="lg_chip_edge">#FF2A5065</color>
+    <color name="lg_row">#F10B131C</color>
+    <color name="lg_row_selected">#FF102536</color>
+    <color name="lg_divider">#FF263846</color>
+    <color name="lg_rail_active">#FF143044</color>
+    <color name="lg_wallpaper_scrim_top">#42030912</color>
+    <color name="lg_wallpaper_scrim_bottom">#E803070D</color>
 </resources>

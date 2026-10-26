@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bg_lucifer_splash"
+    android:clickable="true"
+    android:focusable="true"
+    android:importantForAccessibility="yes"
+    android:contentDescription="Lucifer Launcher loading screen">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:paddingHorizontal="@dimen/_24sdp"
+        android:paddingVertical="@dimen/_18sdp">
+
+        <ImageView
+            android:id="@+id/splash_emblem"
+            android:layout_width="@dimen/_72sdp"
+            android:layout_height="@dimen/_88sdp"
+            android:src="@drawable/lucifer_launcher_mark"
+            android:scaleType="fitCenter"
+            android:contentDescription="Lucifer lightning emblem" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_10sdp"
+            android:text="LUCIFER"
+            android:textColor="#F4FBFF"
+            android:textSize="@dimen/_23ssp"
+            android:textStyle="bold"
+            android:letterSpacing="0.18"
+            android:fontFamily="sans-serif-condensed" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_3sdp"
+            android:text="L A U N C H E R"
+            android:textColor="#78DFFF"
+            android:textSize="@dimen/_9ssp"
+            android:textStyle="bold"
+            android:letterSpacing="0.16" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_30sdp"
+            android:text="MINECRAFT JAVA EDITION"
+            android:textColor="#B6C8D6"
+            android:textSize="@dimen/_7ssp"
+            android:textStyle="bold"
+            android:letterSpacing="0.14" />
+
+        <ProgressBar
+            android:id="@+id/lucifer_splash_progress"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="@dimen/_180sdp"
+            android:layout_height="@dimen/_4sdp"
+            android:layout_marginTop="@dimen/_10sdp"
+            android:max="100"
+            android:progress="4"
+            android:indeterminate="false"
+            android:progressDrawable="@drawable/bg_lucifer_splash_progress" />
+
+        <TextView
+            android:id="@+id/lucifer_splash_status"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_7sdp"
+            android:text="Preparing your world…"
+            android:textColor="#95AABA"
+            android:textSize="@dimen/_7ssp"
+            android:letterSpacing="0.05" />
+    </LinearLayout>
+</FrameLayout>

@@ -8,7 +8,7 @@ import net.kdt.pojavlaunch.R;
 
 /** Curated bundled wallpaper and matching adaptive palette catalog. */
 public final class WallpaperCatalog {
-    /** Liquid Crystal Clear ships as the default scene (the glass revamp is built on it). */
+    /** Lucifer Overworld ships as the default dark landscape scene. */
     public static final int DEFAULT_ID = 21;
 
     public static final Wallpaper[] ALL = {
@@ -33,8 +33,8 @@ public final class WallpaperCatalog {
         new Wallpaper(18, R.drawable.lucifer_wallpaper_19, R.drawable.lucifer_wallpaper_preview_19, R.style.AppTheme_Wallpaper19, R.style.AppTheme_Wallpaper19_Gradient, R.color.wallpaper_19_accent, R.color.wallpaper_19_secondary, R.color.wallpaper_19_surface, R.color.wallpaper_19_border),
         new Wallpaper(19, R.drawable.lucifer_wallpaper_20, R.drawable.lucifer_wallpaper_preview_20, R.style.AppTheme_Wallpaper20, R.style.AppTheme_Wallpaper20_Gradient, R.color.wallpaper_20_accent, R.color.wallpaper_20_secondary, R.color.wallpaper_20_surface, R.color.wallpaper_20_border),
         new Wallpaper(20, R.drawable.lucifer_wallpaper_black, R.drawable.lucifer_wallpaper_black, R.style.AppTheme_Wallpaper21, R.style.AppTheme_Wallpaper21_Gradient, R.color.wallpaper_21_accent, R.color.wallpaper_21_secondary, R.color.wallpaper_21_surface, R.color.wallpaper_21_border),
-        // 22 — Liquid Crystal Clear: the aurora scene the L03 glass revamp was designed on.
-        new Wallpaper(21, R.drawable.lucifer_wallpaper_22, R.drawable.lucifer_wallpaper_preview_22, R.style.AppTheme_Wallpaper22, R.style.AppTheme_Wallpaper22_Gradient, R.color.wallpaper_22_accent, R.color.wallpaper_22_secondary, R.color.wallpaper_22_surface, R.color.wallpaper_22_border)
+        // 22 — Lucifer Overworld: dark aurora valley, cyan accents, and strong text contrast.
+        new Wallpaper(21, R.drawable.lucifer_wallpaper_overworld, R.drawable.lucifer_wallpaper_overworld, R.style.AppTheme_Wallpaper22, R.style.AppTheme_Wallpaper22_Gradient, R.color.wallpaper_22_accent, R.color.wallpaper_22_secondary, R.color.wallpaper_22_surface, R.color.wallpaper_22_border)
     };
 
     private WallpaperCatalog() {}

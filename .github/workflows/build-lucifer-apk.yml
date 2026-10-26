@@ -1,4 +1,4 @@
-name: Lucifer Launcher — v3.4 (black-block fix + HOLY GL4ES + real FPS)
+name: Lucifer Launcher — v3.6.0 (native angular showcase + splash)
 
 on:
   push:
@@ -27,12 +27,12 @@ jobs:
           git clone --branch arena/581836b4-lucifer-launcher-v2 --depth 1 \
             https://github.com/crazymotovlog75-web/LUCIFER-LAUNCHER-v2.git engine
 
-      - name: Apply Abyssal Teal UI + 1.21+ FPS Pack + Modern-GL Compat
+      - name: Apply Lucifer Native Showcase + Existing FPS Pack + Modern-GL Compat
         run: |
           cp -rv overhaul/launcher-ui-overhaul/app_pojavlauncher/* engine/app_pojavlauncher/
           # LWJGL shim: FrameStats + the glfwSwapBuffers hook that feeds the real FPS overlay.
           cp -rv overhaul/launcher-ui-overhaul/jre_lwjgl3glfw/* engine/jre_lwjgl3glfw/
-          sed -i 's/versionCode 10000000/versionCode 10000002/; s/versionCode 10000002/versionCode 10000003/; s/versionCode 10000003/versionCode 10000004/; s/versionCode 10000004/versionCode 10000005/; s/versionCode 10000005/versionCode 10000006/; s/versionCode 10000006/versionCode 10000007/; s/versionCode 10000007/versionCode 10000008/; s/versionCode 10000008/versionCode 10000009/; s/versionCode 10000009/versionCode 10000010/; s/versionCode 10000010/versionCode 10000011/; s/versionCode 10000011/versionCode 10000012/' engine/app_pojavlauncher/build.gradle
+          sed -i 's/versionCode 10000000/versionCode 10000013/; s/versionName getVersionName()/versionName "3.6.0"/' engine/app_pojavlauncher/build.gradle
 
       - name: Set up JDK 21
         uses: actions/setup-java@v4
@@ -71,7 +71,7 @@ jobs:
           fi
 
           cp "$RELEASE_APK" "$GITHUB_WORKSPACE/dist-apk/LUCIFER-LAUNCHER-PACK.apk"
-          cp "$RELEASE_APK" "$GITHUB_WORKSPACE/dist-apk/LUCIFER-LAUNCHER-PACK-v3.5.1.apk"
+          cp "$RELEASE_APK" "$GITHUB_WORKSPACE/dist-apk/LUCIFER-LAUNCHER-PACK-v3.6.0.apk"
           sha256sum "$GITHUB_WORKSPACE/dist-apk/LUCIFER-LAUNCHER-PACK.apk" > "$GITHUB_WORKSPACE/dist-apk/LUCIFER-LAUNCHER-PACK.sha256"
           md5sum "$GITHUB_WORKSPACE/dist-apk/LUCIFER-LAUNCHER-PACK.apk" > "$GITHUB_WORKSPACE/dist-apk/LUCIFER-LAUNCHER-PACK.md5"
 
@@ -136,35 +136,29 @@ jobs:
             || { echo "FAIL: the stencil/ES3 EGL config is not in libpojavexec.so"; exit 1; }
           echo "OK: FPS hook in both shim jars, HOLY GL4ES registered, EGL config compiled in"
 
-      - name: Assert the Liquid Crystal glass revamp is in the APK
+      - name: Assert the native Lucifer showcase and splash are in the APK
         run: |
           set -e
           APK="$GITHUB_WORKSPACE/dist-apk/LUCIFER-LAUNCHER-PACK.apk"
           DEXES=$(unzip -l "$APK" | awk '/classes.*[.]dex/{print $4}')
           echo "dex entries: $(echo $DEXES | tr '\n' ' ')"
 
-          # 1. the glass panes are real custom views, referenced from the layouts, so their
-          #    class names survive R8 and show up in the dex string pool.
-          for needle in GlassFrameLayout GlassLinearLayout; do
-            HITS=$( for d in $DEXES; do unzip -p "$APK" "$d"; done | grep -ac "$needle" || true )
-            test "${HITS:-0}" -gt 0 \
-              || { echo "FAIL: $needle is missing from the shipped APK"; exit 1; }
-            echo "glass view ok: $needle ($HITS hits)"
-          done
+          # Source-level integration checks: the launcher entrypoint and both responsive
+          # activity layouts must wire in the real splash before the UI build is accepted.
+          grep -q 'lucifer_splash_screen' engine/app_pojavlauncher/src/main/res/layout-land/activity_pojav_launcher.xml
+          grep -q 'lucifer_splash_screen' engine/app_pojavlauncher/src/main/res/layout/activity_pojav_launcher.xml
+          grep -q 'ObjectAnimator.ofInt' engine/app_pojavlauncher/src/main/java/net/kdt/pojavlaunch/LauncherActivity.java
+          echo "source integration ok: landscape/portrait splash layouts and animated Activity"
 
-          # 2. the styleable (lgRadius/lgTint/lgScrim/lgRefraction), the Liquid Crystal theme and
-          #    the aurora wallpaper all have to be in the resource table.
-          for needle in lgRadius lgTint lgScrim Wallpaper22 lucifer_wallpaper_22; do
+          # Verify the compiled resource table contains the splash, angular panels and default scene.
+          for needle in lucifer_splash_screen bg_lucifer_slanted_panel bg_lucifer_slanted_cta lucifer_wallpaper_overworld Wallpaper22; do
             HITS=$( unzip -p "$APK" resources.arsc | grep -ac "$needle" || true )
             test "${HITS:-0}" -gt 0 \
-              || { echo "FAIL: $needle is missing from resources.arsc (glass theme not packaged)"; exit 1; }
-            echo "resource ok: $needle ($HITS hits)"
+              || { echo "FAIL: $needle is missing from the packaged native UI"; exit 1; }
+            echo "native resource ok: $needle ($HITS hits)"
           done
 
-          # 3. the glass scene drawable is wired as the window background of the theme.
-          unzip -p "$APK" resources.arsc | grep -aq 'bg_liquid_scene' \
-            || { echo "FAIL: bg_liquid_scene is not packaged"; exit 1; }
-          echo "OK: glass panes, glass theme, aurora wallpaper and scene drawable shipped"
+          echo "OK: native Lucifer UI, splash and scene wallpaper shipped; engine checks ran above"
 
       - name: Surface Build Diagnostics on Failure
         if: failure()
@@ -180,7 +174,7 @@ jobs:
       - name: Upload APK Build Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: lucifer-launcher-pack-v3.5.1-apk
+          name: lucifer-launcher-pack-v3.6.0-apk
           path: dist-apk/*
           retention-days: 30
 
@@ -190,33 +184,26 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         working-directory: dist-apk
         run: |
-          TAG="liquid-v3.5.1"
-          TITLE="LUCIFER LAUNCHER v3.5.1 - Liquid Crystal Clear glass UI (L03 side rail)"
-          NOTES="### LUCIFER LAUNCHER v3.5.1 - Liquid Crystal Clear glass UI (L03 side rail)
+          TAG="lucifer-v3.6.0"
+          TITLE="LUCIFER LAUNCHER v3.6.0 - Native Angular Cyan Showcase"
+          NOTES="### LUCIFER LAUNCHER v3.6.0 - Native Android Showcase UI
 
-          **The UI you picked, built for real**
-          - The launcher now uses the **L03 side rail** layout from the ten glass mockups: a full-height glass rail on the left, one glass header pill, the content stage in the middle and one glass status strip along the bottom.
-          - Nothing was faked with a flat translucent box. Every pane is a real liquid-glass surface: it refracts the aurora wallpaper that sits behind it, adds a white veil, a bottom scrim, a specular sweep and the three lens-rim hairlines. The same material stack the iOS glass look uses.
-          - Glass panes are a single textured quad each (one captured, pre-blurred backdrop), so the material costs no per-frame blur and no extra full-screen pass.
-          - Selected items glow cyan exactly like the mockup: HOME in the rail, the active instance row, the current profile card.
+          **The supplied Lucifer look is integrated into the Android launcher APK.**
+          - Full-screen, landscape-first Lucifer layout with a responsive portrait fallback and angular navy/cyan surfaces.
+          - A branded animated splash appears on each launcher Activity open, then fades into the native Home screen.
+          - Existing native destinations remain connected: profiles/instances, mod search and management, server hub, custom controls, skins, wallpaper studio and settings.
+          - The new dark overworld scene is bundled as wallpaper 22 and remains selectable in the native wallpaper studio.
+          - Home shows the selected profile and real local profile settings; it does not invent player counts, pings, renderer data or installed-mod counts. Live server status is queried in the native Server Hub.
 
-          **Home screen**
-          - Left: the instance hero card with version / fabric / active, renderer, shaders, server, the skin preview and the READY TO LAUNCH pill.
-          - Right: LUCIFERMC card (players, play.lucifermc.fun, LIVE 24ms, JOIN / DISCORD / WIKI), the instances shelf with the quick-switch cards, and the MOD STORE / HUD KEYS shortcuts.
-          - Bottom: TOP MODS strip (Sodium, Iris, Lithium, Krypton, Ferrite) with 42 ACTIVE.
+          **Existing game-engine features are retained.** This UI update does not claim extra GPU/runtime/server capabilities. Microsoft authentication continues to use the launcher's existing sign-in flow.
 
-          **New wallpaper: Liquid Crystal Clear**
-          - Aurora scene rendered for this revamp and bundled as wallpaper 22, shipping as the default. It is selectable in the wallpaper studio like every other scene.
-          - A wallpaper of your own still works: the panes refract whatever is behind them.
-
-          **Still respected from before:** no resolution cap, no forced GC, no CPU pins, no clock mode, no driver env overrides, no renderer auto-switch during play. Everything from v3.4 (stencil/ES3 EGL config, HOLY GL4ES, real movable FPS badge) is untouched.
-
-          **Direct Installable APK:** LUCIFER-LAUNCHER-PACK-v3.5.1.apk (versionCode 10000012, upgrades cleanly over v3.5)
+          **Direct Installable APK:** LUCIFER-LAUNCHER-PACK-v3.6.0.apk (versionCode 10000013)
           - **Branch:** ${GITHUB_REF_NAME} · **Commit:** ${GITHUB_SHA}"
+
 
           if gh release view "$TAG" --repo "${GITHUB_REPOSITORY}" >/dev/null 2>&1; then
             gh release upload "$TAG" \
-              LUCIFER-LAUNCHER-PACK-v3.5.1.apk \
+              LUCIFER-LAUNCHER-PACK-v3.6.0.apk \
               LUCIFER-LAUNCHER-PACK.apk \
               LUCIFER-LAUNCHER-PACK.sha256 \
               LUCIFER-LAUNCHER-PACK.md5 \
@@ -225,7 +212,7 @@ jobs:
             gh release edit "$TAG" --title "$TITLE" --notes "$NOTES" --repo "${GITHUB_REPOSITORY}" --latest
           else
             gh release create "$TAG" \
-              LUCIFER-LAUNCHER-PACK-v3.5.1.apk \
+              LUCIFER-LAUNCHER-PACK-v3.6.0.apk \
               LUCIFER-LAUNCHER-PACK.apk \
               LUCIFER-LAUNCHER-PACK.sha256 \
               LUCIFER-LAUNCHER-PACK.md5 \

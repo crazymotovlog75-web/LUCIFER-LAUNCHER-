@@ -4,6 +4,7 @@ import static android.content.res.Configuration.ORIENTATION_PORTRAIT;
 import static net.kdt.pojavlaunch.Tools.hasNoOnlineProfileDialog;
 
 import android.Manifest;
+import android.animation.ObjectAnimator;
 import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
@@ -254,9 +255,25 @@ public class LauncherActivity extends BaseActivity {
 
         setContentView(R.layout.activity_pojav_launcher);
 
-        // Liquid Crystal Clear: capture the aurora backdrop once so every glass pane can
-        // refract the part of the wallpaper that sits behind it.
-        net.kdt.pojavlaunch.ui.LiquidGlass.install(findViewById(R.id.liquid_root));
+        // Full-screen branded splash on every cold open, then reveal the actual launcher UI.
+        View splashOverlay = findViewById(R.id.lucifer_splash_overlay);
+        android.widget.ProgressBar splashProgress = findViewById(R.id.lucifer_splash_progress);
+        if (splashOverlay != null) {
+            splashOverlay.setAlpha(1f);
+            if (splashProgress != null) {
+                ObjectAnimator progressAnimator = ObjectAnimator.ofInt(splashProgress, "progress", 4, 100);
+                progressAnimator.setDuration(2200L);
+                progressAnimator.start();
+            }
+            splashOverlay.postDelayed(() -> splashOverlay.animate()
+                    .alpha(0f)
+                    .setDuration(320L)
+                    .withEndAction(() -> {
+                        splashOverlay.setVisibility(View.GONE);
+                        splashOverlay.setAlpha(1f);
+                    })
+                    .start(), 2250L);
+        }
         
         // Handle window insets properly to prevent navigation bar space reservation
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(android.R.id.content),
@@ -341,9 +358,6 @@ public class LauncherActivity extends BaseActivity {
                 ((MainMenuFragment) root).reloadSpinner();
             }
         });
-        // Wallpaper/theme may have changed while we were away: re-capture the glass backdrop.
-        View glassRoot = findViewById(R.id.liquid_root);
-        if (glassRoot != null) net.kdt.pojavlaunch.ui.LiquidGlass.refresh(glassRoot);
         refreshShadowDragonTelemetry();
         mInstallTracker.attach();
     }

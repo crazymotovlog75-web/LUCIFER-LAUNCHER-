@@ -1,15 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/card_profile_root"
-    android:layout_width="@dimen/_168sdp"
-    android:layout_height="match_parent"
-    android:minHeight="@dimen/_42sdp"
-    android:layout_marginEnd="@dimen/_5sdp"
-    android:background="@drawable/bg_liquid_row"
+    android:layout_width="@dimen/_250sdp"
+    android:layout_height="@dimen/_100sdp"
+    android:layout_marginHorizontal="@dimen/_5sdp"
+    android:background="@drawable/bg_home_profile_card"
     android:clickable="true"
     android:focusable="true"
-    android:paddingHorizontal="@dimen/_6sdp"
-    android:paddingVertical="@dimen/_4sdp">
+    android:padding="@dimen/_10sdp">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -19,66 +17,66 @@
 
         <ImageView
             android:id="@+id/img_profile_icon"
-            android:layout_width="@dimen/_26sdp"
-            android:layout_height="@dimen/_26sdp"
-            android:layout_marginEnd="@dimen/_6sdp"
+            android:layout_width="@dimen/_42sdp"
+            android:layout_height="@dimen/_42sdp"
+            android:layout_marginEnd="@dimen/_8sdp"
             android:scaleType="fitCenter"
             android:background="@drawable/bg_profile_icon_rounded"
-            android:padding="@dimen/_2sdp"
+            android:padding="@dimen/_3sdp"
             android:contentDescription="Instance icon" />
 
         <LinearLayout
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_weight="1"
+            android:gravity="center_vertical"
             android:orientation="vertical">
-
             <TextView
                 android:id="@+id/tv_profile_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textColor="@color/lg_text_primary"
-                android:textSize="@dimen/_8ssp"
+                android:textColor="@color/text_primary_white"
+                android:textSize="@dimen/_11ssp"
                 android:textStyle="bold"
                 android:maxLines="1"
                 android:ellipsize="end" />
-
             <TextView
                 android:id="@+id/tv_profile_meta"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textColor="@color/lg_accent_bright"
-                android:textSize="@dimen/_6ssp"
-                android:maxLines="1"
-                android:ellipsize="end" />
-
+                android:layout_marginTop="@dimen/_2sdp"
+                android:textColor="@color/text_secondary_light"
+                android:textSize="@dimen/_8ssp"
+                android:maxLines="6"
+                android:breakStrategy="high_quality" />
             <TextView
                 android:id="@+id/tv_profile_mod_count"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textColor="@color/lg_text_tertiary"
-                android:textSize="@dimen/_6ssp"
+                android:layout_marginTop="@dimen/_3sdp"
+                android:textColor="?attr/luciferAccent"
+                android:textSize="@dimen/_8ssp"
                 android:maxLines="1"
                 android:ellipsize="end"
-                android:text="Mods: 0" />
+                android:text="Installed Mods: 0" />
         </LinearLayout>
 
         <ImageButton
             android:id="@+id/btn_profile_edit"
-            android:layout_width="@dimen/_22sdp"
-            android:layout_height="@dimen/_22sdp"
+            android:layout_width="@dimen/_36sdp"
+            android:layout_height="@dimen/_36sdp"
+            android:layout_marginStart="@dimen/_4sdp"
             android:background="?android:attr/selectableItemBackgroundBorderless"
-            android:contentDescription="Edit instance"
-            android:padding="@dimen/_4sdp"
-            android:tint="@color/lg_text_primary"
+            android:contentDescription="Edit instance and select its version"
+            android:padding="@dimen/_8sdp"
             android:src="@drawable/ic_edit_profile" />
 
         <FrameLayout
             android:id="@+id/btn_profile_play"
-            android:layout_width="@dimen/_34sdp"
-            android:layout_height="@dimen/_22sdp"
-            android:layout_marginStart="@dimen/_3sdp"
-            android:background="@drawable/bg_liquid_accent_button"
+            android:layout_width="@dimen/_58sdp"
+            android:layout_height="@dimen/_34sdp"
+            android:layout_marginStart="@dimen/_7sdp"
+            android:background="@drawable/bg_lucifer_action"
             android:clickable="true"
             android:focusable="true"
             android:contentDescription="Launch this instance">
@@ -86,10 +84,11 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:gravity="center"
-                android:text="GO"
-                android:textColor="@color/lg_ink"
-                android:textSize="@dimen/_7ssp"
-                android:textStyle="bold" />
+                android:text="OPEN"
+                android:textColor="?attr/luciferOnAccent"
+                android:textSize="@dimen/_8ssp"
+                android:textStyle="bold"
+                android:letterSpacing="0.08" />
         </FrameLayout>
     </LinearLayout>
 </FrameLayout>

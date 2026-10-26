@@ -1,9 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--
-    HOME — LIQUID CRYSTAL CLEAR (L03 content stage)
-    Hero glass card on the left (instance, spec rows, skin, READY TO LAUNCH), server + instances
-    glass cards on the right, and the TOP MODS / shortcuts strip along the bottom.
--->
+<!-- Lucifer Launcher Home: selected-profile summary, native server hub, profile shelf and shortcuts. -->
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -29,20 +25,17 @@
         app:layout_constraintGuide_percent="0.62" />
 
     <!-- ═══════════════════════════════════════════════════════════════════════
-         HERO — the active instance
+         HERO — selected instance
          ═══════════════════════════════════════════════════════════════════════ -->
-    <net.kdt.pojavlaunch.ui.GlassFrameLayout
+    <FrameLayout
         android:id="@+id/home_instance_card"
+        android:background="@drawable/bg_lucifer_slanted_panel"
         android:layout_width="0dp"
         android:layout_height="0dp"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toTopOf="@+id/home_strip"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/guide_hero_end"
-        app:lgRadius="26dp"
-        app:lgTint="84"
-        app:lgScrim="78"
-        app:lgRefraction="0.06">
+        app:layout_constraintEnd_toStartOf="@+id/guide_hero_end">
 
         <ImageView
             android:id="@+id/iv_home_avatar"
@@ -64,7 +57,7 @@
 
             <TextView
                 style="@style/LiquidLabel"
-                android:text="FABRIC 1.21.4"
+                android:text="SELECTED PROFILE"
                 android:textColor="@color/lg_accent_bright" />
 
             <TextView
@@ -160,7 +153,7 @@
                     android:layout_height="wrap_content"
                     android:orientation="horizontal">
                     <TextView style="@style/LiquidLabel" android:layout_width="@dimen/_58sdp" android:text="SERVER" android:textSize="@dimen/_6ssp" android:gravity="center_vertical" />
-                    <TextView style="@style/LiquidValue" android:text="LuciferMC · 24 ms" android:textSize="@dimen/_9ssp" />
+                    <TextView style="@style/LiquidValue" android:text="Open Server Hub for live status" android:textSize="@dimen/_9ssp" />
                 </LinearLayout>
             </LinearLayout>
 
@@ -169,7 +162,7 @@
                 android:layout_height="0dp"
                 android:layout_weight="1" />
 
-            <!-- RAM + READY TO LAUNCH -->
+            <!-- RAM + LAUNCH GAME -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -223,7 +216,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="@dimen/_6sdp"
-                            android:text="READY TO LAUNCH"
+                            android:text="LAUNCH GAME"
                             android:textColor="@color/lg_ink"
                             android:textSize="@dimen/_9ssp"
                             android:textStyle="bold"
@@ -239,7 +232,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="end"
                 android:layout_marginTop="@dimen/_1sdp"
-                android:text="1.21.10"
+                android:text="Select a profile to configure"
                 android:textColor="@color/lg_text_tertiary"
                 android:textSize="@dimen/_6ssp"
                 android:maxLines="1"
@@ -261,10 +254,10 @@
                 android:clickable="true"
                 android:focusable="true" />
         </LinearLayout>
-    </net.kdt.pojavlaunch.ui.GlassFrameLayout>
+    </FrameLayout>
 
     <!-- ═══════════════════════════════════════════════════════════════════════
-         RIGHT COLUMN — server, instances, arsenal shortcuts
+         RIGHT COLUMN — saved servers, instances and shortcuts
          ═══════════════════════════════════════════════════════════════════════ -->
     <LinearLayout
         android:id="@+id/home_right_col"
@@ -278,19 +271,16 @@
         app:layout_constraintEnd_toEndOf="parent">
 
         <!-- LUCIFERMC — official server -->
-        <net.kdt.pojavlaunch.ui.GlassLinearLayout
+        <LinearLayout
             android:id="@+id/home_server_card"
+            android:background="@drawable/bg_lucifer_slanted_panel"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:paddingHorizontal="@dimen/_10sdp"
             android:paddingVertical="@dimen/_7sdp"
             android:clickable="true"
-            android:focusable="true"
-            app:lgRadius="22dp"
-            app:lgTint="66"
-            app:lgScrim="90"
-            app:lgRefraction="0.05">
+            android:focusable="true">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -303,7 +293,7 @@
                     style="@style/LiquidValue"
                     android:layout_width="0dp"
                     android:layout_weight="1"
-                    android:text="LUCIFERMC"
+                    android:text="SAVED SERVERS"
                     android:textSize="@dimen/_11ssp"
                     android:letterSpacing="0.06"
                     android:ellipsize="end" />
@@ -314,7 +304,7 @@
                     android:paddingHorizontal="@dimen/_6sdp"
                     android:paddingVertical="@dimen/_2sdp"
                     android:background="@drawable/bg_liquid_pill"
-                    android:text="OFFICIAL"
+                    android:text="SAVED"
                     android:textColor="@color/lg_text_primary"
                     android:textSize="@dimen/_6ssp"
                     android:textStyle="bold"
@@ -324,7 +314,7 @@
             <TextView
                 style="@style/LiquidLabel"
                 android:layout_marginTop="@dimen/_1sdp"
-                android:text="LIFESTEEL SMP"
+                android:text="MANAGE YOUR SERVER LIST"
                 android:textSize="@dimen/_6ssp" />
 
             <LinearLayout
@@ -336,7 +326,7 @@
 
                 <TextView
                     style="@style/LiquidLabel"
-                    android:text="PLAYERS"
+                    android:text="CONNECTION STATUS"
                     android:textSize="@dimen/_6ssp" />
 
                 <Space
@@ -346,7 +336,7 @@
 
                 <TextView
                     style="@style/LiquidValue"
-                    android:text="12 / 200"
+                    android:text="NOT CHECKED"
                     android:textSize="@dimen/_8ssp" />
             </LinearLayout>
 
@@ -357,7 +347,7 @@
                 android:background="@drawable/bg_liquid_pill"
                 android:paddingHorizontal="@dimen/_6sdp"
                 android:paddingVertical="@dimen/_1sdp"
-                android:text="play.lucifermc.fun   ● LIVE · 24ms"
+                android:text="Open Server Hub to query live status"
                 android:textColor="@color/lg_accent_bright"
                 android:textSize="@dimen/_7ssp"
                 android:maxLines="1"
@@ -377,7 +367,7 @@
                     android:layout_weight="1.2"
                     android:background="@drawable/bg_liquid_accent_button"
                     android:gravity="center"
-                    android:text="JOIN"
+                    android:text="SERVERS"
                     android:textColor="@color/lg_ink"
                     android:textSize="@dimen/_8ssp"
                     android:textStyle="bold"
@@ -415,21 +405,18 @@
                     android:clickable="true"
                     android:focusable="true" />
             </LinearLayout>
-        </net.kdt.pojavlaunch.ui.GlassLinearLayout>
+        </LinearLayout>
 
         <!-- INSTANCES — quick switch shelf -->
-        <net.kdt.pojavlaunch.ui.GlassLinearLayout
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
+            android:background="@drawable/bg_lucifer_slanted_panel"
             android:layout_weight="1"
             android:layout_marginTop="@dimen/_5sdp"
             android:orientation="vertical"
             android:paddingHorizontal="@dimen/_10sdp"
-            android:paddingVertical="@dimen/_7sdp"
-            app:lgRadius="22dp"
-            app:lgTint="66"
-            app:lgScrim="90"
-            app:lgRefraction="0.05">
+            android:paddingVertical="@dimen/_7sdp">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -518,7 +505,7 @@
                     android:clickable="true"
                     android:focusable="true" />
             </LinearLayout>
-        </net.kdt.pojavlaunch.ui.GlassLinearLayout>
+        </LinearLayout>
 
         <!-- arsenal shortcuts -->
         <LinearLayout
@@ -559,10 +546,11 @@
     </LinearLayout>
 
     <!-- ═══════════════════════════════════════════════════════════════════════
-         BOTTOM STRIP — TOP MODS, mirrors the L03 mods bar
+         BOTTOM STRIP — popular mod examples
          ═══════════════════════════════════════════════════════════════════════ -->
-    <net.kdt.pojavlaunch.ui.GlassLinearLayout
+    <LinearLayout
         android:id="@+id/home_strip"
+        android:background="@drawable/bg_lucifer_slanted_panel"
         android:layout_width="0dp"
         android:layout_height="@dimen/_32sdp"
         android:layout_marginTop="@dimen/_5sdp"
@@ -571,13 +559,9 @@
         android:paddingHorizontal="@dimen/_12sdp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:lgRadius="17dp"
-        app:lgTint="60"
-        app:lgScrim="76"
-        app:lgRefraction="0.03">
+        app:layout_constraintEnd_toEndOf="parent">
 
-        <TextView style="@style/LiquidLabel" android:text="TOP MODS" android:textSize="@dimen/_6ssp" />
+        <TextView style="@style/LiquidLabel" android:text="POPULAR MODS" android:textSize="@dimen/_6ssp" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -647,11 +631,11 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="42 ACTIVE"
+            android:text="LOCAL PROFILE DATA"
             android:textColor="@color/lg_text_primary"
             android:textSize="@dimen/_7ssp"
             android:textStyle="bold"
             android:letterSpacing="0.08" />
-    </net.kdt.pojavlaunch.ui.GlassLinearLayout>
+    </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,17 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:state_pressed="true">
-        <shape android:shape="rectangle">
-            <solid android:color="#552FE9FF" />
-            <corners android:radius="9dp" />
-            <stroke android:width="1dp" android:color="#FF2FE9FF" />
-        </shape>
-    </item>
-    <item>
-        <shape android:shape="rectangle">
-            <solid android:color="#E60C081E" />
-            <corners android:radius="9dp" />
-            <stroke android:width="1dp" android:color="#8800D4FF" />
-        </shape>
-    </item>
+    <item android:state_pressed="true" android:drawable="@drawable/bg_lucifer_slanted_active" />
+    <item android:drawable="@drawable/bg_lucifer_slanted_panel" />
 </selector>

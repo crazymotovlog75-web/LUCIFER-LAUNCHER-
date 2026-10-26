@@ -1,23 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- One entry of the left glass rail (L03). -->
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:state_selected="true">
-        <shape android:shape="rectangle">
-            <solid android:color="@color/lg_rail_active" />
-            <corners android:radius="16dp" />
-            <stroke android:width="1.2dp" android:color="#B3FFFFFF" />
-        </shape>
-    </item>
-    <item android:state_pressed="true">
-        <shape android:shape="rectangle">
-            <solid android:color="#33FFFFFF" />
-            <corners android:radius="16dp" />
-        </shape>
-    </item>
-    <item>
-        <shape android:shape="rectangle">
-            <solid android:color="#00000000" />
-            <corners android:radius="16dp" />
-        </shape>
-    </item>
+    <item android:state_selected="true" android:drawable="@drawable/bg_lucifer_slanted_active" />
+    <item android:state_pressed="true" android:drawable="@drawable/bg_lucifer_slanted_active" />
+    <item android:drawable="@drawable/bg_lucifer_slanted_panel" />
 </selector>

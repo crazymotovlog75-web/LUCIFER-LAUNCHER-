@@ -1,24 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
-    <item>
-        <shape android:shape="rectangle">
-            <gradient
-                android:angle="0"
-                android:startColor="#F2060411"
-                android:centerColor="#F2130A2A"
-                android:endColor="#F2060411" />
-            <corners android:radius="14dp" />
-            <stroke android:width="1.5dp" android:color="#CC00D4FF" />
-        </shape>
-    </item>
-    <item android:left="2dp" android:top="2dp" android:right="2dp" android:bottom="2dp">
-        <shape android:shape="rectangle">
-            <corners android:radius="12dp" />
-            <stroke android:width="1dp" android:color="#88D946EF" />
-        </shape>
-    </item>
-    <item android:gravity="top|start" android:width="18dp" android:height="18dp"
-        android:drawable="@drawable/ic_sd_corner_tl" />
-    <item android:gravity="top|end" android:width="18dp" android:height="18dp"
-        android:drawable="@drawable/ic_sd_corner_tr" />
+    <item android:drawable="@drawable/bg_lucifer_slanted_panel" />
 </layer-list>

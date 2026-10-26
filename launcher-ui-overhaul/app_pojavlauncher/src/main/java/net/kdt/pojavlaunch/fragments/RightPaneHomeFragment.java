@@ -42,8 +42,8 @@ import java.util.Locale;
 import java.util.Map;
 
 /**
- * Lucifer home dashboard. It keeps the original profile actions and launcher event pipeline,
- * while presenting instances and launch controls in the new liquid-glass layout.
+ * Lucifer home dashboard. It keeps the native profile actions and launcher event pipeline,
+ * while presenting instances and launch controls in the dark angular launcher layout.
  */
 public class RightPaneHomeFragment extends Fragment {
 

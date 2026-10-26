@@ -1,10 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
-    <item>
-        <shape android:shape="rectangle">
-            <gradient android:angle="0" android:startColor="#442FE9FF" android:endColor="#44D946EF" />
-            <corners android:radius="10dp" />
-            <stroke android:width="1.8dp" android:color="#FF2FE9FF" />
-        </shape>
-    </item>
+    <item android:drawable="@drawable/bg_lucifer_slanted_active" />
 </layer-list>

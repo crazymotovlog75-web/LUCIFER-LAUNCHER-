@@ -1,27 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <!-- ══════════════════════════════════════════════════════════════════════
-         LIQUID CRYSTAL CLEAR — the L03 "side rail" layout picked from the
-         ten mockups. Light glass panes over a bright aurora wallpaper.
-         ══════════════════════════════════════════════════════════════════════ -->
+    <!-- Lucifer dark-navy / ice-blue theme. Kept under the existing wallpaper style IDs for saved-user compatibility. -->
     <style name="AppTheme.Wallpaper22" parent="AppTheme">
         <item name="luciferAccent">@color/lg_accent</item>
         <item name="luciferSecondary">@color/lg_secondary</item>
         <item name="luciferHighlight">@color/lg_accent_bright</item>
-        <item name="luciferAccentDim">@color/lg_chip_edge</item>
-        <item name="luciferSurface">#E6FFFFFF</item>
-        <item name="luciferSurfaceHigh">#F2FFFFFF</item>
-        <item name="luciferGlass">@color/lg_chip</item>
-        <item name="luciferGlassHigh">@color/lg_row_selected</item>
+        <item name="luciferAccentDim">#5538BDF8</item>
+        <item name="luciferSurface">#F20C141E</item>
+        <item name="luciferSurfaceHigh">#F515202C</item>
+        <item name="luciferGlass">#F20B131C</item>
+        <item name="luciferGlassHigh">#F515202C</item>
         <item name="luciferBorder">@color/lg_chip_edge</item>
-        <item name="luciferBackdrop">#E8102533</item>
-        <item name="luciferWallpaper">@drawable/lucifer_wallpaper_22</item>
-        <item name="android:statusBarColor">#00000000</item>
-        <item name="android:navigationBarColor">#00000000</item>
-        <item name="colorBgApp">#00000000</item>
-        <item name="colorBgBottomBar">@color/lg_chip</item>
-        <item name="colorBgStatusBar">#00000000</item>
+        <item name="luciferBackdrop">#F003070D</item>
+        <item name="luciferWallpaper">@drawable/lucifer_wallpaper_overworld</item>
+        <item name="android:statusBarColor">#03070C</item>
+        <item name="android:navigationBarColor">#03070C</item>
+        <item name="colorBgApp">#03070C</item>
+        <item name="colorBgBottomBar">#FA080D13</item>
+        <item name="colorBgStatusBar">#03070C</item>
         <item name="colorDivider">@color/lg_divider</item>
         <item name="themeAccent">?attr/luciferAccent</item>
         <item name="colorAccent">?attr/luciferAccent</item>
@@ -29,8 +26,8 @@
         <item name="colorTextSecondary">@color/lg_text_secondary</item>
         <item name="bgMainDrawable">@drawable/bg_liquid_scene</item>
         <item name="android:windowBackground">@drawable/bg_liquid_scene</item>
-        <item name="colorSurface">@color/lg_chip</item>
-        <item name="colorSurfaceVariant">@color/lg_row_selected</item>
+        <item name="colorSurface">#F20C141E</item>
+        <item name="colorSurfaceVariant">#F515202C</item>
         <item name="colorOnSurface">@color/lg_text_primary</item>
         <item name="colorOnSurfaceVariant">@color/lg_text_secondary</item>
         <item name="colorPrimary">@color/lg_accent</item>
@@ -42,7 +39,7 @@
         <item name="android:windowBackground">@drawable/bg_liquid_scene</item>
     </style>
 
-    <!-- ── Rail (L03 side rail) ───────────────────────────────────────────── -->
+    <!-- ── Angular cyan navigation rail ───────────────────────────────────── -->
     <style name="LiquidRailItem">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">@dimen/_54sdp</item>

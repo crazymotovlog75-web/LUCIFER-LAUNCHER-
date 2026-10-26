@@ -1,26 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--
-    LUCIFER LAUNCHER — LIQUID CRYSTAL CLEAR  ·  L03 "SIDE RAIL"
-    ─────────────────────────────────────────────────────────────
-    Picked from the ten glass mockups: a full-height glass rail on the left, one glass header
-    pill, the content stage in the middle and one glass status strip along the bottom.
-    Every pane is a real liquid-glass surface (see LiquidGlass.java): it refracts the aurora
-    wallpaper behind it, adds a white veil, a bottom scrim, a specular sweep and the lens rim.
--->
+<!-- Lucifer Launcher landscape shell: angular cyan side rail, native navigation and full-screen content. -->
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/liquid_root"
+    android:id="@+id/lucifer_root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="false"
     android:background="?attr/bgMainDrawable">
 
     <!-- ═══════════════════════════════════════════════════════════════════════
-         SIDE RAIL (glass) — avatar, then the seven destinations
+         ANGULAR SIDE RAIL — avatar, then the native launcher destinations
          ═══════════════════════════════════════════════════════════════════════ -->
-    <net.kdt.pojavlaunch.ui.GlassLinearLayout
+    <LinearLayout
         android:id="@+id/side_rail"
+        android:background="@drawable/bg_lucifer_slanted_panel"
+        android:elevation="6dp"
         android:layout_width="@dimen/_84sdp"
         android:layout_height="0dp"
         android:layout_marginStart="@dimen/_6sdp"
@@ -31,11 +26,7 @@
         android:paddingVertical="@dimen/_6sdp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:lgRadius="30dp"
-        app:lgTint="70"
-        app:lgScrim="92"
-        app:lgRefraction="0.02">
+        app:layout_constraintBottom_toBottomOf="parent">
 
         <FrameLayout
             android:id="@+id/rail_avatar_shell"
@@ -48,7 +39,7 @@
                 android:layout_width="@dimen/_28sdp"
                 android:layout_height="@dimen/_28sdp"
                 android:layout_gravity="center"
-                android:src="@drawable/lucifer_launcher_emblem"
+                android:src="@drawable/lucifer_launcher_mark"
                 android:scaleType="fitCenter"
                 android:contentDescription="Lucifer Launcher" />
         </FrameLayout>
@@ -139,14 +130,16 @@
                 <TextView style="@style/LiquidRailLabel" android:text="SETTINGS" android:textColor="@color/lg_text_primary" />
             </LinearLayout>
         </LinearLayout>
-    </net.kdt.pojavlaunch.ui.GlassLinearLayout>
+    </LinearLayout>
 
     <!-- ═══════════════════════════════════════════════════════════════════════
-         HEADER PILL (glass) — brand, scene/cursor/about chips, live telemetry,
+         HEADER BAR — brand, scene/cursor/about chips and launcher status,
          account spinner and the settings gear
          ═══════════════════════════════════════════════════════════════════════ -->
-    <net.kdt.pojavlaunch.ui.GlassLinearLayout
+    <LinearLayout
         android:id="@+id/header_bar"
+        android:background="@drawable/bg_lucifer_header"
+        android:elevation="8dp"
         android:layout_width="0dp"
         android:layout_height="@dimen/_40sdp"
         android:layout_marginStart="@dimen/_6sdp"
@@ -157,11 +150,7 @@
         android:paddingHorizontal="@dimen/_8sdp"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toEndOf="@+id/side_rail"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:lgRadius="22dp"
-        app:lgTint="60"
-        app:lgScrim="72"
-        app:lgRefraction="0.03">
+        app:layout_constraintEnd_toEndOf="parent">
 
         <FrameLayout
             android:id="@+id/btn_home_logo"
@@ -174,7 +163,7 @@
                 android:id="@+id/iv_lucifer_logo"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:src="@drawable/lucifer_launcher_emblem"
+                android:src="@drawable/lucifer_launcher_mark"
                 android:scaleType="fitCenter"
                 android:contentDescription="Lucifer Launcher logo" />
         </FrameLayout>
@@ -349,7 +338,7 @@
             android:contentDescription="Settings"
             android:clickable="true"
             android:focusable="true" />
-    </net.kdt.pojavlaunch.ui.GlassLinearLayout>
+    </LinearLayout>
 
     <!-- ═══════════════════════════════════════════════════════════════════════
          CONTENT STAGE — Home / Profiles / Mods / Servers / Skins
@@ -378,10 +367,12 @@
         app:layout_constraintEnd_toEndOf="parent" />
 
     <!-- ═══════════════════════════════════════════════════════════════════════
-         STATUS STRIP (glass) — server + build, mirrors the L03 footer bar
+         STATUS STRIP — selected server list state and launcher branding
          ═══════════════════════════════════════════════════════════════════════ -->
-    <net.kdt.pojavlaunch.ui.GlassLinearLayout
+    <LinearLayout
         android:id="@+id/bottom_dock_bar"
+        android:background="@drawable/bg_lucifer_slanted_panel"
+        android:elevation="4dp"
         android:layout_width="0dp"
         android:layout_height="@dimen/_34sdp"
         android:layout_marginStart="@dimen/_6sdp"
@@ -392,11 +383,7 @@
         android:paddingHorizontal="@dimen/_12sdp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toEndOf="@+id/side_rail"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:lgRadius="19dp"
-        app:lgTint="56"
-        app:lgScrim="64"
-        app:lgRefraction="0.02">
+        app:layout_constraintEnd_toEndOf="parent">
 
         <TextView
             android:layout_width="wrap_content"
@@ -409,7 +396,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/_5sdp"
-            android:text="LUCIFERMC · LIFESTEEL SMP"
+            android:text="SAVED SERVERS · STATUS NOT CHECKED"
             android:textColor="@color/lg_text_primary"
             android:textSize="@dimen/_8ssp"
             android:textStyle="bold"
@@ -420,8 +407,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/_8sdp"
-            android:text="LIVE · 24ms"
-            android:textColor="@color/lg_online"
+            android:text="NATIVE"
+            android:textColor="@color/lg_accent_bright"
             android:textSize="@dimen/_8ssp"
             android:textStyle="bold" />
 
@@ -433,11 +420,23 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="LIQUID CRYSTAL CLEAR"
+            android:text="LUCIFER LAUNCHER"
             android:textColor="@color/lg_text_tertiary"
             android:textSize="@dimen/_7ssp"
             android:textStyle="bold"
             android:letterSpacing="0.14" />
-    </net.kdt.pojavlaunch.ui.GlassLinearLayout>
+    </LinearLayout>
+
+
+    <include
+        android:id="@+id/lucifer_splash_overlay"
+        layout="@layout/lucifer_splash_screen"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:elevation="100dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
