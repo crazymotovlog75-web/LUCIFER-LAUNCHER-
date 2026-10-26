@@ -32,7 +32,7 @@ jobs:
           cp -rv overhaul/launcher-ui-overhaul/app_pojavlauncher/* engine/app_pojavlauncher/
           # LWJGL shim: FrameStats + the glfwSwapBuffers hook that feeds the real FPS overlay.
           cp -rv overhaul/launcher-ui-overhaul/jre_lwjgl3glfw/* engine/jre_lwjgl3glfw/
-          sed -i 's/versionCode 10000000/versionCode 10000002/; s/versionCode 10000002/versionCode 10000003/; s/versionCode 10000003/versionCode 10000004/; s/versionCode 10000004/versionCode 10000005/; s/versionCode 10000005/versionCode 10000006/; s/versionCode 10000006/versionCode 10000007/; s/versionCode 10000007/versionCode 10000008/; s/versionCode 10000008/versionCode 10000009/; s/versionCode 10000009/versionCode 10000010/; s/versionCode 10000010/versionCode 10000011/' engine/app_pojavlauncher/build.gradle
+          sed -i 's/versionCode 10000000/versionCode 10000002/; s/versionCode 10000002/versionCode 10000003/; s/versionCode 10000003/versionCode 10000004/; s/versionCode 10000004/versionCode 10000005/; s/versionCode 10000005/versionCode 10000006/; s/versionCode 10000006/versionCode 10000007/; s/versionCode 10000007/versionCode 10000008/; s/versionCode 10000008/versionCode 10000009/; s/versionCode 10000009/versionCode 10000010/; s/versionCode 10000010/versionCode 10000011/; s/versionCode 10000011/versionCode 10000012/' engine/app_pojavlauncher/build.gradle
 
       - name: Set up JDK 21
         uses: actions/setup-java@v4
@@ -71,7 +71,7 @@ jobs:
           fi
 
           cp "$RELEASE_APK" "$GITHUB_WORKSPACE/dist-apk/LUCIFER-LAUNCHER-PACK.apk"
-          cp "$RELEASE_APK" "$GITHUB_WORKSPACE/dist-apk/LUCIFER-LAUNCHER-PACK-v3.5.apk"
+          cp "$RELEASE_APK" "$GITHUB_WORKSPACE/dist-apk/LUCIFER-LAUNCHER-PACK-v3.5.1.apk"
           sha256sum "$GITHUB_WORKSPACE/dist-apk/LUCIFER-LAUNCHER-PACK.apk" > "$GITHUB_WORKSPACE/dist-apk/LUCIFER-LAUNCHER-PACK.sha256"
           md5sum "$GITHUB_WORKSPACE/dist-apk/LUCIFER-LAUNCHER-PACK.apk" > "$GITHUB_WORKSPACE/dist-apk/LUCIFER-LAUNCHER-PACK.md5"
 
@@ -180,7 +180,7 @@ jobs:
       - name: Upload APK Build Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: lucifer-launcher-pack-v3.5-apk
+          name: lucifer-launcher-pack-v3.5.1-apk
           path: dist-apk/*
           retention-days: 30
 
@@ -190,9 +190,9 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         working-directory: dist-apk
         run: |
-          TAG="liquid-v3.5"
-          TITLE="LUCIFER LAUNCHER v3.5 - Liquid Crystal Clear glass UI (L03 side rail)"
-          NOTES="### LUCIFER LAUNCHER v3.5 - Liquid Crystal Clear glass UI (L03 side rail)
+          TAG="liquid-v3.5.1"
+          TITLE="LUCIFER LAUNCHER v3.5.1 - Liquid Crystal Clear glass UI (L03 side rail)"
+          NOTES="### LUCIFER LAUNCHER v3.5.1 - Liquid Crystal Clear glass UI (L03 side rail)
 
           **The UI you picked, built for real**
           - The launcher now uses the **L03 side rail** layout from the ten glass mockups: a full-height glass rail on the left, one glass header pill, the content stage in the middle and one glass status strip along the bottom.
@@ -211,12 +211,12 @@ jobs:
 
           **Still respected from before:** no resolution cap, no forced GC, no CPU pins, no clock mode, no driver env overrides, no renderer auto-switch during play. Everything from v3.4 (stencil/ES3 EGL config, HOLY GL4ES, real movable FPS badge) is untouched.
 
-          **Direct Installable APK:** LUCIFER-LAUNCHER-PACK-v3.5.apk (versionCode 10000011, upgrades cleanly over v3.4)
+          **Direct Installable APK:** LUCIFER-LAUNCHER-PACK-v3.5.1.apk (versionCode 10000012, upgrades cleanly over v3.5)
           - **Branch:** ${GITHUB_REF_NAME} · **Commit:** ${GITHUB_SHA}"
 
           if gh release view "$TAG" --repo "${GITHUB_REPOSITORY}" >/dev/null 2>&1; then
             gh release upload "$TAG" \
-              LUCIFER-LAUNCHER-PACK-v3.5.apk \
+              LUCIFER-LAUNCHER-PACK-v3.5.1.apk \
               LUCIFER-LAUNCHER-PACK.apk \
               LUCIFER-LAUNCHER-PACK.sha256 \
               LUCIFER-LAUNCHER-PACK.md5 \
@@ -225,7 +225,7 @@ jobs:
             gh release edit "$TAG" --title "$TITLE" --notes "$NOTES" --repo "${GITHUB_REPOSITORY}" --latest
           else
             gh release create "$TAG" \
-              LUCIFER-LAUNCHER-PACK-v3.5.apk \
+              LUCIFER-LAUNCHER-PACK-v3.5.1.apk \
               LUCIFER-LAUNCHER-PACK.apk \
               LUCIFER-LAUNCHER-PACK.sha256 \
               LUCIFER-LAUNCHER-PACK.md5 \
