@@ -92,6 +92,8 @@ GLASS = [
     ("06", "glass/g06-amber-glass.png", "AMBER GLASS", "warm gold pane", (255, 218, 156), (255, 176, 118)),
     ("07", "glass/g07-violet-haze.png", "VIOLET HAZE", "amethyst glass · neon rim", (204, 176, 255), (255, 152, 238)),
     ("08", "glass/g08-liquid-chrome.png", "LIQUID CHROME", "smoked metal · mono", (238, 242, 248), (184, 196, 212)),
+    ("09", "glass/g09-crimson-glass.png", "CRIMSON GLASS", "blood-red pane · dark edge", (255, 176, 178), (255, 122, 158)),
+    ("10", "glass/g10-aurora-glass.png", "AURORA GLASS", "multi-colour · iridescent", (178, 255, 244), (214, 176, 255)),
 ]
 
 
@@ -100,5 +102,5 @@ if __name__ == "__main__":
           "LUCIFER LAUNCHER — 10 COLOUR VARIANTS",
           "same layout · same real skin · same BG10 wallpaper · only the palette changes")
     build(GLASS, VAR / "glass" / "00-glass-variants.png",
-          "LUCIFER LAUNCHER — GLASS THEME (8 OPTIONS)",
-          "frosted panes: blurred backdrop · tint wash · edge light · specular sheen")
+          "LUCIFER LAUNCHER — GLASS THEME (10 OPTIONS)",
+          "frosted panes · blurred backdrop · tint wash · edge light · specular sheen")
