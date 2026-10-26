@@ -32,7 +32,7 @@ jobs:
           cp -rv overhaul/launcher-ui-overhaul/app_pojavlauncher/* engine/app_pojavlauncher/
           # LWJGL shim: FrameStats + the glfwSwapBuffers hook that feeds the real FPS overlay.
           cp -rv overhaul/launcher-ui-overhaul/jre_lwjgl3glfw/* engine/jre_lwjgl3glfw/
-          sed -i 's/versionCode 10000000/versionCode 10000002/; s/versionCode 10000002/versionCode 10000003/; s/versionCode 10000003/versionCode 10000004/; s/versionCode 10000004/versionCode 10000005/; s/versionCode 10000005/versionCode 10000006/; s/versionCode 10000006/versionCode 10000007/; s/versionCode 10000007/versionCode 10000008/; s/versionCode 10000008/versionCode 10000009/' engine/app_pojavlauncher/build.gradle
+          sed -i 's/versionCode 10000000/versionCode 10000002/; s/versionCode 10000002/versionCode 10000003/; s/versionCode 10000003/versionCode 10000004/; s/versionCode 10000004/versionCode 10000005/; s/versionCode 10000005/versionCode 10000006/; s/versionCode 10000006/versionCode 10000007/; s/versionCode 10000007/versionCode 10000008/; s/versionCode 10000008/versionCode 10000009/; s/versionCode 10000009/versionCode 10000010/' engine/app_pojavlauncher/build.gradle
 
       - name: Set up JDK 21
         uses: actions/setup-java@v4
@@ -76,6 +76,24 @@ jobs:
           md5sum "$GITHUB_WORKSPACE/dist-apk/LUCIFER-LAUNCHER-PACK.apk" > "$GITHUB_WORKSPACE/dist-apk/LUCIFER-LAUNCHER-PACK.md5"
 
           ls -lh "$GITHUB_WORKSPACE/dist-apk/"
+
+      - name: Verify the FPS hook and the EGL config actually shipped
+        run: |
+          set -e
+          APK="$GITHUB_WORKSPACE/dist-apk/LUCIFER-LAUNCHER-PACK.apk"
+          test -f "$APK"
+          echo "--- LWJGL shim jars"
+          for j in $(find engine/app_pojavlauncher/src/main/assets/components/lwjgl3 -name 'lwjgl-*-merged-modules.jar'); do
+            echo "checking $j"
+            unzip -l "$j" | grep -q 'org/lwjgl/glfw/FrameStats.class' || { echo "FAIL: FrameStats missing from $j"; exit 1; }
+            # GLFW.class must reference FrameStats, otherwise nothing ever counts a frame.
+            unzip -p "$j" org/lwjgl/glfw/GLFW.class | grep -ac 'FrameStats' | grep -qv '^0$' || { echo "FAIL: glfwSwapBuffers is not hooked in $j"; exit 1; }
+          done
+          echo "--- HOLY GL4ES renderer registration"
+          unzip -p "$APK" classes.dex | grep -ac 'holy_gl4es' | grep -qv '^0$' || { echo "FAIL: holy_gl4es not in the dex"; exit 1; }
+          echo "--- EGL window config in the native bridge"
+          unzip -p "$APK" lib/arm64-v8a/libpojavexec.so | grep -ac 'No stencil' | grep -qv '^0$' || { echo "FAIL: new EGL config missing from libpojavexec.so"; exit 1; }
+          echo "OK: FPS hook, HOLY GL4ES and the stencil/ES3 window config are all in the shipped APK"
 
       - name: Surface Build Diagnostics on Failure
         if: failure()
@@ -126,7 +144,7 @@ jobs:
 
           **Still respected from before:** no resolution cap, no forced GC, no CPU pins, no clock mode, no driver env overrides, no renderer auto-switch during play.
 
-          **Direct Installable APK:** LUCIFER-LAUNCHER-PACK-v3.4.apk (versionCode 10000009, upgrades cleanly over v3.3)
+          **Direct Installable APK:** LUCIFER-LAUNCHER-PACK-v3.4.apk (versionCode 10000010, upgrades cleanly over v3.3)
           - **Branch:** ${GITHUB_REF_NAME} · **Commit:** ${GITHUB_SHA}"
 
           if gh release view "$TAG" --repo "${GITHUB_REPOSITORY}" >/dev/null 2>&1; then
