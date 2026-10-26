@@ -270,6 +270,10 @@ public class LauncherPreferenceFragment extends Fragment {
                     graphicsItems.add(new SettingItem(
                             net.kdt.pojavlaunch.compat.FrameProfile.KEY_ENABLED, SettingItem.TYPE_SWITCH,
                             "1.21+ FPS Pack", net.kdt.pojavlaunch.compat.FrameProfile.summary(), true));
+                    graphicsItems.add(new SettingItem("fpsOverlay", SettingItem.TYPE_SWITCH,
+                            "FPS overlay (real, draggable)",
+                            "Counts frames at glfwSwapBuffers, so the number is what the game actually presented. Drag the badge to move it.",
+                            true));
                     // Default matches LauncherPreferences (true): the window must cover the camera cutout,
                     // otherwise a black strip is left on one side of the fullscreen game.
                     graphicsItems.add(new SettingItem("ignoreNotch", SettingItem.TYPE_SWITCH, getString(R.string.mcl_setting_title_ignore_notch), getString(R.string.mcl_setting_subtitle_ignore_notch), true));
@@ -467,6 +471,8 @@ public class LauncherPreferenceFragment extends Fragment {
                 return "Zink — OpenGL 4.6 (recommended for 1.21.11+)";
             case "opengles_mobileglues":
                 return "MobileGlues — fast GL3 wrapper";
+            case "holy_gl4es":
+                return "HOLY GL4ES — max-speed GL4ES (1.20.6 and older)";
             case "opengles3_KW":
                 return "Krypton Wrapper — GL3";
             case "opengles3_ltw":

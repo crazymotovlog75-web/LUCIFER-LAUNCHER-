@@ -63,6 +63,7 @@ import net.kdt.pojavlaunch.lifecycle.ContextExecutor;
 import net.kdt.pojavlaunch.prefs.LauncherPreferences;
 import net.kdt.pojavlaunch.prefs.QuickSettingSideDialog;
 import net.kdt.pojavlaunch.services.GameService;
+import net.kdt.pojavlaunch.utils.FrameRateOverlay;
 import net.kdt.pojavlaunch.utils.JREUtils;
 import net.kdt.pojavlaunch.utils.MCOptionUtils;
 import net.kdt.pojavlaunch.utils.TouchControllerUtils;
@@ -157,6 +158,7 @@ public class MainActivity extends BaseActivity implements ControlButtonMenuListe
         // Start the service a bit early
         ContextCompat.startForegroundService(this, gameServiceIntent);
         initLayout(R.layout.activity_basemain);
+        attachFrameRateOverlay();
         CallbackBridge.addGrabListener(touchpad);
         CallbackBridge.addGrabListener(minecraftGLView);
 
@@ -325,6 +327,28 @@ public class MainActivity extends BaseActivity implements ControlButtonMenuListe
     }
 
     /** Boilerplate binding */
+    /**
+     * Puts the real frame-rate badge above the game surface. It is a plain view over the
+     * SurfaceView, so it survives the zero-copy present path without touching a single GL call.
+     */
+    private void attachFrameRateOverlay(){
+        if(!LauncherPreferences.PREF_FPS_OVERLAY) return;
+        try {
+            ViewGroup host = findViewById(R.id.content_frame);
+            if(host == null) return;
+            String renderer = minecraftProfile == null ? null : minecraftProfile.pojavRendererName;
+            if (renderer == null) renderer = Tools.LOCAL_RENDERER;
+            String contextLine = net.kdt.pojavlaunch.compat.GameCompatBootstrap
+                    .shortRendererName(renderer);
+            if (minecraftProfile != null && minecraftProfile.lastVersionId != null) {
+                contextLine += " · " + minecraftProfile.lastVersionId;
+            }
+            FrameRateOverlay.attach(host, this, contextLine);
+        } catch (Throwable e) {
+            Log.w("FrameRateOverlay", "Could not attach the FPS badge", e);
+        }
+    }
+
     private void bindValues(){
         mControlLayout = findViewById(R.id.main_control_layout);
         minecraftGLView = findViewById(R.id.main_game_render_view);

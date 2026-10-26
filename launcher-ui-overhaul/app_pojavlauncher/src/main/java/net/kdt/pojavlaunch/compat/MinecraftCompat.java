@@ -28,6 +28,8 @@ public final class MinecraftCompat {
     public static final String RENDERER_KRYPTON = "opengles3_KW";
     public static final String RENDERER_ANGLE = "opengles3_ltw";
     public static final String RENDERER_GL4ES = "opengles2";
+    /** Speed profile of GL4ES. Same GL 2.1 emulation, so it is legacy-pipeline only. */
+    public static final String RENDERER_HOLY_GL4ES = "holy_gl4es";
 
     /** {@code 1.21.11}, {@code 1.22}, {@code 1.21} — but not loader versions like {@code 0.16.9}. */
     private static final Pattern VERSION_PATTERN = Pattern.compile("(\\d+)\\.(\\d+)(?:\\.(\\d+))?");
@@ -113,8 +115,10 @@ public final class MinecraftCompat {
     /** @return true when the renderer exposes a desktop-class GL version (3.3+). */
     public static boolean isModernCapable(String renderer) {
         if (renderer == null || renderer.isEmpty()) return false;
-        // Legacy GL4ES only emulates GL 2.1.
+        // Legacy GL4ES only emulates GL 2.1, and HOLY GL4ES is the same emulation with faster
+        // settings: neither can serve the 1.21.11+ pipeline.
         if (RENDERER_GL4ES.equals(renderer)) return false;
+        if (RENDERER_HOLY_GL4ES.equals(renderer)) return false;
         return renderer.contains("zink")
                 || renderer.contains("mobileglues")
                 || renderer.contains("ltw")

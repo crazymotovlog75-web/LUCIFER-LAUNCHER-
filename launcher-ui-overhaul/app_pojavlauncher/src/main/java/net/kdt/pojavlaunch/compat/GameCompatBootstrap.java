@@ -35,8 +35,12 @@ public final class GameCompatBootstrap {
      * is what the engine stores in the instance profile.
      */
     public static final String[] RENDERER_LADDER = {
-            MinecraftCompat.RENDERER_ZINK,
+            // MobileGlues maps GL 3.3-4.6 straight onto the phone's GLES3 driver: it is the only
+            // entry that is both complete enough for the 1.21.11 pipeline and fast enough to be
+            // playable, so it leads. Zink (full Mesa) is the correctness fallback, then the two
+            // remaining GL3 wrappers.
             MinecraftCompat.RENDERER_MOBILEGLUES,
+            MinecraftCompat.RENDERER_ZINK,
             MinecraftCompat.RENDERER_KRYPTON,
             MinecraftCompat.RENDERER_ANGLE,
             "opengles3_desktopgl_zink_kopper",
@@ -172,6 +176,7 @@ public final class GameCompatBootstrap {
         if (renderer.contains("mobileglues")) return "MOBILEGLUES";
         if (renderer.contains("ltw")) return "ANGLE";
         if (renderer.contains("KW")) return "KRYPTON";
+        if (renderer.contains("holy_gl4es")) return "HOLY GL4ES";
         if (renderer.contains("opengles2")) return "GL4ES";
         return renderer.toUpperCase(java.util.Locale.ROOT);
     }

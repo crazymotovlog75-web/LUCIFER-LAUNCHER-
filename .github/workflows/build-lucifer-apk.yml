@@ -1,4 +1,4 @@
-name: Lucifer Launcher — Performance APK Build
+name: Lucifer Launcher — v3.4 (black-block fix + HOLY GL4ES + real FPS)
 
 on:
   push:
@@ -30,7 +30,9 @@ jobs:
       - name: Apply Abyssal Teal UI + 1.21+ FPS Pack + Modern-GL Compat
         run: |
           cp -rv overhaul/launcher-ui-overhaul/app_pojavlauncher/* engine/app_pojavlauncher/
-          sed -i 's/versionCode 10000000/versionCode 10000002/; s/versionCode 10000002/versionCode 10000003/; s/versionCode 10000003/versionCode 10000004/; s/versionCode 10000004/versionCode 10000005/; s/versionCode 10000005/versionCode 10000006/; s/versionCode 10000006/versionCode 10000007/; s/versionCode 10000007/versionCode 10000008/' engine/app_pojavlauncher/build.gradle
+          # LWJGL shim: FrameStats + the glfwSwapBuffers hook that feeds the real FPS overlay.
+          cp -rv overhaul/launcher-ui-overhaul/jre_lwjgl3glfw/* engine/jre_lwjgl3glfw/
+          sed -i 's/versionCode 10000000/versionCode 10000002/; s/versionCode 10000002/versionCode 10000003/; s/versionCode 10000003/versionCode 10000004/; s/versionCode 10000004/versionCode 10000005/; s/versionCode 10000005/versionCode 10000006/; s/versionCode 10000006/versionCode 10000007/; s/versionCode 10000007/versionCode 10000008/; s/versionCode 10000008/versionCode 10000009/' engine/app_pojavlauncher/build.gradle
 
       - name: Set up JDK 21
         uses: actions/setup-java@v4
@@ -69,7 +71,7 @@ jobs:
           fi
 
           cp "$RELEASE_APK" "$GITHUB_WORKSPACE/dist-apk/LUCIFER-LAUNCHER-PACK.apk"
-          cp "$RELEASE_APK" "$GITHUB_WORKSPACE/dist-apk/LUCIFER-LAUNCHER-PACK-v3.3.apk"
+          cp "$RELEASE_APK" "$GITHUB_WORKSPACE/dist-apk/LUCIFER-LAUNCHER-PACK-v3.4.apk"
           sha256sum "$GITHUB_WORKSPACE/dist-apk/LUCIFER-LAUNCHER-PACK.apk" > "$GITHUB_WORKSPACE/dist-apk/LUCIFER-LAUNCHER-PACK.sha256"
           md5sum "$GITHUB_WORKSPACE/dist-apk/LUCIFER-LAUNCHER-PACK.apk" > "$GITHUB_WORKSPACE/dist-apk/LUCIFER-LAUNCHER-PACK.md5"
 
@@ -99,33 +101,37 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         working-directory: dist-apk
         run: |
-          TAG="modernfps-v3.3"
-          TITLE="LUCIFER LAUNCHER v3.3 — 1.21+ FPS Pack"
-          NOTES="### LUCIFER LAUNCHER v3.3 — 1.21+ FPS Pack
+          TAG="modernfps-v3.4"
+          TITLE="LUCIFER LAUNCHER v3.4 - black-block fix, HOLY GL4ES, real FPS"
+          NOTES="### LUCIFER LAUNCHER v3.4 - black-block fix, HOLY GL4ES, real FPS
 
-          Tuned for exactly the versions you showed me: 1.21 and newer. 1.20.6 and below are untouched, and the v3.2 rollback stays in place: no resolution cap, no GC flags, no CPU pins, no clock mode, no driver variables, no renderer auto-switch.
+          **1. Black / translucent blocks and wedges in the world**
+          - The game window was being created without a stencil buffer. Minecraft opens its window with stencil bits and the 1.21.11 render pipeline genuinely uses them; when the config handed back has none, those passes read whatever was left in the buffer, which is how opaque geometry came out as black or see-through slabs.
+          - The EGL window config now requests STENCIL 8 (plus depth 24, MSAA off) and only accepts configs that can really back the context version the renderer runs.
+          - This is a correctness fix in the window setup, not a shader hack, and it applies to every renderer.
 
-          **1.21+ FPS (the low-FPS problem)**
-          - **Zero-copy game surface.** On a 720p phone the engine quietly picked TextureView, which copies the whole frame through the GPU once more every single frame. 1.21+ instances now render straight into a SurfaceView, so that copy disappears.
-          - **Moderate video profile, applied once and reversible.** Clouds, entity shadows, fancy leaves, smooth lighting, biome blend, view-bob nausea, portal distortion and heavy particles off; render distance 6, simulation distance 5, mipmaps 2, unlimited FPS. It only ever lowers a distance you already had - if you run 4 chunks you keep 4.
-          - **MobileGlues wrapper per version.** For 1.21.11+ the generated wrapper config ignores per-call GL error checks and keeps a 512 MB shader cache, so the new pipeline stops recompiling shaders mid-frame (that was the visible stutter).
-          - **Switch:** Settings > Video & Graphics > 1.21+ FPS Pack. Turning it off restores your original options.txt values exactly.
+          **2. Renderers that refused to launch on 1.21.11**
+          - The config selection asked for ES2-only configs even while the renderer was creating an ES3 context, so context creation could fail outright on drivers that keep the two config sets apart. The ES3 renderable bit is now requested whenever the renderer runs GLES3.
+          - The 1.21.11 ladder now leads with MobileGlues - the only wrapper that maps GL 3.3-4.6 straight onto the phone driver at playable speed - with Zink as the correctness fallback, then Krypton and ANGLE. The in-game HUD button still cycles down the ladder if a driver dislikes one entry.
 
-          **Black blocks on 1.21.11+ (the visual bug)**
-          - The black/transparent wedge across the ground comes from the new pipeline drawing terrain through multi-draw indirect, which Mali drivers only accept through MobileGlues fully emulated path.
-          - For 1.21.11+ the wrapper config now forces that emulated path (multidrawMode 4) plus the SurfaceView surface, which is the only surface path that draws the new pipeline without black geometry.
-          - Your own renderer settings are not modified - the compatibility values are written into the generated MobileGlues config only.
+          **3. HOLY GL4ES (new, selectable)**
+          - Real new renderer id: pick it in Settings > Video and Graphics > Renderer, or per instance in the profile editor.
+          - It is GL4ES driven through the fast path instead of the compatibility path: ES3 backend with real VAOs, vertex attributes kept in one VBO instead of being re-specified per draw, no one-log-line-per-stub-call (that logging alone is a file write per call, thousands per frame in Minecraft), fast maths, no NPOT downsample passes.
+          - Honest scope: GL4ES emulates GL 2.1, so HOLY GL4ES is for 1.20.6 and older. It is never auto-selected for 1.21.11 and it cannot fix the new pipeline - no GL4ES build can. Where GL4ES is the right renderer, these settings remove its biggest per-frame costs, and the new badge will show you the real number on your device.
 
-          **What deliberately did NOT come back**
-          - No resolution down-scaling, no forced GC flags, no big-core affinity, no sustained-clocks mode, no raised heap, no Mesa/Zink/Turnip environment overrides, no renderer switching. Those are the exact mechanisms that made v3.1 slower and they stay removed.
+          **4. Real FPS display (always on, movable)**
+          - Frames are counted inside the game at glfwSwapBuffers, so every counted frame is a frame that was actually presented. No estimate, no smoothing, no target number.
+          - The badge shows fps, average frame time and the live renderer + instance. It is on by default, sits on top of the game, and you can drag it anywhere - the position is saved.
+          - If the game stops presenting frames the badge says stalled instead of showing a stale number. Switch: Settings > Video and Graphics > FPS overlay.
 
-          **Direct Installable APK:** LUCIFER-LAUNCHER-PACK-v3.3.apk (versionCode 10000008, upgrades cleanly over v3.2)
-          - **Theme unchanged:** BG10 Abyss Teal wallpaper, teal palette, Shadow-Dragon HUD, crystal-shard dock, renderer picker at the top of Video & Graphics.
+          **Still respected from before:** no resolution cap, no forced GC, no CPU pins, no clock mode, no driver env overrides, no renderer auto-switch during play.
+
+          **Direct Installable APK:** LUCIFER-LAUNCHER-PACK-v3.4.apk (versionCode 10000009, upgrades cleanly over v3.3)
           - **Branch:** ${GITHUB_REF_NAME} · **Commit:** ${GITHUB_SHA}"
 
           if gh release view "$TAG" --repo "${GITHUB_REPOSITORY}" >/dev/null 2>&1; then
             gh release upload "$TAG" \
-              LUCIFER-LAUNCHER-PACK-v3.3.apk \
+              LUCIFER-LAUNCHER-PACK-v3.4.apk \
               LUCIFER-LAUNCHER-PACK.apk \
               LUCIFER-LAUNCHER-PACK.sha256 \
               LUCIFER-LAUNCHER-PACK.md5 \
@@ -134,7 +140,7 @@ jobs:
             gh release edit "$TAG" --title "$TITLE" --notes "$NOTES" --repo "${GITHUB_REPOSITORY}" --latest
           else
             gh release create "$TAG" \
-              LUCIFER-LAUNCHER-PACK-v3.3.apk \
+              LUCIFER-LAUNCHER-PACK-v3.4.apk \
               LUCIFER-LAUNCHER-PACK.apk \
               LUCIFER-LAUNCHER-PACK.sha256 \
               LUCIFER-LAUNCHER-PACK.md5 \

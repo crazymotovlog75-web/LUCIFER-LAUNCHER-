@@ -55,6 +55,8 @@ public class LauncherPreferences {
     public static boolean PREF_VIRTUAL_MOUSE_START = false;
     public static boolean PREF_ARC_CAPES = false;
     public static boolean PREF_USE_ALTERNATE_SURFACE = true;
+    /** In-game FPS badge: always on top, draggable, shows the measured swap rate. */
+    public static boolean PREF_FPS_OVERLAY = true;
     public static boolean PREF_JAVA_SANDBOX = true;
     public static float PREF_SCALE_FACTOR = 1f;
 
@@ -121,6 +123,8 @@ public class LauncherPreferences {
         PREF_VIRTUAL_MOUSE_START = DEFAULT_PREF.getBoolean("mouse_start", false);
         PREF_ARC_CAPES = DEFAULT_PREF.getBoolean("arc_capes",false);
         PREF_USE_ALTERNATE_SURFACE = DEFAULT_PREF.getBoolean("alternate_surface", isDevicePowerful);
+        // On by default: the user asked for a real, always-visible frame read-out.
+        PREF_FPS_OVERLAY = DEFAULT_PREF.getBoolean("fpsOverlay", true);
         PREF_JAVA_SANDBOX = DEFAULT_PREF.getBoolean("java_sandbox", true);
         float savedResolutionScale = DEFAULT_PREF.getInt(
                 "resolutionRatio", findBestResolution(ctx, isDevicePowerful)) / 100f;

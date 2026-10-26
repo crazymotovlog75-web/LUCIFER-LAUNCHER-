@@ -231,6 +231,29 @@ public class JREUtils {
             if(LOCAL_RENDERER.equals("opengles2")){
                 envMap.put("LIBGL_ES", "2"); // Krypton Wrapper crashes with 1
             }
+            if(LOCAL_RENDERER.equals("holy_gl4es")){
+                // Speed profile for GL4ES. Every knob below is read only by GL4ES itself, so it
+                // cannot affect the device, another renderer or another instance.
+                //
+                //  LIBGL_ES=3              use the ES3 backend (real VAOs + ES3 shaders) instead of
+                //                          the ES2 compatibility backend. Biggest single win.
+                //  LIBGL_SILENTSTUB=1      stop printing one log line per unimplemented GL call.
+                //                          GL4ES stubs are hit thousands of times per frame in
+                //                          Minecraft and every line is a file write, so this is a
+                //                          real per-frame cost, not just noise in the log.
+                //  LIBGL_FASTMATH=1        cheaper matrix/vertex maths inside the wrapper.
+                //  LIBGL_NODOWNSAMPLING=1  skip the extra NPOT downsample pass on texture upload.
+                //  LIBGL_NOBANNER=1        no startup banner.
+                // Nothing here changes what the game draws; it only removes wrapper overhead.
+                // ES3 only when the driver really has it; asking for a v3 context on a GLES2
+                // phone is a launch failure, not a speed-up.
+                boolean hasGles3 = GLInfoUtils.getGlInfo().glesMajorVersion >= 3;
+                envMap.put("LIBGL_ES", hasGles3 ? "3" : "2");
+                envMap.put("LIBGL_SILENTSTUB", "1");
+                envMap.put("LIBGL_FASTMATH", "1");
+                envMap.put("LIBGL_NODOWNSAMPLING", "1");
+                envMap.put("LIBGL_NOBANNER", "1");
+            }
             if (LOCAL_RENDERER.equals("opengles3_desktopgl_zink_kopper")){
                 envMap.put("POJAVEXEC_EGL","libEGL_mesa.so"); // Use Mesa EGL
                 if (Tools.shouldUseUBWC()) envMap.put("FD_DEV_FEATURES", "enable_tp_ubwc_flag_hint=1"); // Turnip fix for OneUI rendering issues
@@ -397,6 +420,14 @@ public class JREUtils {
         userArgs.add("-Dorg.lwjgl.freetype.libname="+ Tools.lwjglNativesDir +"/libfreetype.so");
         // Our spirv-cross is compiled shared, so it gets named shared.
         userArgs.add("-Dorg.lwjgl.spvc.libname=spirv-cross-c-shared");
+
+        // Real FPS overlay: glfwSwapBuffers (patched in the LWJGL shim) counts presented frames and
+        // writes this file twice a second. The in-game badge only ever displays what is written
+        // here, so the number on screen is measured, never estimated.
+        File fpsFile = new File(Tools.DIR_CACHE, net.kdt.pojavlaunch.utils.FrameRateOverlay.FPS_FILE_NAME);
+        // A record from the previous session must never be shown as the current frame rate.
+        if (fpsFile.exists() && !fpsFile.delete()) fpsFile.deleteOnExit();
+        userArgs.add("-Dlucifer.fps.file=" + fpsFile.getAbsolutePath());
 
         // We don't have jemalloc for our LWJGL so set the allocator to system to avoid error logs
         userArgs.add("-Dorg.lwjgl.system.allocator=system");
@@ -603,6 +634,11 @@ public class JREUtils {
             case "opengles3_desktopgl_zink": renderLibrary = "libglxshim.so"; break;
             case "opengles3_ltw" : renderLibrary = "libltw.so"; break;
             case "opengles3_KW" : renderLibrary = "libng_gl4es.so"; break;
+            // HOLY GL4ES is the same GL4ES 1.1.5 library as opengles2, driven through the fast
+            // batching path instead of the compatibility one (see the env block in
+            // setJavaEnvironment). It is a legacy-pipeline renderer by design: GL4ES emulates
+            // GL 2.1, so 1.21.11+ never gets pointed at it.
+            case "holy_gl4es" : renderLibrary = "libgl4es_115.so"; break;
             default:
                 Log.w("RENDER_LIBRARY", "No renderer selected, defaulting to opengles2");
                 renderLibrary = "libgl4es_115.so";
