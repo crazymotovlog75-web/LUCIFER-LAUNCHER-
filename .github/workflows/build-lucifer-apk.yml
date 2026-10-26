@@ -147,8 +147,9 @@ jobs:
           # activity layouts must wire in the real splash before the UI build is accepted.
           grep -q 'lucifer_splash_screen' engine/app_pojavlauncher/src/main/res/layout-land/activity_pojav_launcher.xml
           grep -q 'lucifer_splash_screen' engine/app_pojavlauncher/src/main/res/layout/activity_pojav_launcher.xml
+          grep -q 'android:screenOrientation="fullSensor"' engine/app_pojavlauncher/src/main/AndroidManifest.xml
           grep -q 'ObjectAnimator.ofInt' engine/app_pojavlauncher/src/main/java/net/kdt/pojavlaunch/LauncherActivity.java
-          echo "source integration ok: landscape/portrait splash layouts and animated Activity"
+          echo "source integration ok: landscape/portrait layouts, full-sensor rotation and animated Activity"
 
           # Verify the compiled resource table contains the splash, angular panels and default scene.
           for needle in lucifer_splash_screen bg_lucifer_slanted_panel bg_lucifer_slanted_cta lucifer_wallpaper_overworld Wallpaper22; do

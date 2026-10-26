@@ -250,9 +250,7 @@ public class LauncherActivity extends BaseActivity {
         }
 
         
-        // Ensure landscape orientation
-        setRequestedOrientation(android.content.pm.ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE);
-
+        // The manifest enables full-sensor rotation so the landscape-first UI can reflow to portrait.
         setContentView(R.layout.activity_pojav_launcher);
 
         // Full-screen branded splash on every cold open, then reveal the actual launcher UI.
