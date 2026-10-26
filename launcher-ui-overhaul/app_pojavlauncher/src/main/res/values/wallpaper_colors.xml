@@ -252,4 +252,16 @@
     <color name="wallpaper_21_accent_dim">#55C176FF</color>
     <color name="wallpaper_21_backdrop">#00000000</color>
 
+    <!-- 22. Liquid Crystal Clear (aurora) — the L03 glass wallpaper -->
+    <color name="wallpaper_22_accent">#2FE9FF</color>
+    <color name="wallpaper_22_secondary">#D946EF</color>
+    <color name="wallpaper_22_highlight">#A8F5FF</color>
+    <color name="wallpaper_22_surface">#E6102533</color>
+    <color name="wallpaper_22_surface_high">#F0FFFFFF</color>
+    <color name="wallpaper_22_glass">#38FFFFFF</color>
+    <color name="wallpaper_22_glass_high">#5EFFFFFF</color>
+    <color name="wallpaper_22_border">#8CFFFFFF</color>
+    <color name="wallpaper_22_accent_dim">#B3A8F5FF</color>
+    <color name="wallpaper_22_backdrop">#00000000</color>
+
 </resources>

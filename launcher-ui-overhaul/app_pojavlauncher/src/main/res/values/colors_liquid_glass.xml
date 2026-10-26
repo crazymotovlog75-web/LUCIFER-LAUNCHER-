@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Liquid crystal clear tokens (L03 "side rail" revamp) -->
+    <color name="lg_text_primary">#FFFFFF</color>
+    <color name="lg_text_secondary">#E4F1F7</color>
+    <color name="lg_text_tertiary">#C2DCE6</color>
+    <color name="lg_accent">#2FE9FF</color>
+    <color name="lg_accent_bright">#A8F5FF</color>
+    <color name="lg_secondary">#D946EF</color>
+    <color name="lg_online">#22C55E</color>
+    <color name="lg_ink">#06131B</color>
+    <color name="lg_chip">#38FFFFFF</color>
+    <color name="lg_chip_edge">#8CFFFFFF</color>
+    <color name="lg_row">#2EFFFFFF</color>
+    <color name="lg_row_selected">#5EFFFFFF</color>
+    <color name="lg_divider">#4DFFFFFF</color>
+    <color name="lg_rail_active">#4DFFFFFF</color>
+    <color name="lg_wallpaper_scrim_top">#1A0C1A28</color>
+    <color name="lg_wallpaper_scrim_bottom">#4D0C1A28</color>
+</resources>

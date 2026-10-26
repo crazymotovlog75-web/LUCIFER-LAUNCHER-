@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Liquid Crystal backdrop: the aurora wallpaper plus ONE gradient pass that lifts the bottom
+    half, so white glass type stays readable. The glass panes refract this exact drawable.
+-->
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:drawable="@drawable/lucifer_wallpaper_22" />
+    <item>
+        <shape android:shape="rectangle">
+            <gradient
+                android:angle="270"
+                android:startColor="@color/lg_wallpaper_scrim_top"
+                android:centerColor="#260C1A28"
+                android:endColor="@color/lg_wallpaper_scrim_bottom" />
+        </shape>
+    </item>
+</layer-list>

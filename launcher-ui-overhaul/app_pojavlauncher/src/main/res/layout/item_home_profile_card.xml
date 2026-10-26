@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:minHeight="@dimen/_42sdp"
     android:layout_marginEnd="@dimen/_5sdp"
-    android:background="@drawable/bg_home_profile_card"
+    android:background="@drawable/bg_liquid_row"
     android:clickable="true"
     android:focusable="true"
     android:paddingHorizontal="@dimen/_6sdp"
@@ -37,7 +37,7 @@
                 android:id="@+id/tv_profile_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textColor="@color/text_primary_white"
+                android:textColor="@color/lg_text_primary"
                 android:textSize="@dimen/_8ssp"
                 android:textStyle="bold"
                 android:maxLines="1"
@@ -47,7 +47,7 @@
                 android:id="@+id/tv_profile_meta"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textColor="@color/sd_cyan_bright"
+                android:textColor="@color/lg_accent_bright"
                 android:textSize="@dimen/_6ssp"
                 android:maxLines="1"
                 android:ellipsize="end" />
@@ -56,7 +56,7 @@
                 android:id="@+id/tv_profile_mod_count"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textColor="@color/sd_magenta_bright"
+                android:textColor="@color/lg_text_tertiary"
                 android:textSize="@dimen/_6ssp"
                 android:maxLines="1"
                 android:ellipsize="end"
@@ -70,7 +70,7 @@
             android:background="?android:attr/selectableItemBackgroundBorderless"
             android:contentDescription="Edit instance"
             android:padding="@dimen/_4sdp"
-            android:tint="@color/sd_cyan"
+            android:tint="@color/lg_text_primary"
             android:src="@drawable/ic_edit_profile" />
 
         <FrameLayout
@@ -78,7 +78,7 @@
             android:layout_width="@dimen/_34sdp"
             android:layout_height="@dimen/_22sdp"
             android:layout_marginStart="@dimen/_3sdp"
-            android:background="@drawable/bg_sd_join_cyan"
+            android:background="@drawable/bg_liquid_accent_button"
             android:clickable="true"
             android:focusable="true"
             android:contentDescription="Launch this instance">
@@ -87,7 +87,7 @@
                 android:layout_height="match_parent"
                 android:gravity="center"
                 android:text="GO"
-                android:textColor="#040812"
+                android:textColor="@color/lg_ink"
                 android:textSize="@dimen/_7ssp"
                 android:textStyle="bold" />
         </FrameLayout>

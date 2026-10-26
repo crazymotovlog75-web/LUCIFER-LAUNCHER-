@@ -253,6 +253,10 @@ public class LauncherActivity extends BaseActivity {
         setRequestedOrientation(android.content.pm.ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE);
 
         setContentView(R.layout.activity_pojav_launcher);
+
+        // Liquid Crystal Clear: capture the aurora backdrop once so every glass pane can
+        // refract the part of the wallpaper that sits behind it.
+        net.kdt.pojavlaunch.ui.LiquidGlass.install(findViewById(R.id.liquid_root));
         
         // Handle window insets properly to prevent navigation bar space reservation
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(android.R.id.content),
@@ -337,6 +341,9 @@ public class LauncherActivity extends BaseActivity {
                 ((MainMenuFragment) root).reloadSpinner();
             }
         });
+        // Wallpaper/theme may have changed while we were away: re-capture the glass backdrop.
+        View glassRoot = findViewById(R.id.liquid_root);
+        if (glassRoot != null) net.kdt.pojavlaunch.ui.LiquidGlass.refresh(glassRoot);
         refreshShadowDragonTelemetry();
         mInstallTracker.attach();
     }

@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- ══════════════════════════════════════════════════════════════════════
+         LIQUID CRYSTAL CLEAR — the L03 "side rail" layout picked from the
+         ten mockups. Light glass panes over a bright aurora wallpaper.
+         ══════════════════════════════════════════════════════════════════════ -->
+    <style name="AppTheme.Wallpaper22" parent="AppTheme">
+        <item name="luciferAccent">@color/lg_accent</item>
+        <item name="luciferSecondary">@color/lg_secondary</item>
+        <item name="luciferHighlight">@color/lg_accent_bright</item>
+        <item name="luciferAccentDim">@color/lg_chip_edge</item>
+        <item name="luciferSurface">#E6FFFFFF</item>
+        <item name="luciferSurfaceHigh">#F2FFFFFF</item>
+        <item name="luciferGlass">@color/lg_chip</item>
+        <item name="luciferGlassHigh">@color/lg_row_selected</item>
+        <item name="luciferBorder">@color/lg_chip_edge</item>
+        <item name="luciferBackdrop">#E8102533</item>
+        <item name="luciferWallpaper">@drawable/lucifer_wallpaper_22</item>
+        <item name="android:statusBarColor">#00000000</item>
+        <item name="android:navigationBarColor">#00000000</item>
+        <item name="colorBgApp">#00000000</item>
+        <item name="colorBgBottomBar">@color/lg_chip</item>
+        <item name="colorBgStatusBar">#00000000</item>
+        <item name="colorDivider">@color/lg_divider</item>
+        <item name="themeAccent">?attr/luciferAccent</item>
+        <item name="colorAccent">?attr/luciferAccent</item>
+        <item name="colorTextPrimary">@color/lg_text_primary</item>
+        <item name="colorTextSecondary">@color/lg_text_secondary</item>
+        <item name="bgMainDrawable">@drawable/bg_liquid_scene</item>
+        <item name="android:windowBackground">@drawable/bg_liquid_scene</item>
+        <item name="colorSurface">@color/lg_chip</item>
+        <item name="colorSurfaceVariant">@color/lg_row_selected</item>
+        <item name="colorOnSurface">@color/lg_text_primary</item>
+        <item name="colorOnSurfaceVariant">@color/lg_text_secondary</item>
+        <item name="colorPrimary">@color/lg_accent</item>
+        <item name="colorOnPrimary">@color/lg_ink</item>
+    </style>
+
+    <style name="AppTheme.Wallpaper22.Gradient" parent="AppTheme.Wallpaper22">
+        <item name="bgMainDrawable">@drawable/bg_liquid_scene</item>
+        <item name="android:windowBackground">@drawable/bg_liquid_scene</item>
+    </style>
+
+    <!-- ── Rail (L03 side rail) ───────────────────────────────────────────── -->
+    <style name="LiquidRailItem">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">@dimen/_54sdp</item>
+        <item name="android:layout_marginHorizontal">@dimen/_5sdp</item>
+        <item name="android:layout_marginBottom">@dimen/_3sdp</item>
+        <item name="android:orientation">vertical</item>
+        <item name="android:gravity">center</item>
+        <item name="android:background">@drawable/bg_liquid_rail_item</item>
+        <item name="android:clickable">true</item>
+        <item name="android:focusable">true</item>
+    </style>
+
+    <style name="LiquidRailIcon">
+        <item name="android:layout_width">@dimen/_19sdp</item>
+        <item name="android:layout_height">@dimen/_19sdp</item>
+        <item name="android:tint">@color/lg_text_secondary</item>
+        <item name="android:contentDescription">@null</item>
+    </style>
+
+    <style name="LiquidRailLabel">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginTop">@dimen/_3sdp</item>
+        <item name="android:textColor">@color/lg_text_secondary</item>
+        <item name="android:textSize">@dimen/_6ssp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:letterSpacing">0.06</item>
+        <item name="android:textAllCaps">true</item>
+        <item name="android:maxLines">1</item>
+    </style>
+
+    <!-- ── Glass typography ───────────────────────────────────────────────── -->
+    <style name="LiquidLabel">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">@color/lg_text_tertiary</item>
+        <item name="android:textSize">@dimen/_7ssp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:letterSpacing">0.10</item>
+        <item name="android:textAllCaps">true</item>
+        <item name="android:maxLines">1</item>
+    </style>
+
+    <style name="LiquidValue">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">@color/lg_text_primary</item>
+        <item name="android:textSize">@dimen/_10ssp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:maxLines">1</item>
+        <item name="android:shadowColor">#66000000</item>
+        <item name="android:shadowDx">0.6</item>
+        <item name="android:shadowDy">0.8</item>
+        <item name="android:shadowRadius">2</item>
+    </style>
+
+    <style name="LiquidTitle">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">@color/lg_text_primary</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:letterSpacing">0.01</item>
+        <item name="android:maxLines">1</item>
+        <item name="android:shadowColor">#66000000</item>
+        <item name="android:shadowDx">0.6</item>
+        <item name="android:shadowDy">1</item>
+        <item name="android:shadowRadius">3</item>
+    </style>
+
+</resources>

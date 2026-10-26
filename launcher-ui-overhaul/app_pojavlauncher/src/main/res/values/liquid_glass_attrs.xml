@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Liquid crystal clear panes (L03 "side rail" revamp).
+         Kept in its own file so the engine's own attrs.xml is never clobbered. -->
+    <declare-styleable name="LiquidGlassPane">
+        <!-- Corner radius of the pane. Negative / missing = auto (18% of the short side). -->
+        <attr name="lgRadius" format="dimension" />
+        <!-- White veil strength over the refracted wallpaper, 0..255. -->
+        <attr name="lgTint" format="integer" />
+        <!-- Extra darkening towards the bottom of the pane so white type stays readable, 0..255. -->
+        <attr name="lgScrim" format="integer" />
+        <!-- How much the wallpaper is magnified inside the pane (lens effect), 0..0.2. -->
+        <attr name="lgRefraction" format="float" />
+        <!-- Draw the three hairlines of the lens rim. -->
+        <attr name="lgRim" format="boolean" />
+    </declare-styleable>
+</resources>

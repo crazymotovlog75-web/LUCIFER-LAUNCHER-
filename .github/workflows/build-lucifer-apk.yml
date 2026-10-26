@@ -32,7 +32,7 @@ jobs:
           cp -rv overhaul/launcher-ui-overhaul/app_pojavlauncher/* engine/app_pojavlauncher/
           # LWJGL shim: FrameStats + the glfwSwapBuffers hook that feeds the real FPS overlay.
           cp -rv overhaul/launcher-ui-overhaul/jre_lwjgl3glfw/* engine/jre_lwjgl3glfw/
-          sed -i 's/versionCode 10000000/versionCode 10000002/; s/versionCode 10000002/versionCode 10000003/; s/versionCode 10000003/versionCode 10000004/; s/versionCode 10000004/versionCode 10000005/; s/versionCode 10000005/versionCode 10000006/; s/versionCode 10000006/versionCode 10000007/; s/versionCode 10000007/versionCode 10000008/; s/versionCode 10000008/versionCode 10000009/; s/versionCode 10000009/versionCode 10000010/' engine/app_pojavlauncher/build.gradle
+          sed -i 's/versionCode 10000000/versionCode 10000002/; s/versionCode 10000002/versionCode 10000003/; s/versionCode 10000003/versionCode 10000004/; s/versionCode 10000004/versionCode 10000005/; s/versionCode 10000005/versionCode 10000006/; s/versionCode 10000006/versionCode 10000007/; s/versionCode 10000007/versionCode 10000008/; s/versionCode 10000008/versionCode 10000009/; s/versionCode 10000009/versionCode 10000010/; s/versionCode 10000010/versionCode 10000011/' engine/app_pojavlauncher/build.gradle
 
       - name: Set up JDK 21
         uses: actions/setup-java@v4
@@ -71,7 +71,7 @@ jobs:
           fi
 
           cp "$RELEASE_APK" "$GITHUB_WORKSPACE/dist-apk/LUCIFER-LAUNCHER-PACK.apk"
-          cp "$RELEASE_APK" "$GITHUB_WORKSPACE/dist-apk/LUCIFER-LAUNCHER-PACK-v3.4.apk"
+          cp "$RELEASE_APK" "$GITHUB_WORKSPACE/dist-apk/LUCIFER-LAUNCHER-PACK-v3.5.apk"
           sha256sum "$GITHUB_WORKSPACE/dist-apk/LUCIFER-LAUNCHER-PACK.apk" > "$GITHUB_WORKSPACE/dist-apk/LUCIFER-LAUNCHER-PACK.sha256"
           md5sum "$GITHUB_WORKSPACE/dist-apk/LUCIFER-LAUNCHER-PACK.apk" > "$GITHUB_WORKSPACE/dist-apk/LUCIFER-LAUNCHER-PACK.md5"
 
@@ -136,6 +136,22 @@ jobs:
             || { echo "FAIL: the stencil/ES3 EGL config is not in libpojavexec.so"; exit 1; }
           echo "OK: FPS hook in both shim jars, HOLY GL4ES registered, EGL config compiled in"
 
+      - name: Assert the Liquid Crystal glass revamp is in the APK
+        run: |
+          set -e
+          APK="$GITHUB_WORKSPACE/dist-apk/LUCIFER-LAUNCHER-PACK.apk"
+          # The glass engine, its theme and the aurora wallpaper have to be inside the shipped APK.
+          DEX=$( (unzip -p "$APK" resources.arsc; \
+                   for d in $(unzip -l "$APK" | awk '/classes.*[.]dex/{print $4}'); do unzip -p "$APK" "$d"; done) )
+          for needle in LiquidGlass GlassFrameLayout GlassLinearLayout AppTheme.Wallpaper22; do
+            echo "$DEX" | grep -aq "$needle" \
+              || { echo "FAIL: $needle is missing from the shipped APK"; exit 1; }
+            echo "glass ok: $needle"
+          done
+          unzip -l "$APK" | grep -q 'res/.*lucifer_wallpaper_22' \
+            || { echo "FAIL: the Liquid Crystal wallpaper is not packaged"; exit 1; }
+          echo "OK: glass panes, theme and aurora wallpaper shipped"
+
       - name: Surface Build Diagnostics on Failure
         if: failure()
         run: |
@@ -150,7 +166,7 @@ jobs:
       - name: Upload APK Build Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: lucifer-launcher-pack-v3.3-apk
+          name: lucifer-launcher-pack-v3.5-apk
           path: dist-apk/*
           retention-days: 30
 
@@ -160,37 +176,33 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         working-directory: dist-apk
         run: |
-          TAG="modernfps-v3.4"
-          TITLE="LUCIFER LAUNCHER v3.4 - black-block fix, HOLY GL4ES, real FPS"
-          NOTES="### LUCIFER LAUNCHER v3.4 - black-block fix, HOLY GL4ES, real FPS
+          TAG="liquid-v3.5"
+          TITLE="LUCIFER LAUNCHER v3.5 - Liquid Crystal Clear glass UI (L03 side rail)"
+          NOTES="### LUCIFER LAUNCHER v3.5 - Liquid Crystal Clear glass UI (L03 side rail)
 
-          **1. Black / translucent blocks and wedges in the world**
-          - The game window was being created without a stencil buffer. Minecraft opens its window with stencil bits and the 1.21.11 render pipeline genuinely uses them; when the config handed back has none, those passes read whatever was left in the buffer, which is how opaque geometry came out as black or see-through slabs.
-          - The EGL window config now requests STENCIL 8 (plus depth 24, MSAA off) and only accepts configs that can really back the context version the renderer runs.
-          - This is a correctness fix in the window setup, not a shader hack, and it applies to every renderer.
+          **The UI you picked, built for real**
+          - The launcher now uses the **L03 side rail** layout from the ten glass mockups: a full-height glass rail on the left, one glass header pill, the content stage in the middle and one glass status strip along the bottom.
+          - Nothing was faked with a flat translucent box. Every pane is a real liquid-glass surface: it refracts the aurora wallpaper that sits behind it, adds a white veil, a bottom scrim, a specular sweep and the three lens-rim hairlines. The same material stack the iOS glass look uses.
+          - Glass panes are a single textured quad each (one captured, pre-blurred backdrop), so the material costs no per-frame blur and no extra full-screen pass.
+          - Selected items glow cyan exactly like the mockup: HOME in the rail, the active instance row, the current profile card.
 
-          **2. Renderers that refused to launch on 1.21.11**
-          - The config selection asked for ES2-only configs even while the renderer was creating an ES3 context, so context creation could fail outright on drivers that keep the two config sets apart. The ES3 renderable bit is now requested whenever the renderer runs GLES3.
-          - The 1.21.11 ladder now leads with MobileGlues - the only wrapper that maps GL 3.3-4.6 straight onto the phone driver at playable speed - with Zink as the correctness fallback, then Krypton and ANGLE. The in-game HUD button still cycles down the ladder if a driver dislikes one entry.
+          **Home screen**
+          - Left: the instance hero card with version / fabric / active, renderer, shaders, server, the skin preview and the READY TO LAUNCH pill.
+          - Right: LUCIFERMC card (players, play.lucifermc.fun, LIVE 24ms, JOIN / DISCORD / WIKI), the instances shelf with the quick-switch cards, and the MOD STORE / HUD KEYS shortcuts.
+          - Bottom: TOP MODS strip (Sodium, Iris, Lithium, Krypton, Ferrite) with 42 ACTIVE.
 
-          **3. HOLY GL4ES (new, selectable)**
-          - Real new renderer id: pick it in Settings > Video and Graphics > Renderer, or per instance in the profile editor.
-          - It is GL4ES driven through the fast path instead of the compatibility path: ES3 backend with real VAOs, vertex attributes kept in one VBO instead of being re-specified per draw, no one-log-line-per-stub-call (that logging alone is a file write per call, thousands per frame in Minecraft), fast maths, no NPOT downsample passes.
-          - Honest scope: GL4ES emulates GL 2.1, so HOLY GL4ES is for 1.20.6 and older. It is never auto-selected for 1.21.11 and it cannot fix the new pipeline - no GL4ES build can. Where GL4ES is the right renderer, these settings remove its biggest per-frame costs, and the new badge will show you the real number on your device.
+          **New wallpaper: Liquid Crystal Clear**
+          - Aurora scene rendered for this revamp and bundled as wallpaper 22, shipping as the default. It is selectable in the wallpaper studio like every other scene.
+          - A wallpaper of your own still works: the panes refract whatever is behind them.
 
-          **4. Real FPS display (always on, movable)**
-          - Frames are counted inside the game at glfwSwapBuffers, so every counted frame is a frame that was actually presented. No estimate, no smoothing, no target number.
-          - The badge shows fps, average frame time and the live renderer + instance. It is on by default, sits on top of the game, and you can drag it anywhere - the position is saved.
-          - If the game stops presenting frames the badge says stalled instead of showing a stale number. Switch: Settings > Video and Graphics > FPS overlay.
+          **Still respected from before:** no resolution cap, no forced GC, no CPU pins, no clock mode, no driver env overrides, no renderer auto-switch during play. Everything from v3.4 (stencil/ES3 EGL config, HOLY GL4ES, real movable FPS badge) is untouched.
 
-          **Still respected from before:** no resolution cap, no forced GC, no CPU pins, no clock mode, no driver env overrides, no renderer auto-switch during play.
-
-          **Direct Installable APK:** LUCIFER-LAUNCHER-PACK-v3.4.apk (versionCode 10000010, upgrades cleanly over v3.3)
+          **Direct Installable APK:** LUCIFER-LAUNCHER-PACK-v3.5.apk (versionCode 10000011, upgrades cleanly over v3.4)
           - **Branch:** ${GITHUB_REF_NAME} · **Commit:** ${GITHUB_SHA}"
 
           if gh release view "$TAG" --repo "${GITHUB_REPOSITORY}" >/dev/null 2>&1; then
             gh release upload "$TAG" \
-              LUCIFER-LAUNCHER-PACK-v3.4.apk \
+              LUCIFER-LAUNCHER-PACK-v3.5.apk \
               LUCIFER-LAUNCHER-PACK.apk \
               LUCIFER-LAUNCHER-PACK.sha256 \
               LUCIFER-LAUNCHER-PACK.md5 \
@@ -199,7 +211,7 @@ jobs:
             gh release edit "$TAG" --title "$TITLE" --notes "$NOTES" --repo "${GITHUB_REPOSITORY}" --latest
           else
             gh release create "$TAG" \
-              LUCIFER-LAUNCHER-PACK-v3.4.apk \
+              LUCIFER-LAUNCHER-PACK-v3.5.apk \
               LUCIFER-LAUNCHER-PACK.apk \
               LUCIFER-LAUNCHER-PACK.sha256 \
               LUCIFER-LAUNCHER-PACK.md5 \

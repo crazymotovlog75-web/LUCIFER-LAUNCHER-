@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Neutral glass chip (secondary actions on top of a pane). -->
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:state_pressed="true">
+        <shape android:shape="rectangle">
+            <solid android:color="#7AFFFFFF" />
+            <corners android:radius="14dp" />
+            <stroke android:width="1dp" android:color="#CCFFFFFF" />
+        </shape>
+    </item>
+    <item>
+        <shape android:shape="rectangle">
+            <solid android:color="#45FFFFFF" />
+            <corners android:radius="14dp" />
+            <stroke android:width="1dp" android:color="#8CFFFFFF" />
+        </shape>
+    </item>
+</selector>
