@@ -1,6 +1,6 @@
 # Lucifer Launcher UI Redesign Prototype
 
-This is a standalone, landscape-first responsive browser prototype for the requested Lucifer Launcher showcase. Landscape uses a compact navigation rail and full-width content; portrait remains supported. It is not the native Android launcher and does not launch Minecraft.
+This is a standalone, landscape-first responsive browser prototype based on the supplied Lucifer Launcher showcase. It opens with a full-screen branded loading sequence, then hands off to Home; landscape uses a compact rail, scenic backgrounds, and angled panels while portrait remains supported. It is not the proprietary native Android launcher and does not launch Minecraft.
 
 ## Run
 

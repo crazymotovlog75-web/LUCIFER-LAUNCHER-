@@ -46,3 +46,71 @@
  .home-profile-meta{grid-template-columns:repeat(4,minmax(0,1fr))}
 }
 @media(orientation:portrait) and (max-width:760px){.home-dashboard{grid-template-columns:1fr}.home-dashboard>.hero-card{grid-column:1;grid-row:auto}.home-side-stack,.home-lower{grid-column:1;grid-row:auto}}
+
+/* Reference art: cool Minecraft vistas, hard cyan highlights, and an angular/Zalith-like lean. */
+.hero-card{background-image:linear-gradient(90deg,#050a11f2 0%,#07111bd9 42%,#08131a60 100%),linear-gradient(0deg,#060a10ad,transparent 62%),var(--active-scene,url('assets/overworld.jpg'));background-position:center;background-size:cover;background-repeat:no-repeat;clip-path:polygon(2.4% 0,100% 0,97.6% 100%,0 100%)}
+.hero-card:after{right:10%;background:#52d7ff18}
+.scene-preview{background-size:cover!important;background-position:center!important}
+.scene-preview:after{opacity:.48}
+@media(orientation:landscape){
+ .card{position:relative;isolation:isolate;background:transparent;border-color:transparent;box-shadow:none;border-radius:8px 16px 7px 14px}
+ .card::before{content:"";position:absolute;inset:3px;z-index:-1;border:1px solid var(--line);border-radius:8px 16px 7px 14px;background:linear-gradient(150deg,#111b26f4,#0a1119f5 80%);transform:skewX(-1.35deg) rotate(-.16deg);box-shadow:0 12px 26px #0004}
+ .card.compact::before{inset:2px;transform:skewX(-1.8deg) rotate(-.18deg)}
+ .card>*{position:relative;z-index:1}
+ .list-row{position:relative;isolation:isolate;background:transparent;border-color:transparent;border-radius:7px 12px 7px 12px}
+ .list-row::before{content:"";position:absolute;inset:1px;z-index:-1;border:1px solid #1e2b37;border-radius:7px 12px 7px 12px;background:linear-gradient(115deg,#0d1721f5,#09111af5);transform:skewX(-1.6deg)}
+ .list-row>*{position:relative;z-index:1}
+ .quick-action{position:relative;isolation:isolate;background:transparent;border-color:transparent;border-radius:8px 14px 8px 13px}
+ .quick-action::before{content:"";position:absolute;inset:2px;z-index:-1;border:1px solid var(--line);border-radius:8px 14px 8px 13px;background:linear-gradient(120deg,#0e1a24,#0a1119);transform:skewX(-2deg)}
+ .quick-action>*{position:relative;z-index:1}
+ .hero-card{transform:skewX(-.65deg) rotate(-.12deg);transform-origin:center center}
+ .hero-card>.hero-copy,.hero-card>.hero-art{transform:skewX(.65deg) rotate(.12deg)}
+ .rail-nav .nav-item{transform:skewX(-3deg);border-radius:5px 10px 5px 10px}
+ .rail-nav .nav-item>*{transform:skewX(3deg)}
+ .segmented button{clip-path:polygon(5% 0,100% 0,95% 100%,0 100%)}
+ .intro-actions .btn,.btn{border-radius:5px 13px 5px 13px}
+ .scene-preview{clip-path:polygon(3% 0,100% 0,97% 100%,0 100%)}
+}
+
+/* First-open splash: full-screen, then it hands off to the Home dashboard. */
+body[data-page="splash"] .app-shell{grid-template-columns:minmax(0,1fr)!important}
+body[data-page="splash"] .sidebar{display:none!important}
+body[data-page="splash"] .app-frame{min-height:100dvh;padding-bottom:0}
+body[data-page="splash"] .topbar{display:block!important;position:absolute;inset:0 0 auto;min-height:0;padding:env(safe-area-inset-top,0px) 22px 0;background:transparent;border:0;backdrop-filter:none;z-index:9}
+body[data-page="splash"] .mobile-appbar{display:none!important}
+body[data-page="splash"] .system-status{height:30px}
+body[data-page="splash"] .page-content{width:100%;max-width:none;min-height:100dvh;margin:0;padding:0}
+body[data-page="splash"] .bottom-nav{display:none!important}
+.splash-preview{position:relative;overflow:hidden;min-height:100dvh;padding:50px 20px 26px;background:radial-gradient(ellipse at 50% 43%,#0d2d44 0%,#071521 30%,#03070c 74%);}
+.splash-preview::before,.splash-preview::after{content:"";position:absolute;pointer-events:none}
+.splash-preview::before{inset:0;background:linear-gradient(128deg,transparent 0 48%,#46d5ff08 48.1% 48.5%,transparent 48.6%),radial-gradient(ellipse at 50% 50%,transparent 0 27%,#1ba5e008 48%,transparent 72%)}
+.splash-preview::after{width:min(540px,70vw);height:1px;bottom:18%;left:50%;transform:translateX(-50%);background:linear-gradient(90deg,transparent,#58d8ff7d,transparent);box-shadow:0 0 26px #31b8ff75}
+.splash-glow{position:absolute;width:180px;height:180px;top:25%;left:50%;transform:translateX(-50%);border-radius:50%;background:#36c6ff20;filter:blur(48px)}
+.splash-emblem{position:relative;width:clamp(90px,16vh,150px);height:clamp(108px,19vh,172px);border-radius:0;background:none;color:transparent;box-shadow:none;filter:drop-shadow(0 0 30px #32cfff52);animation:emblemRise .8s cubic-bezier(.2,.8,.2,1) both}
+.splash-emblem svg{width:100%;height:100%;overflow:visible}
+.splash-brand{margin-top:19px;font-size:clamp(22px,4vh,32px);letter-spacing:.24em;text-shadow:0 0 24px #6edfff28}
+.splash-brand span{font-size:11px;letter-spacing:.48em;margin-top:8px}
+.splash-preview p{margin:clamp(36px,9vh,84px) 0 14px;font-size:10px;font-weight:800;letter-spacing:.22em;color:#AFC6D6}
+.splash-progress{width:min(240px,62vw);height:4px;background:#132332;border:1px solid #234154;box-shadow:0 0 18px #1dafff12}
+.splash-progress span{width:4%;animation:splashFill 3.5s cubic-bezier(.35,.04,.2,1) forwards}
+.splash-preview small{margin-top:10px;letter-spacing:.08em}
+.splash-skip{position:absolute;right:24px;bottom:calc(22px + env(safe-area-inset-bottom));border:0;background:transparent;color:#91AABB;font-size:10px;letter-spacing:.08em}
+.splash-skip span{color:#6DDBFF;font-size:15px;margin-left:5px}
+@keyframes splashFill{to{width:100%}}
+@keyframes emblemRise{from{opacity:0;transform:translateY(12px) scale(.92)}to{opacity:1;transform:translateY(0) scale(1)}}
+@media(orientation:landscape){
+ body[data-page="splash"] .topbar{padding-left:26px;padding-right:26px}
+ .splash-preview{padding-top:34px}
+ .splash-preview p{margin-top:5vh}
+ .splash-preview::after{bottom:12%}
+ .splash-emblem{width:clamp(84px,18vh,148px);height:clamp(98px,22vh,176px)}
+}
+@media(prefers-reduced-motion:reduce){.splash-emblem,.splash-progress span{animation:none}.splash-progress span{width:100%}}
+.brand-mark svg{width:25px;height:30px;filter:drop-shadow(0 0 8px #74ddff55)}
+.rail-brand .brand-mark svg{width:19px;height:22px}
+@media(orientation:landscape){
+ .screen-intro{position:relative}
+ .screen-intro::after{content:"";position:absolute;left:0;bottom:-5px;width:min(128px,18vw);height:2px;background:linear-gradient(90deg,var(--blue),transparent);transform:skewX(-35deg)}
+ .profile-card,.version-card,.mod-card,.server-card,.download-card{border-radius:7px 15px 7px 13px}
+ .download-tabs,.mod-tabs,.profile-tabs{transform:skewX(-1deg)}
+}
