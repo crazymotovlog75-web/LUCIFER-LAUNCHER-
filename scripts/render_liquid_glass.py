@@ -39,8 +39,8 @@ MAGENTA = (217, 70, 239)
 WHITE = (255, 255, 255)
 INK = (8, 16, 22)
 TEXT = (255, 255, 255)
-TEXT_2 = (216, 236, 245)
-TEXT_3 = (168, 196, 208)
+TEXT_2 = (232, 244, 250)
+TEXT_3 = (206, 226, 236)
 OK_GREEN = (52, 211, 153)
 AMBER = (255, 196, 107)
 
@@ -50,33 +50,54 @@ MODS = ["Sodium", "Iris", "Lithium", "Krypton", "Ferrite"]
 
 # --------------------------------------------------------------------------- background
 def build_bg():
-    """BG10 Abyss Teal, lifted into a bright vivid wash so clear glass has something to bend."""
-    art = Image.open(WALL).convert("RGB")
-    art = ImageOps.fit(art, (W * S, H * S), method=Image.LANCZOS)
-    art = ImageEnhance.Brightness(art).enhance(1.52)
-    art = ImageEnhance.Color(art).enhance(1.62)
-    art = ImageEnhance.Contrast(art).enhance(1.04)
+    """Bright iOS-style aurora wallpaper.
 
+    Liquid glass only reads as *crystal* over a bright, colourful backdrop: the pane has to have
+    something to refract. On the dark Abyss Teal wallpaper every panel just looked like a dark box.
+    """
+    w, h = W * S, H * S
+    art = Image.new("RGB", (w, h), (20, 30, 46))
+    px = art.load()
+    # four-corner aurora mesh, all light values high so the glass has light to bend
+    corners = ((0, 0, (150, 236, 255)), (1, 0, (255, 186, 232)),
+               (0, 1, (86, 146, 255)), (1, 1, (150, 120, 245)))
+    for y in range(h):
+        ty = y / (h - 1)
+        for x in range(0, w, 4):
+            tx = x / (w - 1)
+            r = g = b = 0.0
+            for cx, cy, col in corners:
+                # smooth inverse-distance blend
+                d = 1.0 / (0.22 + ((tx - cx) ** 2 + (ty - cy) ** 2) ** 0.5)
+                r += col[0] * d
+                g += col[1] * d
+                b += col[2] * d
+            s = sum(1.0 / (0.22 + ((tx - cx) ** 2 + (ty - cy) ** 2) ** 0.5) for cx, cy, _ in corners)
+            val = (int(min(255, r / s)), int(min(255, g / s)), int(min(255, b / s)))
+            for dx in range(4):
+                if x + dx < w:
+                    px[x + dx, y] = val
+    art = art.filter(ImageFilter.GaussianBlur(w // 220))
+
+    # sunlight from the top + soft bokeh discs (these are what the panes refract)
     glow = Image.new("RGBA", art.size, (0, 0, 0, 0))
     gd = ImageDraw.Draw(glow)
-    for fx, fy, fr, col, a in (
-        (0.18, 0.14, 0.30, (0, 236, 255), 120),
-        (0.82, 0.18, 0.26, (255, 90, 214), 105),
-        (0.50, 0.86, 0.34, (0, 150, 220), 80),
-        (0.68, 0.55, 0.20, (150, 250, 255), 70),
-    ):
-        gd.ellipse([art.size[0] * (fx - fr), art.size[1] * (fy - fr),
-                    art.size[0] * (fx + fr), art.size[1] * (fy + fr)], fill=rgba(col, a))
-    glow = glow.filter(ImageFilter.GaussianBlur(art.size[0] // 8))
+    gd.ellipse([w * 0.22, -h * 0.30, w * 0.78, h * 0.42], fill=rgba((255, 255, 255), 190))
+    for fx, fy, fr, a in ((0.13, 0.22, 0.085, 120), (0.30, 0.72, 0.055, 95),
+                          (0.70, 0.18, 0.070, 110), (0.86, 0.62, 0.100, 90),
+                          (0.55, 0.88, 0.075, 80), (0.40, 0.44, 0.040, 70)):
+        gd.ellipse([w * (fx - fr), h * (fy - fr), w * (fx + fr), h * (fy + fr)],
+                   fill=rgba((255, 255, 255), a))
+    glow = glow.filter(ImageFilter.GaussianBlur(w // 26))
     art = Image.alpha_composite(art.convert("RGBA"), glow)
 
-    # a soft top light so the specular rims have something to answer to
-    top = Image.new("RGBA", art.size, (0, 0, 0, 0))
-    td = ImageDraw.Draw(top)
-    for y in range(art.size[1]):
-        t = y / (art.size[1] - 1)
-        td.line([(0, y), (art.size[0], y)], fill=rgba((255, 255, 255), int(46 * (1 - t) ** 2)))
-    return Image.alpha_composite(art, top)
+    # gentle vignette so the edges settle instead of shouting
+    vig = Image.new("L", art.size, 0)
+    ImageDraw.Draw(vig).ellipse([-w * 0.25, -h * 0.35, w * 1.25, h * 1.35], fill=255)
+    vig = vig.filter(ImageFilter.GaussianBlur(w // 12))
+    dark = Image.new("RGBA", art.size, (16, 24, 40, 120))
+    art = Image.composite(art, Image.alpha_composite(art, dark), vig)
+    return art
 
 
 # --------------------------------------------------------------------------- helpers
@@ -97,7 +118,7 @@ class LiquidScreen(base.Screen):
     """The base Screen plus the liquid-glass panel."""
 
     # ---- the glass ------------------------------------------------------
-    def liquid(self, x, y, w, h, radius=26, tint=30, scrim=62, magnify=0.055,
+    def liquid(self, x, y, w, h, radius=26, tint=18, scrim=104, magnify=0.055,
                accent=CYAN, shadow=96, rim=1.0, spec=1.0, edge_col=WHITE):
         box = self.box(x, y, w, h)
         pw, ph = self.s(w), self.s(h)
@@ -140,7 +161,12 @@ class LiquidScreen(base.Screen):
         tintimg.putalpha(ImageChops.multiply(tintimg.split()[3], mask))
         self.img.alpha_composite(tintimg, (box[0], box[1]))
 
-        # 4. bottom scrim so labels stay readable on a bright wallpaper
+        # 4. a whisper of dark, then a scrim towards the bottom: white type has to stay readable
+        #    while the pane still reads as clear glass at the top edge
+        veil = Image.new("RGBA", (pw, ph), (12, 20, 34, 26))
+        veil.putalpha(ImageChops.multiply(veil.split()[3], mask))
+        self.img.alpha_composite(veil, (box[0], box[1]))
+        self.redraw()
         if scrim > 0:
             sc = Image.new("RGBA", (pw, ph), (0, 0, 0, 0))
             sd = ImageDraw.Draw(sc)
@@ -516,7 +542,7 @@ def l02(sc):
     sc.dot(W - PAD - 150, sheet_y + 44, 3.4, OK_GREEN)
     sc.send(W - PAD - 30, sheet_y + 38, "LIVE · 24ms", 8.6, OK_GREEN, True, 0.6)
 
-    cards_y = sheet_y + 76
+    cards_y = sheet_y + 68
     cw = (W - PAD * 2 - 60 - 2 * 18) / 3
     for i, (t, s2, a) in enumerate((("Fabric 1.21.10", "SHADOW PVP", True),
                                     ("LuciferMC SMP", "LIFESTEEL", False),
@@ -526,7 +552,7 @@ def l02(sc):
     # hero row
     hx, hy = PAD + 30, cards_y + 96
     hw = (W - PAD * 2 - 60) * 0.56
-    sc.liquid(hx, hy, hw, 244, radius=26, tint=30, scrim=70)
+    sc.liquid(hx, hy, hw, 206, radius=26, tint=30, scrim=70)
     sc.stext(hx + 20, hy + 16, "FABRIC 1.21.4", 7.6, CYAN, True, 1.3)  # hero header
     sc.stext(hx + 20, hy + 28, "Shadow PvP", 18, WHITE, True, 0.2)
     for i, (lab, val) in enumerate((("VERSION", "1.21.10"), ("FABRIC", "0.16.9"), ("ACTIVE", "42"))):
@@ -538,9 +564,9 @@ def l02(sc):
                            (sc.s(hx + hw * 0.66), sc.s(hy + 40)))
     sc.redraw()
     sc.halo(hx + hw * 0.72, hy + 120, 76, CYAN, 34)
-    sc.grad_rect(hx + 20, hy + 176, hw - 40, 34, lerp(CYAN, WHITE, 0.5), CYAN, radius=17)
-    sc.glyph("play", hx + 42, hy + 193, 9, INK, 1.4)
-    sc.text(hx + 62, hy + 186, "READY TO LAUNCH", 9, INK, True, 0.9)
+    sc.grad_rect(hx + 20, hy + 156, hw - 40, 34, lerp(CYAN, WHITE, 0.5), CYAN, radius=17)
+    sc.glyph("play", hx + 42, hy + 173, 9, INK, 1.4)
+    sc.text(hx + 62, hy + 166, "READY TO LAUNCH", 9, INK, True, 0.9)
 
     # right stack: ram + mods
     rx = hx + hw + 18
@@ -550,7 +576,7 @@ def l02(sc):
     sc.stext(rx + 18, hy + 26, "6.0 GB", 17, WHITE, True, 0.3)
     sc.rect(rx + 18, hy + 54, rw - 36, 6, rgba(WHITE, 60), radius=3)
     sc.grad_rect(rx + 18, hy + 54, (rw - 36) * 0.62, 6, lerp(CYAN, WHITE, 0.4), CYAN, radius=3)
-    sc.liquid(rx, hy + 104, rw, 140, radius=24, tint=30, scrim=66)
+    sc.liquid(rx, hy + 104, rw, 134, radius=24, tint=30, scrim=66)
     sc.stext(rx + 18, hy + 118, "SHADERS", 7.4, TEXT_3, True, 1.3)
     sc.stext(rx + 18, hy + 130, "Complementary", 13, WHITE, True, 0.3)
     sc.stext(rx + 18, hy + 150, "Ultra · 42 fps target", 8, TEXT_3, False)
@@ -558,7 +584,7 @@ def l02(sc):
     sc.stext(rx + 18, hy + 182, "MODS DIR", 7.2, TEXT_3, True, 1.3)
     sc.stext(rx + 18, hy + 194, "12.4 GB · 42 mods", 10, WHITE, True, 0.2)
 
-    mods_strip(sc, hx, hy + 260, hw, h=40)
+    mods_strip(sc, hx, 754, hw, h=38)
     dock_bar(sc, PAD + 30, H - PAD - 22 - 58, W - PAD * 2 - 60, 58)
 
 
@@ -601,8 +627,8 @@ def l03(sc):
         sc.rect(sx + 18, yy - 4, sw - 36, 1.2, rgba(WHITE, 46), radius=1)
         sc.dot(sx + 26, yy + 12, 3.0, CYAN)
         sc.text(sx + 40, yy + 5, m, 9.6, WHITE, True, 0.4)
-        sc.text_end(sx + sw - 18 - 34, yy + 5, "v" + str(2 + i) + "." + str(i + 3), 8, TEXT_3, False)
-        sc.pill(sx + sw - 46, yy + 2, 28, 16, fill=OK_GREEN, alpha=60, edge=rgba(OK_GREEN, 160))
+        sc.text_end(sx + sw - 64, yy + 5, "v" + str(2 + i) + "." + str(i + 3), 8, TEXT_3, False)
+        sc.pill(sx + sw - 54, yy + 2, 28, 16, fill=OK_GREEN, alpha=60, edge=rgba(OK_GREEN, 160))
 
     by = 540
     mods_strip(sc, x0, by, w0, h=42)
@@ -730,8 +756,8 @@ def l05(sc):
     x = PAD + 92
     for m in MODS:
         tw = sc.width_of(m, 8.2, True, 0.4)
-        sc.pill(x, 654, tw + 16, 26, fill=WHITE, alpha=56, edge=WHITE, edge_alpha=130)
-        sc.text(x + 8, 660, m, 8.2, WHITE, True, 0.4)
+        sc.pill(x, 722, tw + 16, 26, fill=WHITE, alpha=56, edge=WHITE, edge_alpha=130)
+        sc.text(x + 8, 728, m, 8.2, WHITE, True, 0.4)
         x += tw + 24
 
     sc.liquid(W - PAD - 340, 706, 340, 56, radius=28, tint=30, scrim=56)
