@@ -23,11 +23,11 @@ ROWS = [
     ("10", "v10-bone-crypt.png", "BONE CRYPT", "bone + slate", (236, 224, 196), (160, 172, 184)),
 ]
 
-CELL_W = 760            # thumbnail width
+CELL_W = 900            # thumbnail width
 COLS = 2
 PAD = 22
-HEADER = 96
-LABEL_H = 54
+HEADER = 110
+LABEL_H = 62
 BG = (6, 7, 12)
 
 
@@ -41,11 +41,11 @@ def main():
     sheet = Image.new("RGB", (W, H), BG)
     d = ImageDraw.Draw(sheet)
 
-    f_title = ImageFont.truetype(FONT_B, 34)
-    f_sub = ImageFont.truetype(FONT_B, 16)
-    f_num = ImageFont.truetype(FONT_B, 22)
-    f_name = ImageFont.truetype(FONT_B, 21)
-    f_note = ImageFont.truetype(FONT_B, 14)
+    f_title = ImageFont.truetype(FONT_B, 40)
+    f_sub = ImageFont.truetype(FONT_B, 19)
+    f_num = ImageFont.truetype(FONT_B, 26)
+    f_name = ImageFont.truetype(FONT_B, 25)
+    f_note = ImageFont.truetype(FONT_B, 17)
 
     d.text((PAD + 2, 24), "LUCIFER LAUNCHER — 10 COLOUR VARIANTS", font=f_title, fill=(245, 248, 255))
     d.text((PAD + 2, 66), "same layout · same real skin · same BG10 wallpaper · only the palette changes",
