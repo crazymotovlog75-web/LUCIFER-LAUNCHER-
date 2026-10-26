@@ -18,6 +18,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import net.kdt.pojavlaunch.PojavApplication;
+import net.kdt.pojavlaunch.compat.GameCompatBootstrap;
 import net.kdt.pojavlaunch.PojavProfile;
 import net.kdt.pojavlaunch.R;
 import net.kdt.pojavlaunch.Tools;
@@ -59,6 +60,10 @@ public class RightPaneHomeFragment extends Fragment {
     private TextView mLoader;
     private TextView mRam;
     private TextView mLaunchVersionSub;
+    private TextView mHeroRenderer;
+    private TextView mHeroShaderpacks;
+    private TextView mHeroModCount;
+    private int mHeroStatsGeneration;
     private int mAvatarBindGeneration;
     private boolean mAvatarLoadPending;
     private long mAvatarLoadStartedAt;
@@ -86,6 +91,9 @@ public class RightPaneHomeFragment extends Fragment {
         mLoader = view.findViewById(R.id.tv_home_loader);
         mRam = view.findViewById(R.id.tv_home_ram);
         mLaunchVersionSub = view.findViewById(R.id.tv_launch_version_sub);
+        mHeroRenderer = view.findViewById(R.id.tv_home_renderer);
+        mHeroShaderpacks = view.findViewById(R.id.tv_home_shaderpacks);
+        mHeroModCount = view.findViewById(R.id.tv_home_mod_count);
 
         View launchPortal = view.findViewById(R.id.btn_launch_portal);
         launchPortal.setOnClickListener(v -> ExtraCore.setValue(ExtraConstants.LAUNCH_GAME, true));
@@ -183,6 +191,10 @@ public class RightPaneHomeFragment extends Fragment {
         mLoader = null;
         mRam = null;
         mLaunchVersionSub = null;
+        mHeroRenderer = null;
+        mHeroShaderpacks = null;
+        mHeroModCount = null;
+        mHeroStatsGeneration++;
         mAdapter = null;
         mProfileLoadPending = false;
     }
@@ -286,6 +298,15 @@ public class RightPaneHomeFragment extends Fragment {
         }
         mRam.setText(getString(R.string.ram_summary_gb,
                 LauncherPreferences.PREF_RAM_ALLOCATION / 1024.0));
+
+        // The hero reports the instance's real renderer and its real mod / shaderpack counts
+        // (both read off disk), never a decorative placeholder.
+        if (mHeroRenderer != null) {
+            String renderer = profile == null ? null : profile.pojavRendererName;
+            if (renderer == null) renderer = Tools.LOCAL_RENDERER;
+            mHeroRenderer.setText(GameCompatBootstrap.shortRendererName(renderer));
+        }
+        bindInstanceAssetCounts(profile);
         if (mLaunchVersionSub != null) {
             if (profile == null) {
                 mLaunchVersionSub.setText("SELECT A BUILD");
@@ -293,6 +314,47 @@ public class RightPaneHomeFragment extends Fragment {
                 mLaunchVersionSub.setText(ProfileVersionDisplay.format(profile.lastVersionId, profile.name).toUpperCase(Locale.ROOT));
             }
         }
+    }
+
+
+    /** Counts the instance's mods and shaderpacks off disk, off the UI thread. */
+    private void bindInstanceAssetCounts(@Nullable MinecraftProfile profile) {
+        if (mHeroModCount == null || mHeroShaderpacks == null) return;
+        final int generation = ++mHeroStatsGeneration;
+        mHeroModCount.setText("—");
+        mHeroShaderpacks.setText("—");
+        if (profile == null) return;
+
+        final java.io.File gameDir;
+        try {
+            gameDir = profile.resolveGameDir();
+        } catch (Throwable error) {
+            return;
+        }
+        if (gameDir == null) return;
+
+        PojavApplication.sExecutorService.execute(() -> {
+            int mods = countJars(new java.io.File(gameDir, "mods"));
+            int packs = countJars(new java.io.File(gameDir, "shaderpacks"));
+            Tools.runOnUiThread(() -> {
+                if (!isAdded() || generation != mHeroStatsGeneration) return;
+                if (mHeroModCount != null) {
+                    mHeroModCount.setText(mods == 1 ? "1 mod" : mods + " mods");
+                }
+                if (mHeroShaderpacks != null) {
+                    mHeroShaderpacks.setText(packs == 0 ? "none installed"
+                            : (packs == 1 ? "1 pack" : packs + " packs"));
+                }
+            });
+        });
+    }
+
+    private static int countJars(@Nullable java.io.File dir) {
+        if (dir == null || !dir.isDirectory()) return 0;
+        java.io.File[] files = dir.listFiles(file -> file.isFile()
+                && (file.getName().toLowerCase(Locale.ROOT).endsWith(".jar")
+                    || file.getName().toLowerCase(Locale.ROOT).endsWith(".zip")));
+        return files == null ? 0 : files.length;
     }
 
     private void refreshSelectedInstanceFromLoadedProfiles() {

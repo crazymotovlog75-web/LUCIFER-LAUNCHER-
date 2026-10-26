@@ -140,17 +140,31 @@ jobs:
         run: |
           set -e
           APK="$GITHUB_WORKSPACE/dist-apk/LUCIFER-LAUNCHER-PACK.apk"
-          # The glass engine, its theme and the aurora wallpaper have to be inside the shipped APK.
-          DEX=$( (unzip -p "$APK" resources.arsc; \
-                   for d in $(unzip -l "$APK" | awk '/classes.*[.]dex/{print $4}'); do unzip -p "$APK" "$d"; done) )
-          for needle in LiquidGlass GlassFrameLayout GlassLinearLayout AppTheme.Wallpaper22; do
-            echo "$DEX" | grep -aq "$needle" \
+          DEXES=$(unzip -l "$APK" | awk '/classes.*[.]dex/{print $4}')
+          echo "dex entries: $(echo $DEXES | tr '\n' ' ')"
+
+          # 1. the glass panes are real custom views, referenced from the layouts, so their
+          #    class names survive R8 and show up in the dex string pool.
+          for needle in GlassFrameLayout GlassLinearLayout; do
+            HITS=$( for d in $DEXES; do unzip -p "$APK" "$d"; done | grep -ac "$needle" || true )
+            test "${HITS:-0}" -gt 0 \
               || { echo "FAIL: $needle is missing from the shipped APK"; exit 1; }
-            echo "glass ok: $needle"
+            echo "glass view ok: $needle ($HITS hits)"
           done
-          unzip -l "$APK" | grep -q 'res/.*lucifer_wallpaper_22' \
-            || { echo "FAIL: the Liquid Crystal wallpaper is not packaged"; exit 1; }
-          echo "OK: glass panes, theme and aurora wallpaper shipped"
+
+          # 2. the styleable (lgRadius/lgTint/lgScrim/lgRefraction), the Liquid Crystal theme and
+          #    the aurora wallpaper all have to be in the resource table.
+          for needle in lgRadius lgTint lgScrim Wallpaper22 lucifer_wallpaper_22; do
+            HITS=$( unzip -p "$APK" resources.arsc | grep -ac "$needle" || true )
+            test "${HITS:-0}" -gt 0 \
+              || { echo "FAIL: $needle is missing from resources.arsc (glass theme not packaged)"; exit 1; }
+            echo "resource ok: $needle ($HITS hits)"
+          done
+
+          # 3. the glass scene drawable is wired as the window background of the theme.
+          unzip -p "$APK" resources.arsc | grep -aq 'bg_liquid_scene' \
+            || { echo "FAIL: bg_liquid_scene is not packaged"; exit 1; }
+          echo "OK: glass panes, glass theme, aurora wallpaper and scene drawable shipped"
 
       - name: Surface Build Diagnostics on Failure
         if: failure()

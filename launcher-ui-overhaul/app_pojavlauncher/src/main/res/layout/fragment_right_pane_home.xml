@@ -40,8 +40,8 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/guide_hero_end"
         app:lgRadius="26dp"
-        app:lgTint="72"
-        app:lgScrim="96"
+        app:lgTint="84"
+        app:lgScrim="78"
         app:lgRefraction="0.06">
 
         <ImageView
@@ -115,8 +115,9 @@
                     android:orientation="vertical">
                     <TextView style="@style/LiquidLabel" android:text="ACTIVE" android:textSize="@dimen/_6ssp" />
                     <TextView
+                        android:id="@+id/tv_home_mod_count"
                         style="@style/LiquidValue"
-                        android:text="42 mods"
+                        android:text="—"
                         android:textSize="@dimen/_12ssp" />
                 </LinearLayout>
             </LinearLayout>
@@ -134,7 +135,11 @@
                     android:layout_marginBottom="@dimen/_2sdp"
                     android:orientation="horizontal">
                     <TextView style="@style/LiquidLabel" android:layout_width="@dimen/_58sdp" android:text="RENDERER" android:textSize="@dimen/_6ssp" android:gravity="center_vertical" />
-                    <TextView style="@style/LiquidValue" android:text="MobileGlues" android:textSize="@dimen/_9ssp" />
+                    <TextView
+                        android:id="@+id/tv_home_renderer"
+                        style="@style/LiquidValue"
+                        android:text="—"
+                        android:textSize="@dimen/_9ssp" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -142,8 +147,12 @@
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="@dimen/_2sdp"
                     android:orientation="horizontal">
-                    <TextView style="@style/LiquidLabel" android:layout_width="@dimen/_58sdp" android:text="SHADERS" android:textSize="@dimen/_6ssp" android:gravity="center_vertical" />
-                    <TextView style="@style/LiquidValue" android:text="Complementary Ultra" android:textSize="@dimen/_9ssp" />
+                    <TextView style="@style/LiquidLabel" android:layout_width="@dimen/_58sdp" android:text="SHADERPACKS" android:textSize="@dimen/_6ssp" android:gravity="center_vertical" />
+                    <TextView
+                        android:id="@+id/tv_home_shaderpacks"
+                        style="@style/LiquidValue"
+                        android:text="—"
+                        android:textSize="@dimen/_9ssp" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -230,7 +239,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="end"
                 android:layout_marginTop="@dimen/_1sdp"
-                android:text="1.21.10 · 42 mods · Complementary"
+                android:text="1.21.10"
                 android:textColor="@color/lg_text_tertiary"
                 android:textSize="@dimen/_6ssp"
                 android:maxLines="1"
