@@ -22,7 +22,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.62" />
+        app:layout_constraintGuide_percent="0.60" />
 
     <!-- ═══════════════════════════════════════════════════════════════════════
          HERO — selected instance
@@ -52,8 +52,8 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical"
-            android:paddingHorizontal="@dimen/_12sdp"
-            android:paddingVertical="@dimen/_9sdp">
+            android:paddingHorizontal="@dimen/_15sdp"
+            android:paddingVertical="@dimen/_12sdp">
 
             <TextView
                 style="@style/LiquidLabel"
@@ -263,7 +263,7 @@
         android:id="@+id/home_right_col"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginStart="@dimen/_5sdp"
+        android:layout_marginStart="@dimen/_10sdp"
         android:orientation="vertical"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toTopOf="@+id/home_strip"
@@ -277,8 +277,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:paddingHorizontal="@dimen/_10sdp"
-            android:paddingVertical="@dimen/_7sdp"
+            android:paddingHorizontal="@dimen/_12sdp"
+            android:paddingVertical="@dimen/_9sdp"
             android:clickable="true"
             android:focusable="true">
 
@@ -413,10 +413,10 @@
             android:layout_height="0dp"
             android:background="@drawable/bg_lucifer_slanted_panel"
             android:layout_weight="1"
-            android:layout_marginTop="@dimen/_5sdp"
+            android:layout_marginTop="@dimen/_7sdp"
             android:orientation="vertical"
-            android:paddingHorizontal="@dimen/_10sdp"
-            android:paddingVertical="@dimen/_7sdp">
+            android:paddingHorizontal="@dimen/_12sdp"
+            android:paddingVertical="@dimen/_9sdp">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -552,7 +552,7 @@
         android:id="@+id/home_strip"
         android:background="@drawable/bg_lucifer_slanted_panel"
         android:layout_width="0dp"
-        android:layout_height="@dimen/_32sdp"
+        android:layout_height="@dimen/_36sdp"
         android:layout_marginTop="@dimen/_5sdp"
         android:orientation="horizontal"
         android:gravity="center_vertical"

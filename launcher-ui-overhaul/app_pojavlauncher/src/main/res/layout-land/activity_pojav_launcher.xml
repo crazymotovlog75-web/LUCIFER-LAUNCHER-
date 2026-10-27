@@ -126,8 +126,8 @@
                 android:layout_height="0dp"
                 android:layout_weight="1"
                 android:contentDescription="Settings">
-                <ImageView style="@style/LiquidRailIcon" android:src="@drawable/ic_menu_settings" android:tint="@color/lg_text_primary" />
-                <TextView style="@style/LiquidRailLabel" android:text="SETTINGS" android:textColor="@color/lg_text_primary" />
+                <ImageView style="@style/LiquidRailIcon" android:src="@drawable/ic_menu_settings" />
+                <TextView style="@style/LiquidRailLabel" android:text="SETTINGS" />
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>

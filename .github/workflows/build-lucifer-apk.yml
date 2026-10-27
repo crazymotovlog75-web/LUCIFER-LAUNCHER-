@@ -1,4 +1,4 @@
-name: Lucifer Launcher — v3.6.0 (native angular showcase + splash)
+name: Lucifer Launcher — v3.6.1 (native angular showcase + splash)
 
 on:
   push:
@@ -32,7 +32,7 @@ jobs:
           cp -rv overhaul/launcher-ui-overhaul/app_pojavlauncher/* engine/app_pojavlauncher/
           # LWJGL shim: FrameStats + the glfwSwapBuffers hook that feeds the real FPS overlay.
           cp -rv overhaul/launcher-ui-overhaul/jre_lwjgl3glfw/* engine/jre_lwjgl3glfw/
-          sed -i 's/versionCode 10000000/versionCode 10000013/; s/versionName getVersionName()/versionName "3.6.0"/' engine/app_pojavlauncher/build.gradle
+          sed -i 's/versionCode 10000000/versionCode 10000014/; s/versionName getVersionName()/versionName "3.6.1"/' engine/app_pojavlauncher/build.gradle
 
       - name: Set up JDK 21
         uses: actions/setup-java@v4
@@ -71,7 +71,7 @@ jobs:
           fi
 
           cp "$RELEASE_APK" "$GITHUB_WORKSPACE/dist-apk/LUCIFER-LAUNCHER-PACK.apk"
-          cp "$RELEASE_APK" "$GITHUB_WORKSPACE/dist-apk/LUCIFER-LAUNCHER-PACK-v3.6.0.apk"
+          cp "$RELEASE_APK" "$GITHUB_WORKSPACE/dist-apk/LUCIFER-LAUNCHER-PACK-v3.6.1.apk"
           sha256sum "$GITHUB_WORKSPACE/dist-apk/LUCIFER-LAUNCHER-PACK.apk" > "$GITHUB_WORKSPACE/dist-apk/LUCIFER-LAUNCHER-PACK.sha256"
           md5sum "$GITHUB_WORKSPACE/dist-apk/LUCIFER-LAUNCHER-PACK.apk" > "$GITHUB_WORKSPACE/dist-apk/LUCIFER-LAUNCHER-PACK.md5"
 
@@ -175,7 +175,7 @@ jobs:
       - name: Upload APK Build Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: lucifer-launcher-pack-v3.6.0-apk
+          name: lucifer-launcher-pack-v3.6.1-apk
           path: dist-apk/*
           retention-days: 30
 
@@ -185,12 +185,13 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         working-directory: dist-apk
         run: |
-          TAG="lucifer-v3.6.0"
-          TITLE="LUCIFER LAUNCHER v3.6.0 - Native Angular Cyan Showcase"
-          NOTES="### LUCIFER LAUNCHER v3.6.0 - Native Android Showcase UI
+          TAG="lucifer-v3.6.1"
+          TITLE="LUCIFER LAUNCHER v3.6.1 - Native Angular Cyan Showcase"
+          NOTES="### LUCIFER LAUNCHER v3.6.1 - Native Android Showcase UI
 
           **The supplied Lucifer look is integrated into the Android launcher APK.**
           - Full-screen, landscape-first Lucifer layout with a responsive portrait fallback and angular navy/cyan surfaces.
+          - The side navigation options have transparent backgrounds; selected icons and labels use a restrained cyan highlight. Home spacing is opened up without changing its overall layout.
           - A branded animated splash appears on each launcher Activity open, then fades into the native Home screen.
           - Existing native destinations remain connected: profiles/instances, mod search and management, server hub, custom controls, skins, wallpaper studio and settings.
           - The new dark overworld scene is bundled as wallpaper 22 and remains selectable in the native wallpaper studio.
@@ -198,13 +199,13 @@ jobs:
 
           **Existing game-engine features are retained.** This UI update does not claim extra GPU/runtime/server capabilities. Microsoft authentication continues to use the launcher's existing sign-in flow.
 
-          **Direct Installable APK:** LUCIFER-LAUNCHER-PACK-v3.6.0.apk (versionCode 10000013)
+          **Direct Installable APK:** LUCIFER-LAUNCHER-PACK-v3.6.1.apk (versionCode 10000014)
           - **Branch:** ${GITHUB_REF_NAME} · **Commit:** ${GITHUB_SHA}"
 
 
           if gh release view "$TAG" --repo "${GITHUB_REPOSITORY}" >/dev/null 2>&1; then
             gh release upload "$TAG" \
-              LUCIFER-LAUNCHER-PACK-v3.6.0.apk \
+              LUCIFER-LAUNCHER-PACK-v3.6.1.apk \
               LUCIFER-LAUNCHER-PACK.apk \
               LUCIFER-LAUNCHER-PACK.sha256 \
               LUCIFER-LAUNCHER-PACK.md5 \
@@ -213,7 +214,7 @@ jobs:
             gh release edit "$TAG" --title "$TITLE" --notes "$NOTES" --repo "${GITHUB_REPOSITORY}" --latest
           else
             gh release create "$TAG" \
-              LUCIFER-LAUNCHER-PACK-v3.6.0.apk \
+              LUCIFER-LAUNCHER-PACK-v3.6.1.apk \
               LUCIFER-LAUNCHER-PACK.apk \
               LUCIFER-LAUNCHER-PACK.sha256 \
               LUCIFER-LAUNCHER-PACK.md5 \
